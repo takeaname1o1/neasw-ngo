@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+:root {
+  --font-title: 'Playfair Display', Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Premium Light Canvas Theme Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #0f172a; /* Deep navy/charcoal for footer & select sections */
+  --bg-tertiary: #f4f6f0;  /* Pale olive secondary background */
+  --bg-card: #f8fafc;      /* Subtle light gray card backgrounds */
+  
+  --text-primary: #000000;
+  --text-secondary: #222222;
+  --text-muted: #6b7280;
+  --text-white: #ffffff;
+
+  --color-forest: #0f766e; /* Deep forest teal */
+  --color-forest-hover: #115e59;
+  --color-gold: #b45309;   /* Earthy gold/amber */
+  --color-gold-hover: #92400e;
+  
+  --border-color: rgba(0, 0, 0, 0.08);
+  --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --border-radius-btn: 4px;   /* Flat, sharp or subtly rounded corners for buttons/inputs */
+  --border-radius-card: 8px;  /* Softer border-radius for cards and imagery blocks */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  color: var(--text-primary);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+}
+
+p {
+  color: var(--text-muted);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Container */
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Premium Layout Panels */
+.card-panel {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--glass-shadow);
+}
+
+.olive-panel {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-card);
+}
+
+/* Buttons: Flat, minimalist design with sharp/subtly rounded corners */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 26px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--border-radius-btn);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  gap: 8px;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.btn-primary {
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.btn-primary:hover {
+  background-color: #222222;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  transform: translateY(-1px);
+}
+
+.btn-accent {
+  background-color: var(--color-forest);
+  color: var(--bg-primary);
+}
+
+.btn-accent:hover {
+  background-color: var(--color-forest-hover);
+  transform: translateY(-1px);
+}
+
+/* Minimalist Form Elements: Simple bottom underlines instead of boxes */
+.input-underlined {
+  border: none !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  padding: 10px 0 !important;
+  color: var(--text-primary) !important;
+  outline: none !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.98rem !important;
+  width: 100% !important;
+  transition: var(--transition-smooth) !important;
+}
+
+.input-underlined:focus {
+  border-bottom-color: var(--color-forest) !important;
+}
+
+.input-underlined::placeholder {
+  color: #a0aec0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-section {
+  animation: fadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
