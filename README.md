@@ -2,6 +2,8 @@
 
 A modern, highly interactive web application for the **NEASW Welfare Foundation**, built using a decoupled architecture: a premium Vite + React frontend powered by a FastAPI + SQLite backend.
 
+> 📘 **Technical Documentation:** For a detailed breakdown of the frontend, backend, database models, and deployment configurations, refer to the [Technical Documentation](file:///Users/g10/Sync/deploy_project/ngo/TECHNICAL_DOCUMENTATION.md).
+
 ---
 
 ## 🏗️ Architecture & Tech Stack
@@ -108,3 +110,11 @@ To quickly deploy the FastAPI backend on Railway:
 4. Add a variable in Railway settings:
    - **Root Directory**: `backend` (this builds and executes just the backend code).
 5. Railway will read the `requirements.txt` file and boot the app using `uvicorn app.main:app --host 0.0.0.0 --port $PORT` automatically.
+
+---
+
+## 🎨 Recent Enhancements & Design Updates
+
+- **Homepage Hero Banner:** Swapped the legacy banner with a fresh high-resolution banner [home_banner.png](file:///Users/g10/Sync/deploy_project/ngo/frontend/src/assets/home/home_banner.png).
+- **Impact Section Illustration:** Updated the central impact illustration [impact.png](file:///Users/g10/Sync/deploy_project/ngo/frontend/src/assets/home/impact.png) to separate general impact branding from the user portraits.
+- **Upgraded Partners Grid:** Added four high-quality partner logos (`Assam_rifles.png`, `Home_Affairs.png`, `NE_doner.png`, `science_techno.png`) and updated the layout of the homepage strip. Added smooth lifting micro-animations and grayscale-to-color hover transitions for a modern, interactive look.

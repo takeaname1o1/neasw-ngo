@@ -3,16 +3,21 @@ import { ChevronRight } from 'lucide-react';
 import { ConversionBlock } from '../components/ConversionBlock';
 
 // Import high-quality local assets
-import homeHeroBg from '../assets/home_top_banner.png'; 
+import homeHeroBg from '../assets/home/home_banner.png'; 
 import impactPortrait from '../assets/intro_portrait.png';
+import impactHome from '../assets/home/impact.png';
 import introGroupLeader from '../assets/intro_group_leader.png';
 import introStage from '../assets/intro_stage.png';
+import unityUtsavBanner from '../assets/UnityUtsav/bannerUU.png';
 import introChildrenClassroom from '../assets/intro_children_classroom.png';
+import educationalSupportImg from '../assets/programs/EducationalSupport.png';
 import contact1 from '../assets/contact1.png';
 import contact2 from '../assets/contact2.png';
 import contact3 from '../assets/contact3.png';
-import assamRiflesLogo from '../assets/assam_rifles_logo.png';
-import mhaLogo from '../assets/mha_logo.png';
+import assamRiflesLogo from '../assets/partner/Assam_rifles.png';
+import homeAffairsLogo from '../assets/partner/Home_Affairs.png';
+import neDonerLogo from '../assets/partner/NE_doner.png';
+import scienceTechnoLogo from '../assets/partner/science_techno.png';
 
 interface HomeProps {
   setCurrentPage: (page: string) => void;
@@ -110,7 +115,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <h3 style={{ fontSize: '1.45rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)', lineHeight: 1.3 }}>Empowering Communities, Creating Lasting Change</h3>
             <p style={{ color: 'var(--text-muted)', lineHeight: 1.6, margin: 0, fontSize: '1.05rem' }}>
-              At NEASW Welfare Foundation, we are committed to uplifting the regions of the Northeast people through sustainable social initiatives.
+              NEASW works with students. youth leaders, communities and institutions to promote education, cultural preservation, social welfare and national integration.
             </p>
             <button 
               onClick={() => {
@@ -131,14 +136,14 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
               onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
             >
-              Read More
+              About Us
             </button>
           </div>
           
           {/* Center Image */}
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <img 
-              src={impactPortrait} 
+              src={impactHome} 
               alt="Impact" 
               style={{ 
                 width: '100%', 
@@ -154,26 +159,104 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           {/* Right Stats/Features */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
             <div>
-              <h4 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px', color: 'var(--text-primary)' }}>50+ Members</h4>
-              <p style={{ fontSize: '0.925rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>A strong network of volunteers dedicated to grassroots development.</p>
+              <h4 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px', color: 'var(--text-primary)' }}>Youth Leadership</h4>
+              <p style={{ fontSize: '0.925rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>Empowering young people through sports, cultural exchange, leadership programs, and skill development opportunities.</p>
             </div>
             <div>
-              <h4 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px', color: 'var(--text-primary)' }}>Cultural Awareness</h4>
-              <p style={{ fontSize: '0.925rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>Preserving and promoting the rich heritage of Northeast India.</p>
+              <h4 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px', color: 'var(--text-primary)' }}>Relief & Humanitarian Support</h4>
+              <p style={{ fontSize: '0.925rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>Providing timely assistance during emergencies and supporting vulnerable communities with essential resources.</p>
             </div>
             <div>
-              <h4 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px', color: 'var(--text-primary)' }}>Annual Revenue</h4>
-              <p style={{ fontSize: '0.925rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>Transparent fund allocation for community welfare programs.</p>
+              <h4 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px', color: 'var(--text-primary)' }}>Cultural Preservation</h4>
+              <p style={{ fontSize: '0.925rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>Promoting and celebrating the rich traditions, languages, and heritage of Northeast India through events and exchanges.</p>
             </div>
           </div>
         </div>
 
         {/* Partners Strip */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-color)', paddingTop: '40px', flexWrap: 'wrap', gap: '24px' }}>
-          <span style={{ fontWeight: 700, textTransform: 'uppercase', fontSize: '0.85rem', color: 'var(--text-muted)', letterSpacing: '0.08em' }}>Our Partners</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '40px', flexWrap: 'wrap' }}>
-            <img src={assamRiflesLogo} alt="Assam Rifles" style={{ height: '40px', objectFit: 'contain', filter: 'grayscale(100%) opacity(40%)' }} />
-            <img src={mhaLogo} alt="MHA" style={{ height: '40px', objectFit: 'contain', filter: 'grayscale(100%) opacity(40%)' }} />
+        <div style={{ 
+          borderTop: '1px solid var(--border-color)', 
+          paddingTop: '60px', 
+          marginTop: '45px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '35px',
+          alignItems: 'center' 
+        }}>
+          <span style={{ 
+            fontWeight: 700, 
+            textTransform: 'uppercase', 
+            fontSize: '0.8rem', 
+            color: 'var(--text-muted)', 
+            letterSpacing: '0.12em',
+            position: 'relative',
+            display: 'inline-block',
+            paddingBottom: '10px',
+            margin: 0
+          }}>
+            Our Partners
+            <span style={{
+              position: 'absolute',
+              bottom: 0,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '24px',
+              height: '2px',
+              backgroundColor: '#000000',
+              borderRadius: '2px'
+            }}></span>
+          </span>
+          
+          <div 
+            className="partner-logo-grid"
+            style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              gap: '24px', 
+              width: '100%',
+              maxWidth: '1200px',
+              boxSizing: 'border-box'
+            }}
+          >
+            {[
+              { logo: assamRiflesLogo, alt: "Assam Rifles" },
+              { logo: homeAffairsLogo, alt: "Ministry of Home Affairs" },
+              { logo: neDonerLogo, alt: "Ministry of Development of North Eastern Region" },
+              { logo: scienceTechnoLogo, alt: "Department of Science & Technology" }
+            ].map((partner, index) => (
+              <div 
+                key={index}
+                className="partner-logo-card"
+                style={{
+                  background: '#ffffff',
+                  border: '1px solid rgba(0, 0, 0, 0.06)',
+                  borderRadius: '16px',
+                  padding: '20px 32px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100px',
+                  flex: '1 1 0px',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.015)',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'pointer',
+                  boxSizing: 'border-box'
+                }}
+              >
+                <img 
+                  src={partner.logo} 
+                  alt={partner.alt} 
+                  style={{ 
+                    maxHeight: '100%', 
+                    maxWidth: '100%', 
+                    objectFit: 'contain', 
+                    filter: 'grayscale(100%) opacity(50%)',
+                    transition: 'all 0.3s ease',
+                  }} 
+                />
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -190,7 +273,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <div style={{ textAlign: 'left' }}>
             <h2 style={{ fontSize: '2.8rem', fontFamily: 'var(--font-title)', marginBottom: '20px', fontWeight: 500, color: '#ffffff' }}>Meet Our Leadership</h2>
             <p style={{ color: '#a0aec0', lineHeight: 1.6, marginBottom: '30px', fontSize: '1.05rem' }}>
-              Meet the dedicated individuals who drive our mission forward and inspire change across communities.
+              Guided by a passionate team committed to building a stronger, united and empowered Northeast.
             </p>
             <button 
               onClick={() => {
@@ -210,7 +293,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
               onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
             >
-              Join Us
+              View All
             </button>
           </div>
         </div>
@@ -220,7 +303,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       <section style={{ padding: '90px 0', overflow: 'hidden' }}>
         <div className="container" style={{ marginBottom: '50px', textAlign: 'center' }}>
           <h2 style={{ fontSize: '3rem', fontFamily: 'var(--font-title)', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '8px' }}>Our Flagship Initiatives</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', margin: 0 }}>Discover programs that create tangible differences across communities.</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', margin: 0 }}>Major platforms that bring youth together, colobrate culture and drive national integration.</p>
         </div>
         
         {/* Carousel Mockup */}
@@ -229,9 +312,12 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             <img src={contact2} alt="Initiative Left" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <div style={{ flexShrink: 0, width: '55%', height: '380px', borderRadius: '16px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '24px' }}>
-             <img src={introStage} alt="Initiative Center" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }} />
+             <img src={unityUtsavBanner} alt="Initiative Center" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }} />
              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(transparent, rgba(0,0,0,0.6))', zIndex: 2 }}></div>
-             <h3 style={{ fontSize: '1.65rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: '#ffffff', zIndex: 3, margin: 0 }}>Unity Chorus</h3>
+             <div style={{ zIndex: 3, display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
+               <h3 style={{ fontSize: '1.85rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: '#ffffff', margin: 0 }}>Unity Utsav</h3>
+               <p style={{ fontSize: '0.98rem', color: '#e2e8f0', margin: 0, lineHeight: 1.45, fontWeight: 400 }}>The largest student cultural and sports festival for Northeasterns in Delhi.</p>
+             </div>
           </div>
           <div style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3 }}>
             <img src={introChildrenClassroom} alt="Initiative Right" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -249,10 +335,10 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
         <div className="home-programs-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
           {/* Program Card 1 */}
           <div style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
-            <img src={introChildrenClassroom} alt="Educational Support" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
+            <img src={educationalSupportImg} alt="Educational Support" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Educational Support</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Providing scholarships and resources to underprivileged students.</p>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Scholarships, learning resources, digital literacy initiatives, and guidance for students from underserved communities.</p>
               <a 
                 href="#learn" 
                 onClick={(e) => {
@@ -291,8 +377,8 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <div style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
             <img src={introStage} alt="Relief Operations" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Relief Operations</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Crisis logistics coordinate distribution of essential aid.</p>
+              <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Relief & Humanitarian Aid</h4>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Providing emergency assistance, relief materials, and support to communities affected by disasters and crises.</p>
               <a 
                 href="#learn" 
                 onClick={(e) => {
@@ -448,6 +534,30 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
 
       {/* Responsive Styles Injection */}
       <style>{`
+        .partner-logo-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06) !important;
+          border-color: rgba(0, 0, 0, 0.12) !important;
+        }
+        .partner-logo-card:hover img {
+          filter: grayscale(0%) opacity(100%) !important;
+        }
+        @media (max-width: 992px) {
+          .partner-logo-grid {
+            flex-wrap: wrap !important;
+          }
+          .partner-logo-card {
+            flex: 1 1 calc(50% - 12px) !important;
+            min-width: 180px !important;
+            height: 90px !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .partner-logo-card {
+            flex: 1 1 100% !important;
+            height: 80px !important;
+          }
+        }
         @media (min-width: 992px) {
           .home-impact-grid {
             grid-template-columns: 1.1fr 0.9fr 1.1fr !important;
