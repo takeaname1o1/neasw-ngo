@@ -7,10 +7,10 @@ import homeHeroBg from '../assets/home/home_banner.png';
 import impactPortrait from '../assets/intro_portrait.png';
 import impactHome from '../assets/home/impact.png';
 import introGroupLeader from '../assets/intro_group_leader.png';
-import introStage from '../assets/intro_stage.png';
 import unityUtsavBanner from '../assets/UnityUtsav/bannerUU.png';
 import introChildrenClassroom from '../assets/intro_children_classroom.png';
 import educationalSupportImg from '../assets/programs/EducationalSupport.png';
+import reliefAidImg from '../assets/programs/ReliefHumanitarianAid.png';
 import contact1 from '../assets/contact1.png';
 import contact2 from '../assets/contact2.png';
 import contact3 from '../assets/contact3.png';
@@ -357,8 +357,8 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <div style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
             <img src={contact3} alt="Artisanal Markets" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Artisanal Markets</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Empowering local craftsmen by providing platforms for their goods.</p>
+              <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Northeast Tourism</h4>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Promoting the natural beauty. culture, and hidden gems of Northeast India. Discover destinations, experiences, and responsible tourism opportunities.</p>
               <a 
                 href="#learn" 
                 onClick={(e) => {
@@ -375,7 +375,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
 
           {/* Program Card 3 */}
           <div style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
-            <img src={introStage} alt="Relief Operations" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
+            <img src={reliefAidImg} alt="Relief Operations" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Relief & Humanitarian Aid</h4>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Providing emergency assistance, relief materials, and support to communities affected by disasters and crises.</p>
