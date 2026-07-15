@@ -11,9 +11,9 @@ import unityUtsavBanner from '../assets/UnityUtsav/bannerUU.png';
 import introChildrenClassroom from '../assets/intro_children_classroom.png';
 import educationalSupportImg from '../assets/programs/EducationalSupport.png';
 import reliefAidImg from '../assets/programs/ReliefHumanitarianAid.png';
+import northeastTourismImg from '../assets/programs/NortheastTourism.png';
 import contact1 from '../assets/contact1.png';
 import contact2 from '../assets/contact2.png';
-import contact3 from '../assets/contact3.png';
 import assamRiflesLogo from '../assets/partner/Assam_rifles.png';
 import homeAffairsLogo from '../assets/partner/Home_Affairs.png';
 import neDonerLogo from '../assets/partner/NE_doner.png';
@@ -355,7 +355,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           
           {/* Program Card 2 */}
           <div style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
-            <img src={contact3} alt="Artisanal Markets" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
+            <img src={northeastTourismImg} alt="Northeast Tourism" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Northeast Tourism</h4>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Promoting the natural beauty. culture, and hidden gems of Northeast India. Discover destinations, experiences, and responsible tourism opportunities.</p>
@@ -397,7 +397,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <div style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
             <img src={contact2} alt="Eco-Tourism homestays" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Eco-Tourism Homestays</h4>
+              <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Local Products</h4>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Promoting community homestays and regional eco circuits.</p>
               <a 
                 href="#learn" 
