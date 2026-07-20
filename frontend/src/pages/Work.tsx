@@ -32,6 +32,11 @@ import rha1 from '../assets/RHA/1.png';
 import rha2 from '../assets/RHA/2.png';
 import rha3 from '../assets/RHA/3.png';
 
+// NT Assets
+import nt1 from '../assets/NT/1.png';
+import nt2 from '../assets/NT/2.png';
+import nt3 from '../assets/NT/3.png';
+
 interface WorkProps {
   setCurrentPage: (page: string) => void;
 }
@@ -80,9 +85,9 @@ export const Work: React.FC<WorkProps> = ({ setCurrentPage }) => {
       theme: "light",
       imagePos: "left",
       images: [
-        contact2,
-        contact1,
-        home_top_banner
+        nt1,
+        nt2,
+        nt3
       ],
       collageType: "vertical"
     },
