@@ -10,6 +10,14 @@ import offerConnect from '../assets/offer_connect.png';
 import offerTransform from '../assets/offer_transform.png';
 import { ConversionBlock } from '../components/ConversionBlock';
 
+// Delhi Chapter Leadership Images
+import pratikPresident from '../assets/delhi_chapter/Pratik Thaomung_Delhi chapter_President.jpeg';
+import lanchenbiVP from '../assets/delhi_chapter/Lanchenbi Urungpurel_Delhi chapter_VP.jpeg';
+import boazLepcha from '../assets/delhi_chapter/BOAZ Lepcha_Delhi chapter.jpeg';
+import michiSheela from '../assets/delhi_chapter/Michi Sheela_Delhi chapter.jpeg';
+import pemaKhandu from '../assets/delhi_chapter/Pema Khandu Thungon_Delhi chapter.jpeg';
+import tashiChotton from '../assets/delhi_chapter/Tashi Chotton_Delhi chapter.jpeg';
+
 interface AboutProps {
   setCurrentPage: (page: string) => void;
 }
@@ -243,10 +251,12 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
               {
                 title: "Delhi Chapter",
                 members: [
-                  { name: "Joyson Mazumdar", role: "President", image: introPortrait },
-                  { name: "Ningthem Meitei", role: "Vice President", image: introGroupLeader },
-                  { name: "Alila Sangma", role: "General Secretary", image: introChildrenClassroom },
-                  { name: "Kethosezo Angami", role: "Treasurer", image: introStage }
+                  { name: "Pratik Thaomung", role: "President", image: pratikPresident },
+                  { name: "Lanchenbi Urungpurel", role: "Vice President", image: lanchenbiVP },
+                  { name: "Michi Sheela", role: "Secretary", image: michiSheela },
+                  { name: "Boaz Lepcha", role: "Joint Secretary", image: boazLepcha },
+                  { name: "Pema Khandu Thungon", role: "Treasurer", image: pemaKhandu },
+                  { name: "Tashi Chotton", role: "Coordinator", image: tashiChotton }
                 ]
               },
               {
