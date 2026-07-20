@@ -200,7 +200,178 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
         </div>
       </section>
 
-      {/* 4. Conversion Banner (Dark) */}
+      {/* 4. Meet Our Leadership */}
+      <section style={{ backgroundColor: '#F5F5F5', padding: '100px 24px' }}>
+        <div className="container">
+          {/* Header */}
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'flex-start', 
+            flexWrap: 'wrap', 
+            gap: '30px', 
+            marginBottom: '80px' 
+          }}>
+            <h2 style={{ 
+              fontSize: 'clamp(2.5rem, 5vw, 4rem)', 
+              fontFamily: 'var(--font-title)', 
+              fontWeight: 400, 
+              color: '#000000', 
+              margin: 0, 
+              maxWidth: '450px', 
+              lineHeight: 1.15,
+              textAlign: 'left'
+            }}>
+              Meet Our Leadership
+            </h2>
+            <p style={{ 
+              fontSize: '1.25rem', 
+              color: '#404040', 
+              maxWidth: '560px', 
+              margin: 0, 
+              lineHeight: 1.45,
+              textAlign: 'left',
+              fontFamily: 'var(--font-body)'
+            }}>
+              Guided by a passionate team committed to building a stronger, united and empowered Northeast.
+            </p>
+          </div>
+
+          {/* Chapters and Leadership Grid */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '80px' }}>
+            {[
+              {
+                title: "Delhi Chapter",
+                members: [
+                  { name: "Joyson Mazumdar", role: "President", image: introPortrait },
+                  { name: "Ningthem Meitei", role: "Vice President", image: introGroupLeader },
+                  { name: "Alila Sangma", role: "General Secretary", image: introChildrenClassroom },
+                  { name: "Kethosezo Angami", role: "Treasurer", image: introStage }
+                ]
+              },
+              {
+                title: "Nagaland Chapter",
+                members: [
+                  { name: "Zuboni Humtsoe", role: "Chapter Head", image: introPortrait },
+                  { name: "Imotemjen Longkumer", role: "Secretary", image: introGroupLeader },
+                  { name: "Vezosa Yietsu", role: "Coordinator", image: introChildrenClassroom },
+                  { name: "Sentila Ao", role: "Advisor", image: introStage }
+                ]
+              },
+              {
+                title: "Manipur Chapter",
+                members: [
+                  { name: "Thanglenmang Haokip", role: "Chapter Head", image: introPortrait },
+                  { name: "Nganba Singh", role: "Joint Secretary", image: introGroupLeader },
+                  { name: "Hoinu Kipgen", role: "Treasurer", image: introChildrenClassroom },
+                  { name: "RK Sanayaima", role: "Executive Member", image: introStage }
+                ]
+              },
+              {
+                title: "Arunachal Pradesh Chapter",
+                members: [
+                  { name: "Tasso Robin", role: "Chapter Head", image: introPortrait },
+                  { name: "Likha Taji", role: "Secretary", image: introGroupLeader },
+                  { name: "Yomge Riba", role: "Coordinator", image: introChildrenClassroom },
+                  { name: "Koj Tari", role: "Executive Member", image: introStage }
+                ]
+              }
+            ].map((chapter, idx) => (
+              <div key={idx} style={{ textAlign: 'left' }}>
+                <h3 style={{ 
+                  fontSize: '2rem', 
+                  fontWeight: 500, 
+                  fontFamily: 'var(--font-body)', 
+                  color: '#000000', 
+                  marginBottom: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  {chapter.title} <span style={{ fontWeight: 300 }}>→</span>
+                </h3>
+                
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', 
+                  gap: '40px 30px' 
+                }}>
+                  {chapter.members.map((member, mIdx) => (
+                    <div key={mIdx} style={{ 
+                      position: 'relative', 
+                      width: '100%', 
+                      maxWidth: '283px', 
+                      margin: '0 auto', 
+                      height: '426px' 
+                    }}>
+                      {/* Card Backplate */}
+                      <div style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: '318px',
+                        backgroundColor: '#ffffff',
+                        borderRadius: '45px',
+                        zIndex: 1
+                      }} />
+                      
+                      {/* Image on Top */}
+                      <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: '318px',
+                        borderRadius: '18px',
+                        overflow: 'hidden',
+                        zIndex: 2,
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.06)'
+                      }}>
+                        <img src={member.image} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      </div>
+                      
+                      {/* Text details inside the backplate */}
+                      <div style={{
+                        position: 'absolute',
+                        bottom: '24px',
+                        left: '24px',
+                        right: '24px',
+                        zIndex: 3,
+                        textAlign: 'left'
+                      }}>
+                        <span style={{ 
+                          display: 'block', 
+                          fontSize: '14px', 
+                          color: '#555555', 
+                          fontFamily: 'var(--font-body)', 
+                          marginBottom: '4px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em'
+                        }}>
+                          {member.role}
+                        </span>
+                        <h4 style={{ 
+                          fontSize: '22px', 
+                          fontFamily: 'var(--font-title)', 
+                          color: '#000000', 
+                          margin: 0, 
+                          fontWeight: 500, 
+                          lineHeight: 1.25 
+                        }}>
+                          {member.name}
+                        </h4>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Conversion Banner (Dark) */}
       <ConversionBlock setCurrentPage={setCurrentPage} />
 
       {/* Responsive Styles Injection */}

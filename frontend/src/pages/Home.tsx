@@ -14,10 +14,12 @@ import reliefAidImg from '../assets/programs/ReliefHumanitarianAid.png';
 import northeastTourismImg from '../assets/programs/NortheastTourism.png';
 import contact1 from '../assets/contact1.png';
 import contact2 from '../assets/contact2.png';
+import LocalProducts from '../assets/programs/LocalProducts.png';
 import assamRiflesLogo from '../assets/partner/Assam_rifles.png';
 import homeAffairsLogo from '../assets/partner/Home_Affairs.png';
 import neDonerLogo from '../assets/partner/NE_doner.png';
 import scienceTechnoLogo from '../assets/partner/science_techno.png';
+import storiesOfChangeImg from '../assets/UnityUtsav/stoories_of_chnage.png';
 
 interface HomeProps {
   setCurrentPage: (page: string) => void;
@@ -398,7 +400,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             <img src={contact2} alt="Eco-Tourism homestays" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Local Products</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Promoting community homestays and regional eco circuits.</p>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Supporting local farmers and communities by offering pure, natural, and organic products made in the Northeast.</p>
               <a 
                 href="#learn" 
                 onClick={(e) => {
@@ -439,21 +441,120 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       </section>
 
       {/* 6. Stories of Change (Testimonials) */}
-      <section style={{ backgroundColor: '#0a0d14', color: '#ffffff', padding: '90px 24px' }}>
+      <section style={{ backgroundColor: '#000000', color: '#ffffff', padding: '90px 24px' }}>
         <div className="container">
-          <h2 style={{ fontSize: '3rem', fontFamily: 'var(--font-title)', fontWeight: 500, color: '#ffffff', marginBottom: '40px', textAlign: 'center' }}>Stories of Change</h2>
+          {/* Header Layout */}
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'flex-end', 
+            marginBottom: '48px', 
+            flexWrap: 'wrap', 
+            gap: '24px' 
+          }}>
+            <h2 style={{ 
+              fontSize: 'clamp(2.5rem, 5vw, 4rem)', 
+              fontFamily: 'var(--font-title)', 
+              fontWeight: 400, 
+              color: '#ffffff', 
+              margin: 0,
+              lineHeight: 1.1
+            }}>
+              Stories of Change
+            </h2>
+            <p style={{ 
+              color: '#8a92a6', 
+              fontSize: '1.05rem', 
+              maxWidth: '320px', 
+              lineHeight: 1.45, 
+              margin: 0, 
+              textAlign: 'left' 
+            }}>
+              Real stories from real people whose lives have been touched by NEASW Welfare Foundation.
+            </p>
+          </div>
           
-          <div className="home-testimonial-card" style={{ background: '#f8f9fa', color: '#000000', borderRadius: '24px', padding: '50px 40px', display: 'flex', gap: '40px', alignItems: 'center', textAlign: 'left' }}>
-            <img src={contact1} alt="Testimonial Profile" style={{ width: '260px', height: '260px', objectFit: 'cover', borderRadius: '16px', flexShrink: 0 }} />
-            <div>
-              <p style={{ fontSize: '1.45rem', fontWeight: 500, lineHeight: 1.4, marginBottom: '24px', fontFamily: 'var(--font-title)', color: '#000000' }}>
-                "Every effort helped me connect with fellow students from across the Northeast, and that changed my view of unity."
+          {/* Main Card with Background Image */}
+          <div style={{ 
+            position: 'relative',
+            backgroundImage: `url(${storiesOfChangeImg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            borderRadius: '32px',
+            minHeight: '520px',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            padding: '40px',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)'
+          }} className="stories-banner-card">
+            
+            {/* White Testimonial Card Overlay */}
+            <div style={{ 
+              background: '#ffffff', 
+              color: '#000000', 
+              borderRadius: '24px', 
+              padding: '40px 48px', 
+              maxWidth: '540px',
+              width: '100%',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+              textAlign: 'left',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '24px'
+            }}>
+              <p style={{ 
+                fontSize: '1.6rem', 
+                fontWeight: 500, 
+                lineHeight: 1.4, 
+                margin: 0, 
+                color: '#000000',
+                fontFamily: 'var(--font-body)'
+              }}>
+                “Unity Utsav helped me connect with fellow students from across the Northeast and strengthened my sense of identity.”
               </p>
               <div>
-                <strong style={{ display: 'block', fontSize: '1.1rem', color: '#000000' }}>R. B. Sangma</strong>
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 600 }}>Volunteer | 2022 Batch</span>
+                <span style={{ 
+                  display: 'block', 
+                  fontSize: '1.2rem', 
+                  color: '#718096',
+                  marginBottom: '6px'
+                }}>
+                  - Lhingneihoi Chongloi
+                </span>
+                <span style={{ 
+                  color: '#a0aec0', 
+                  fontSize: '0.95rem', 
+                  fontWeight: 500 
+                }}>
+                  Participant &nbsp;|&nbsp; Unity Utsav
+                </span>
               </div>
             </div>
+          </div>
+
+          {/* View All Button */}
+          <div style={{ textAlign: 'center', marginTop: '40px' }}>
+            <button 
+              onClick={() => {
+                setCurrentPage('work');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              style={{ 
+                padding: '12px 36px', 
+                background: '#ffffff', 
+                color: '#000000', 
+                borderRadius: '30px', 
+                border: 'none', 
+                cursor: 'pointer',
+                fontWeight: 600,
+                transition: 'opacity 0.2s',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
+              onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+            >
+              View All
+            </button>
           </div>
         </div>
       </section>
