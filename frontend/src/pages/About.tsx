@@ -15,6 +15,14 @@ import wwo1 from '../assets/WWO/1.png';
 import wwo2 from '../assets/WWO/2.png';
 import wwo3 from '../assets/WWO/3.png';
 
+// OS Collage Assets
+import os1 from '../assets/OS/1.jpg';
+import os2 from '../assets/OS/2.jpg';
+import os3 from '../assets/OS/3.png';
+import os4 from '../assets/OS/4.png';
+import os5 from '../assets/OS/5.png';
+import os6 from '../assets/OS/6.png';
+
 // Delhi Chapter Leadership Images
 import pratikPresident from '../assets/delhi_chapter/Pratik Thaomung_Delhi chapter_President.jpeg';
 import lanchenbiVP from '../assets/delhi_chapter/Lanchenbi Urungpurel_Delhi chapter_VP.jpeg';
@@ -60,58 +68,113 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
 
       {/* 2. Intro Collage Grid */}
       <section className="container" style={{ padding: '90px 24px' }}>
-        <div className="intro-collage-layout" style={{
+        {/* Intro text spanning the top-left */}
+        <div style={{ textAlign: 'left', marginBottom: '60px', maxWidth: '562px' }}>
+          <p style={{
+            fontSize: '32px',
+            lineHeight: '38px',
+            color: '#000000',
+            fontWeight: 500,
+            fontFamily: 'var(--font-body)',
+            margin: 0
+          }}>
+            At NEASW Welfare Foundation, we are committed to empowering communities, preserving cultural heritage, and creating opportunities for youth through meaningful social initiatives.
+          </p>
+        </div>
+
+        {/* 4-Column Collage Layout */}
+        <div style={{
           display: 'grid',
-          gridTemplateColumns: '1fr',
-          gap: '50px',
-          alignItems: 'start',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '24px',
+          alignItems: 'start'
         }}>
-          {/* Left Text & Portrait column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', textAlign: 'left' }}>
-            <p style={{
-              fontSize: '1.45rem',
-              lineHeight: 1.5,
-              color: 'var(--text-primary)',
-              fontWeight: 500,
-              fontFamily: 'var(--font-body)',
-              letterSpacing: '-0.015em',
-            }}>
-              At NEASW Welfare Foundation, we are committed to empowering communities, preserving cultural heritage, and creating opportunities for youth through meaningful social initiatives.
-            </p>
+          {/* Column 1 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingTop: '40px' }}>
             <img 
-              src={introPortrait} 
-              alt="Volunteer Portrait" 
-              style={{ 
-                width: '100%', 
-                borderRadius: 'var(--border-radius-card)', 
-                objectFit: 'cover', 
-                height: '420px',
-                border: '1px solid var(--border-color)' 
+              src={os1} 
+              alt="Youth member portrait" 
+              style={{
+                width: '100%',
+                maxWidth: '293px',
+                height: '352px',
+                objectFit: 'cover',
+                borderRadius: '12px',
+                boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
               }} 
             />
           </div>
 
-          {/* Right Collage column: 3 columns of varying heights */}
-          <div className="collage-container" style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: '16px',
-            alignItems: 'start',
-          }}>
-            {/* Collage Column 1 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <img src={introGroupSchool} alt="Traditional Dress Group" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '220px', objectFit: 'cover' }} />
-              <img src={introGroupSchool} alt="School Group" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '160px', objectFit: 'cover' }} />
-            </div>
-            {/* Collage Column 2 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <img src={introGroupLeader} alt="Group Leader" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '320px', objectFit: 'cover' }} />
-              <img src={introStage} alt="Stage Performance" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '170px', objectFit: 'cover' }} />
-            </div>
-            {/* Collage Column 3 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <img src={introChildrenClassroom} alt="Children in Classroom" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '320px', objectFit: 'cover' }} />
-            </div>
+          {/* Column 2 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingTop: '20px' }}>
+            <img 
+              src={os2} 
+              alt="Members in traditional attire" 
+              style={{
+                width: '100%',
+                maxWidth: '288px',
+                height: '258px',
+                objectFit: 'cover',
+                borderRadius: '12px',
+                boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
+              }} 
+            />
+            <img 
+              src={os5} 
+              alt="Community group photo" 
+              style={{
+                width: '100%',
+                maxWidth: '387px',
+                height: '261px',
+                objectFit: 'cover',
+                borderRadius: '12px',
+                boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
+              }} 
+            />
+          </div>
+
+          {/* Column 3 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <img 
+              src={os3} 
+              alt="Shawl presentation ceremony" 
+              style={{
+                width: '100%',
+                maxWidth: '302px',
+                height: '423px',
+                objectFit: 'cover',
+                borderRadius: '12px',
+                boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
+              }} 
+            />
+            <img 
+              src={os6} 
+              alt="Stage gathering" 
+              style={{
+                width: '100%',
+                maxWidth: '290px',
+                height: '211px',
+                objectFit: 'cover',
+                borderRadius: '12px',
+                boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
+              }} 
+            />
+          </div>
+
+          {/* Column 4 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingTop: '30px' }}>
+            <img 
+              src={os4} 
+              alt="Children studying in classroom" 
+              style={{
+                width: '100%',
+                maxWidth: '262px',
+                height: '309px',
+                objectFit: 'cover',
+                borderRadius: '12px',
+                boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
+              }} 
+            />
           </div>
         </div>
       </section>
