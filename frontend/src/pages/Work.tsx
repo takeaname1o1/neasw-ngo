@@ -22,6 +22,11 @@ import eye1 from '../assets/EYE/1.png';
 import eye2 from '../assets/EYE/2.png';
 import eye3 from '../assets/EYE/3.png';
 
+// CWS Assets
+import cws1 from '../assets/CWS/1.png';
+import cws2 from '../assets/CWS/2.png';
+import cws3 from '../assets/CWS/3.png';
+
 interface WorkProps {
   setCurrentPage: (page: string) => void;
 }
@@ -46,9 +51,9 @@ export const Work: React.FC<WorkProps> = ({ setCurrentPage }) => {
       theme: "light",
       imagePos: "left",
       images: [
-        intro_portrait,
-        offer_connect,
-        offer_empower
+        cws1,
+        cws2,
+        cws3
       ],
       collageType: "vertical"
     },
