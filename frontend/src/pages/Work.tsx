@@ -16,6 +16,8 @@ import contact3 from '../assets/contact3.png';
 import assam_rifles_logo from '../assets/assam_rifles_logo.png';
 import mha_logo from '../assets/mha_logo.png';
 import home_top_banner from '../assets/home_top_banner.png';
+
+// EYE Assets
 import eye1 from '../assets/EYE/1.png';
 import eye2 from '../assets/EYE/2.png';
 import eye3 from '../assets/EYE/3.png';
@@ -32,9 +34,9 @@ export const Work: React.FC<WorkProps> = ({ setCurrentPage }) => {
       theme: "dark",
       imagePos: "right",
       images: [
-        intro_children_classroom,
-        intro_group_school,
-        intro_group_leader
+        eye1,
+        eye2,
+        eye3
       ],
       collageType: "horizontal"
     },
@@ -56,9 +58,9 @@ export const Work: React.FC<WorkProps> = ({ setCurrentPage }) => {
       theme: "dark",
       imagePos: "right",
       images: [
-        eye1,
-        eye2,
-        eye3
+        intro_stage,
+        assam_rifles_logo,
+        mha_logo
       ],
       collageType: "horizontal"
     },
