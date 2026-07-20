@@ -397,7 +397,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
 
           {/* Program Card 4 */}
           <div style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
-            <img src={contact2} alt="Eco-Tourism homestays" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
+            <img src={LocalProducts} alt="Local Products" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Local Products</h4>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Supporting local farmers and communities by offering pure, natural, and organic products made in the Northeast.</p>
