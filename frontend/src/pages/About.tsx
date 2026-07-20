@@ -94,13 +94,12 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
             <img 
               src={os1} 
               alt="Youth member portrait" 
+              className="collage-image"
               style={{
                 width: '100%',
                 maxWidth: '293px',
                 height: '352px',
-                objectFit: 'cover',
-                borderRadius: '12px',
-                boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
+                objectFit: 'cover'
               }} 
             />
           </div>
@@ -110,25 +109,23 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
             <img 
               src={os2} 
               alt="Members in traditional attire" 
+              className="collage-image"
               style={{
                 width: '100%',
                 maxWidth: '288px',
                 height: '258px',
-                objectFit: 'cover',
-                borderRadius: '12px',
-                boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
+                objectFit: 'cover'
               }} 
             />
             <img 
               src={os5} 
               alt="Community group photo" 
+              className="collage-image"
               style={{
                 width: '100%',
                 maxWidth: '387px',
                 height: '261px',
-                objectFit: 'cover',
-                borderRadius: '12px',
-                boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
+                objectFit: 'cover'
               }} 
             />
           </div>
@@ -138,25 +135,23 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
             <img 
               src={os3} 
               alt="Shawl presentation ceremony" 
+              className="collage-image"
               style={{
                 width: '100%',
                 maxWidth: '302px',
                 height: '423px',
-                objectFit: 'cover',
-                borderRadius: '12px',
-                boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
+                objectFit: 'cover'
               }} 
             />
             <img 
               src={os6} 
               alt="Stage gathering" 
+              className="collage-image"
               style={{
                 width: '100%',
                 maxWidth: '290px',
                 height: '211px',
-                objectFit: 'cover',
-                borderRadius: '12px',
-                boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
+                objectFit: 'cover'
               }} 
             />
           </div>
@@ -166,13 +161,12 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
             <img 
               src={os4} 
               alt="Children studying in classroom" 
+              className="collage-image"
               style={{
                 width: '100%',
                 maxWidth: '262px',
                 height: '309px',
-                objectFit: 'cover',
-                borderRadius: '12px',
-                boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
+                objectFit: 'cover'
               }} 
             />
           </div>
@@ -454,6 +448,17 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
 
       {/* Responsive Styles Injection */}
       <style>{`
+        .collage-image {
+          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+          border-radius: 12px;
+          box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.08);
+          border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .collage-image:hover {
+          transform: translateY(-4px) scale(1.015);
+          box-shadow: 0px 16px 36px rgba(0, 0, 0, 0.16);
+        }
+
         @media (min-width: 992px) {
           .intro-collage-layout {
             grid-template-columns: 1fr 1fr !important;
