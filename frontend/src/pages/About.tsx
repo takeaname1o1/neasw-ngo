@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import homeTopBanner from '../assets/home_top_banner.png';
 import introPortrait from '../assets/intro_portrait.png';
 import introGroupLeader from '../assets/intro_group_leader.png';
@@ -30,6 +30,61 @@ import boazLepcha from '../assets/delhi_chapter/BOAZ Lepcha_Delhi chapter.jpeg';
 import michiSheela from '../assets/delhi_chapter/Michi Sheela_Delhi chapter.jpeg';
 import pemaKhandu from '../assets/delhi_chapter/Pema Khandu Thungon_Delhi chapter.jpeg';
 import tashiChotton from '../assets/delhi_chapter/Tashi Chotton_Delhi chapter.jpeg';
+
+// Helper component for auto-switching images in the 1x3 collage
+const AutoSwitchImage: React.FC<{ img1: string; img2: string; alt: string; height: string }> = ({ img1, img2, alt, height }) => {
+  const [showFirst, setShowFirst] = useState(true);
+
+  useEffect(() => {
+    // Staggered trigger to create a premium, natural feel
+    const interval = setInterval(() => {
+      setShowFirst(prev => !prev);
+    }, 4000 + Math.random() * 1200);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div style={{
+      position: 'relative',
+      width: '100%',
+      height: height,
+      borderRadius: '12px',
+      overflow: 'hidden',
+      boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
+    }}>
+      <img
+        src={img1}
+        alt={alt}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          opacity: showFirst ? 1 : 0,
+          transition: 'opacity 1.2s ease-in-out',
+          zIndex: showFirst ? 2 : 1
+        }}
+      />
+      <img
+        src={img2}
+        alt={alt}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          opacity: showFirst ? 0 : 1,
+          transition: 'opacity 1.2s ease-in-out',
+          zIndex: showFirst ? 1 : 2
+        }}
+      />
+    </div>
+  );
+};
 
 interface AboutProps {
   setCurrentPage: (page: string) => void;
@@ -82,94 +137,36 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
           </p>
         </div>
 
-        {/* 4-Column Collage Layout */}
+        {/* 1x3 Horizontal Grid with Auto-Switching Images */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '24px',
-          alignItems: 'start'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '30px',
+          alignItems: 'center'
         }}>
-          {/* Column 1 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingTop: '40px' }}>
-            <img 
-              src={os1} 
-              alt="Youth member portrait" 
-              className="collage-image"
-              style={{
-                width: '100%',
-                maxWidth: '293px',
-                height: '352px',
-                objectFit: 'cover'
-              }} 
-            />
-          </div>
+          {/* Card 1 */}
+          <AutoSwitchImage 
+            img1={os1} 
+            img2={os4} 
+            alt="Youth empowerment and classroom study" 
+            height="380px" 
+          />
 
-          {/* Column 2 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingTop: '20px' }}>
-            <img 
-              src={os2} 
-              alt="Members in traditional attire" 
-              className="collage-image"
-              style={{
-                width: '100%',
-                maxWidth: '288px',
-                height: '258px',
-                objectFit: 'cover'
-              }} 
-            />
-            <img 
-              src={os5} 
-              alt="Community group photo" 
-              className="collage-image"
-              style={{
-                width: '100%',
-                maxWidth: '387px',
-                height: '261px',
-                objectFit: 'cover'
-              }} 
-            />
-          </div>
+          {/* Card 2 (Taller middle element for premium visual rhythm) */}
+          <AutoSwitchImage 
+            img1={os2} 
+            img2={os5} 
+            alt="Traditional attire and community gathering" 
+            height="440px" 
+          />
 
-          {/* Column 3 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <img 
-              src={os3} 
-              alt="Shawl presentation ceremony" 
-              className="collage-image"
-              style={{
-                width: '100%',
-                maxWidth: '302px',
-                height: '423px',
-                objectFit: 'cover'
-              }} 
-            />
-            <img 
-              src={os6} 
-              alt="Stage gathering" 
-              className="collage-image"
-              style={{
-                width: '100%',
-                maxWidth: '290px',
-                height: '211px',
-                objectFit: 'cover'
-              }} 
-            />
-          </div>
-
-          {/* Column 4 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingTop: '30px' }}>
-            <img 
-              src={os4} 
-              alt="Children studying in classroom" 
-              className="collage-image"
-              style={{
-                width: '100%',
-                maxWidth: '262px',
-                height: '309px',
-                objectFit: 'cover'
-              }} 
-            />
-          </div>
+          {/* Card 3 */}
+          <AutoSwitchImage 
+            img1={os3} 
+            img2={os6} 
+            alt="Shawl presentation and stage ceremony" 
+            height="380px" 
+          />
         </div>
       </section>
 
@@ -448,17 +445,6 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
 
       {/* Responsive Styles Injection */}
       <style>{`
-        .collage-image {
-          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
-          border-radius: 12px;
-          box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.08);
-          border: 1px solid rgba(0, 0, 0, 0.04);
-        }
-        .collage-image:hover {
-          transform: translateY(-4px) scale(1.015);
-          box-shadow: 0px 16px 36px rgba(0, 0, 0, 0.16);
-        }
-
         @media (min-width: 992px) {
           .intro-collage-layout {
             grid-template-columns: 1fr 1fr !important;
