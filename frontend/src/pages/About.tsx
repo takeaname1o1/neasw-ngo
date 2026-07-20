@@ -10,6 +10,11 @@ import offerConnect from '../assets/offer_connect.png';
 import offerTransform from '../assets/offer_transform.png';
 import { ConversionBlock } from '../components/ConversionBlock';
 
+// WWO Assets
+import wwo1 from '../assets/WWO/1.png';
+import wwo2 from '../assets/WWO/2.png';
+import wwo3 from '../assets/WWO/3.png';
+
 // Delhi Chapter Leadership Images
 import pratikPresident from '../assets/delhi_chapter/Pratik Thaomung_Delhi chapter_President.jpeg';
 import lanchenbiVP from '../assets/delhi_chapter/Lanchenbi Urungpurel_Delhi chapter_VP.jpeg';
@@ -183,7 +188,7 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
         }}>
           {/* Column 1: Empower */}
           <div>
-            <img src={offerEmpower} alt="Empower" style={{ width: '100%', height: '240px', objectFit: 'cover', borderRadius: 'var(--border-radius-card)', marginBottom: '20px', border: '1px solid var(--border-color)' }} />
+            <img src={wwo1} alt="Empower" style={{ width: '100%', height: '240px', objectFit: 'cover', borderRadius: 'var(--border-radius-card)', marginBottom: '20px', border: '1px solid var(--border-color)' }} />
             <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '10px', fontFamily: 'var(--font-body)', color: 'var(--text-primary)' }}>Empower</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6 }}>
               Create opportunities for individuals and communities through education, mentorship and leadership development.
@@ -191,7 +196,7 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
           </div>
           {/* Column 2: Connect */}
           <div>
-            <img src={offerConnect} alt="Connect" style={{ width: '100%', height: '240px', objectFit: 'cover', borderRadius: 'var(--border-radius-card)', marginBottom: '20px', border: '1px solid var(--border-color)' }} />
+            <img src={wwo2} alt="Connect" style={{ width: '100%', height: '240px', objectFit: 'cover', borderRadius: 'var(--border-radius-card)', marginBottom: '20px', border: '1px solid var(--border-color)' }} />
             <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '10px', fontFamily: 'var(--font-body)', color: 'var(--text-primary)' }}>Connect</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6 }}>
               Bringing people together through cultural exchange, sports, and collaborative initiatives that promote unity and understanding.
@@ -199,7 +204,7 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
           </div>
           {/* Column 3: Transform */}
           <div>
-            <img src={offerTransform} alt="Transform" style={{ width: '100%', height: '240px', objectFit: 'cover', borderRadius: 'var(--border-radius-card)', marginBottom: '20px', border: '1px solid var(--border-color)' }} />
+            <img src={wwo3} alt="Transform" style={{ width: '100%', height: '240px', objectFit: 'cover', borderRadius: 'var(--border-radius-card)', marginBottom: '20px', border: '1px solid var(--border-color)' }} />
             <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '10px', fontFamily: 'var(--font-body)', color: 'var(--text-primary)' }}>Transform</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6 }}>
               Driving sustainable social change through welfare programs, community outreach and sustainable development efforts.
