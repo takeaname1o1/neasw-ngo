@@ -15,14 +15,6 @@ import wwo1 from '../assets/WWO/1.png';
 import wwo2 from '../assets/WWO/2.png';
 import wwo3 from '../assets/WWO/3.png';
 
-// OS Assets
-import os1 from '../assets/OS/1.jpg';
-import os2 from '../assets/OS/2.jpg';
-import os3 from '../assets/OS/3.png';
-import os4 from '../assets/OS/4.png';
-import os5 from '../assets/OS/5.png';
-import os6 from '../assets/OS/6.png';
-
 // Delhi Chapter Leadership Images
 import pratikPresident from '../assets/delhi_chapter/Pratik Thaomung_Delhi chapter_President.jpeg';
 import lanchenbiVP from '../assets/delhi_chapter/Lanchenbi Urungpurel_Delhi chapter_VP.jpeg';
@@ -87,7 +79,7 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
               At NEASW Welfare Foundation, we are committed to empowering communities, preserving cultural heritage, and creating opportunities for youth through meaningful social initiatives.
             </p>
             <img 
-              src={os1} 
+              src={introPortrait} 
               alt="Volunteer Portrait" 
               style={{ 
                 width: '100%', 
@@ -108,17 +100,17 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
           }}>
             {/* Collage Column 1 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <img src={os2} alt="Traditional Dress Group" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '220px', objectFit: 'cover' }} />
-              <img src={os3} alt="School Group" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '160px', objectFit: 'cover' }} />
+              <img src={introGroupSchool} alt="Traditional Dress Group" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '220px', objectFit: 'cover' }} />
+              <img src={introGroupSchool} alt="School Group" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '160px', objectFit: 'cover' }} />
             </div>
             {/* Collage Column 2 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <img src={os4} alt="Group Leader" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '320px', objectFit: 'cover' }} />
-              <img src={os5} alt="Stage Performance" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '170px', objectFit: 'cover' }} />
+              <img src={introGroupLeader} alt="Group Leader" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '320px', objectFit: 'cover' }} />
+              <img src={introStage} alt="Stage Performance" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '170px', objectFit: 'cover' }} />
             </div>
             {/* Collage Column 3 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <img src={os6} alt="Children in Classroom" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '320px', objectFit: 'cover' }} />
+              <img src={introChildrenClassroom} alt="Children in Classroom" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '320px', objectFit: 'cover' }} />
             </div>
           </div>
         </div>
