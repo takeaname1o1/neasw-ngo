@@ -16,6 +16,9 @@ import contact3 from '../assets/contact3.png';
 import assam_rifles_logo from '../assets/assam_rifles_logo.png';
 import mha_logo from '../assets/mha_logo.png';
 import home_top_banner from '../assets/home_top_banner.png';
+import eye1 from '../assets/EYE/1.png';
+import eye2 from '../assets/EYE/2.png';
+import eye3 from '../assets/EYE/3.png';
 
 interface WorkProps {
   setCurrentPage: (page: string) => void;
@@ -53,9 +56,9 @@ export const Work: React.FC<WorkProps> = ({ setCurrentPage }) => {
       theme: "dark",
       imagePos: "right",
       images: [
-        intro_stage,
-        assam_rifles_logo,
-        mha_logo
+        eye1,
+        eye2,
+        eye3
       ],
       collageType: "horizontal"
     },
