@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import homeTopBanner from '../assets/home_top_banner.png';
 import introPortrait from '../assets/intro_portrait.png';
 import introGroupLeader from '../assets/intro_group_leader.png';
@@ -15,7 +15,7 @@ import wwo1 from '../assets/WWO/1.png';
 import wwo2 from '../assets/WWO/2.png';
 import wwo3 from '../assets/WWO/3.png';
 
-// OS Collage Assets
+// OS Assets
 import os1 from '../assets/OS/1.jpg';
 import os2 from '../assets/OS/2.jpg';
 import os3 from '../assets/OS/3.png';
@@ -30,61 +30,6 @@ import boazLepcha from '../assets/delhi_chapter/BOAZ Lepcha_Delhi chapter.jpeg';
 import michiSheela from '../assets/delhi_chapter/Michi Sheela_Delhi chapter.jpeg';
 import pemaKhandu from '../assets/delhi_chapter/Pema Khandu Thungon_Delhi chapter.jpeg';
 import tashiChotton from '../assets/delhi_chapter/Tashi Chotton_Delhi chapter.jpeg';
-
-// Helper component for auto-switching images in the 1x3 collage
-const AutoSwitchImage: React.FC<{ img1: string; img2: string; alt: string; height: string }> = ({ img1, img2, alt, height }) => {
-  const [showFirst, setShowFirst] = useState(true);
-
-  useEffect(() => {
-    // Staggered trigger to create a premium, natural feel
-    const interval = setInterval(() => {
-      setShowFirst(prev => !prev);
-    }, 4000 + Math.random() * 1200);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div style={{
-      position: 'relative',
-      width: '100%',
-      height: height,
-      borderRadius: '12px',
-      overflow: 'hidden',
-      boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)'
-    }}>
-      <img
-        src={img1}
-        alt={alt}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          opacity: showFirst ? 1 : 0,
-          transition: 'opacity 1.2s ease-in-out',
-          zIndex: showFirst ? 2 : 1
-        }}
-      />
-      <img
-        src={img2}
-        alt={alt}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          opacity: showFirst ? 0 : 1,
-          transition: 'opacity 1.2s ease-in-out',
-          zIndex: showFirst ? 1 : 2
-        }}
-      />
-    </div>
-  );
-};
 
 interface AboutProps {
   setCurrentPage: (page: string) => void;
@@ -123,50 +68,59 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
 
       {/* 2. Intro Collage Grid */}
       <section className="container" style={{ padding: '90px 24px' }}>
-        {/* Intro text spanning the top-left */}
-        <div style={{ textAlign: 'left', marginBottom: '60px', maxWidth: '562px' }}>
-          <p style={{
-            fontSize: '32px',
-            lineHeight: '38px',
-            color: '#000000',
-            fontWeight: 500,
-            fontFamily: 'var(--font-body)',
-            margin: 0
-          }}>
-            At NEASW Welfare Foundation, we are committed to empowering communities, preserving cultural heritage, and creating opportunities for youth through meaningful social initiatives.
-          </p>
-        </div>
-
-        {/* 1x3 Horizontal Grid with Auto-Switching Images */}
-        <div style={{
+        <div className="intro-collage-layout" style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '30px',
-          alignItems: 'center'
+          gridTemplateColumns: '1fr',
+          gap: '50px',
+          alignItems: 'start',
         }}>
-          {/* Card 1 */}
-          <AutoSwitchImage 
-            img1={os1} 
-            img2={os4} 
-            alt="Youth empowerment and classroom study" 
-            height="380px" 
-          />
+          {/* Left Text & Portrait column */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', textAlign: 'left' }}>
+            <p style={{
+              fontSize: '1.45rem',
+              lineHeight: 1.5,
+              color: 'var(--text-primary)',
+              fontWeight: 500,
+              fontFamily: 'var(--font-body)',
+              letterSpacing: '-0.015em',
+            }}>
+              At NEASW Welfare Foundation, we are committed to empowering communities, preserving cultural heritage, and creating opportunities for youth through meaningful social initiatives.
+            </p>
+            <img 
+              src={os1} 
+              alt="Volunteer Portrait" 
+              style={{ 
+                width: '100%', 
+                borderRadius: 'var(--border-radius-card)', 
+                objectFit: 'cover', 
+                height: '420px',
+                border: '1px solid var(--border-color)' 
+              }} 
+            />
+          </div>
 
-          {/* Card 2 (Taller middle element for premium visual rhythm) */}
-          <AutoSwitchImage 
-            img1={os2} 
-            img2={os5} 
-            alt="Traditional attire and community gathering" 
-            height="440px" 
-          />
-
-          {/* Card 3 */}
-          <AutoSwitchImage 
-            img1={os3} 
-            img2={os6} 
-            alt="Shawl presentation and stage ceremony" 
-            height="380px" 
-          />
+          {/* Right Collage column: 3 columns of varying heights */}
+          <div className="collage-container" style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: '16px',
+            alignItems: 'start',
+          }}>
+            {/* Collage Column 1 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <img src={os2} alt="Traditional Dress Group" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '220px', objectFit: 'cover' }} />
+              <img src={os3} alt="School Group" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '160px', objectFit: 'cover' }} />
+            </div>
+            {/* Collage Column 2 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <img src={os4} alt="Group Leader" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '320px', objectFit: 'cover' }} />
+              <img src={os5} alt="Stage Performance" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '170px', objectFit: 'cover' }} />
+            </div>
+            {/* Collage Column 3 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <img src={os6} alt="Children in Classroom" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '320px', objectFit: 'cover' }} />
+            </div>
+          </div>
         </div>
       </section>
 
