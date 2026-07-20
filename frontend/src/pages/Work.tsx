@@ -47,6 +47,11 @@ import op1 from '../assets/OP/1.png';
 import op2 from '../assets/OP/2.png';
 import op3 from '../assets/OP/3.png';
 
+// OW Assets
+import ow1 from '../assets/OW/1.png';
+import ow2 from '../assets/OW/2.png';
+import ow3 from '../assets/OW/3.png';
+
 interface WorkProps {
   setCurrentPage: (page: string) => void;
 }
@@ -131,114 +136,188 @@ export const Work: React.FC<WorkProps> = ({ setCurrentPage }) => {
     <div className="fade-in-section" style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#ffffff' }}>
       
       {/* Hero Section */}
-      <header className="container" style={{ padding: '65px 24px 80px 24px' }}>
+      <header className="container" style={{ padding: '80px 24px 100px 24px' }}>
         <div className="work-hero-grid" style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
           gap: '50px',
+          alignItems: 'start'
         }}>
           
-          {/* Left Column - Text */}
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left' }}>
+          {/* Column 1 */}
+          <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+            <span style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '14px',
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              color: '#000000',
+              letterSpacing: '0.05em',
+              marginBottom: '16px',
+              display: 'block'
+            }}>
+              EXPLORE OUR PROGRAMS
+            </span>
             <h1 style={{
               fontFamily: 'var(--font-title)',
-              fontSize: '4rem',
-              lineHeight: 1.1,
-              fontWeight: 500,
-              color: 'var(--text-primary)',
+              fontSize: '48px',
+              lineHeight: '61px',
+              fontWeight: 400,
+              color: '#000000',
               margin: '0 0 24px 0',
+              letterSpacing: '0.02em'
             }}>
               Empowering lives.<br/>Building stronger<br/>communities.
             </h1>
             <p style={{
-              fontSize: '1.2rem',
-              color: 'var(--text-muted)',
-              lineHeight: 1.6,
-              margin: 0,
-              maxWidth: '420px',
+              fontSize: '16px',
+              color: '#878787',
+              lineHeight: '1.45',
+              margin: '0 0 40px 0',
+              maxWidth: '399px',
+              fontFamily: 'var(--font-body)'
             }}>
-              We focus on providing scholarships, direct institutional mentorship, and bridging educational gaps for rural pupils.
+              From education and youth empowerment to community welfare, cultural preservation, tourism and sustainable livelihoods - our programs create lasting impact and meaningful change.
             </p>
-          </div>
-
-          {/* Middle Column - Small Stat */}
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '30px', textAlign: 'left' }}>
+            
+            <img 
+              src={ow1} 
+              alt="Artisan hands" 
+              style={{
+                width: '219px',
+                height: '166px',
+                objectFit: 'cover',
+                borderRadius: '18px',
+                marginBottom: '24px'
+              }}
+            />
+            
             <div>
-              <p style={{
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                letterSpacing: '0.1em',
-                color: '#a0aec0',
-                textTransform: 'uppercase',
-                margin: '0 0 10px 0',
-              }}>
-                Our Impact Metrics
-              </p>
               <h3 style={{
                 fontFamily: 'var(--font-title)',
-                fontSize: '3rem',
-                fontWeight: 500,
-                color: 'var(--text-primary)',
+                fontSize: '48px',
+                fontWeight: 400,
+                color: '#000000',
                 margin: '0 0 4px 0',
-                lineHeight: 1,
+                lineHeight: '61px',
+                letterSpacing: '0.03em'
+              }}>
+                100+
+              </h3>
+              <p style={{
+                fontSize: '14px',
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                margin: 0,
+                color: '#000000',
+                fontFamily: 'var(--font-body)',
+                letterSpacing: '0.05em'
+              }}>
+                PROGRAMS & INITIATIVES
+              </p>
+            </div>
+          </div>
+
+          {/* Column 2 */}
+          <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+            <span style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '14px',
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              color: '#000000',
+              letterSpacing: '0.05em',
+              marginBottom: '16px',
+              display: 'block'
+            }}>
+              OUR JOURNEY SINCE 2014
+            </span>
+            <p style={{
+              fontSize: '16px',
+              color: '#878787',
+              lineHeight: '1.45',
+              margin: '0 0 40px 0',
+              maxWidth: '343px',
+              fontFamily: 'var(--font-body)'
+            }}>
+              What started as a small initiative rooted in compassion has grown into a strong movement driven by people, purpose and impact. For over 12 years, we have stood with communities, empowering them to build a better and brighter tomorrow.
+            </p>
+            
+            <div style={{ marginBottom: '32px' }}>
+              <h3 style={{
+                fontFamily: 'var(--font-title)',
+                fontSize: '48px',
+                fontWeight: 400,
+                color: '#000000',
+                margin: '0 0 4px 0',
+                lineHeight: '61px',
+                letterSpacing: '0.03em'
               }}>
                 12+
               </h3>
               <p style={{
-                fontSize: '0.85rem',
-                fontWeight: 700,
+                fontSize: '14px',
+                fontWeight: 600,
                 textTransform: 'uppercase',
                 margin: 0,
-                color: 'var(--text-secondary)',
+                color: '#000000',
+                fontFamily: 'var(--font-body)',
+                letterSpacing: '0.05em'
               }}>
-                Years of impact
+                YEARS OF IMPACT
               </p>
             </div>
+            
             <img 
-              src={intro_portrait} 
-              alt="Hands working" 
+              src={ow2} 
+              alt="Hands warming by fire" 
               style={{
                 width: '100%',
-                height: '190px',
+                maxWidth: '359px',
+                height: '330px',
                 objectFit: 'cover',
-                borderRadius: '16px',
+                borderRadius: '18px'
               }}
             />
           </div>
 
-          {/* Right Column - Large Image & Stat */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', textAlign: 'left' }}>
+          {/* Column 3 */}
+          <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
             <img 
-              src={intro_children_classroom} 
-              alt="Classroom" 
+              src={ow3} 
+              alt="Northeast valley landscape" 
               style={{
                 width: '100%',
-                height: '270px',
+                maxWidth: '458px',
+                height: '416px',
                 objectFit: 'cover',
-                borderRadius: '16px',
+                borderRadius: '18px',
+                marginBottom: '32px'
               }}
             />
-            <div>
-              <h3 style={{
-                fontFamily: 'var(--font-title)',
-                fontSize: '2.5rem',
-                fontWeight: 500,
-                color: 'var(--text-primary)',
-                margin: '0 0 4px 0',
-                lineHeight: 1,
-              }}>
-                10,000+
-              </h3>
-              <p style={{
-                fontSize: '0.85rem',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                color: 'var(--text-muted)',
-                margin: 0,
-              }}>
-                Students assisted
-              </p>
-            </div>
+            
+            <span style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '14px',
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              color: '#000000',
+              letterSpacing: '0.05em',
+              marginBottom: '12px',
+              display: 'block'
+            }}>
+              OUR PROMISE
+            </span>
+            <p style={{
+              fontSize: '16px',
+              color: '#878787',
+              lineHeight: '1.45',
+              margin: 0,
+              maxWidth: '343px',
+              fontFamily: 'var(--font-body)'
+            }}>
+              We are committed to transparency, inclusivity and long-term impact. Every program is designed with community needs at the heart, and sustainability at the core.
+            </p>
           </div>
           
         </div>
