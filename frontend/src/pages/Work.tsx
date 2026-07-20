@@ -1,22 +1,6 @@
 import React from 'react';
 import { ConversionBlock } from '../components/ConversionBlock';
 
-// Import high-quality local assets
-import intro_children_classroom from '../assets/intro_children_classroom.png';
-import intro_group_leader from '../assets/intro_group_leader.png';
-import intro_group_school from '../assets/intro_group_school.png';
-import intro_portrait from '../assets/intro_portrait.png';
-import intro_stage from '../assets/intro_stage.png';
-import offer_connect from '../assets/offer_connect.png';
-import offer_empower from '../assets/offer_empower.png';
-import offer_transform from '../assets/offer_transform.png';
-import contact1 from '../assets/contact1.png';
-import contact2 from '../assets/contact2.png';
-import contact3 from '../assets/contact3.png';
-import assam_rifles_logo from '../assets/assam_rifles_logo.png';
-import mha_logo from '../assets/mha_logo.png';
-import home_top_banner from '../assets/home_top_banner.png';
-
 // EYE Assets
 import eye1 from '../assets/EYE/1.png';
 import eye2 from '../assets/EYE/2.png';

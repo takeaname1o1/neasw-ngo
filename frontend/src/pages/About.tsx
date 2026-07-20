@@ -5,9 +5,6 @@ import introGroupLeader from '../assets/intro_group_leader.png';
 import introChildrenClassroom from '../assets/intro_children_classroom.png';
 import introGroupSchool from '../assets/intro_group_school.png';
 import introStage from '../assets/intro_stage.png';
-import offerEmpower from '../assets/offer_empower.png';
-import offerConnect from '../assets/offer_connect.png';
-import offerTransform from '../assets/offer_transform.png';
 import { ConversionBlock } from '../components/ConversionBlock';
 
 // WWO Assets
