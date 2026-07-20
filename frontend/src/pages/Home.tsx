@@ -491,20 +491,22 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             
             {/* White Testimonial Card Overlay */}
             <div style={{ 
-              background: '#ffffff', 
+              background: 'rgba(255, 255, 255, 0.5)', 
               color: '#000000', 
               borderRadius: '24px', 
-              padding: '40px 48px', 
-              maxWidth: '540px',
+              padding: '32px 36px', 
+              maxWidth: '440px',
               width: '100%',
               boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
               textAlign: 'left',
               display: 'flex',
               flexDirection: 'column',
-              gap: '24px'
+              gap: '20px',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)'
             }}>
               <p style={{ 
-                fontSize: '1.6rem', 
+                fontSize: '1.35rem', 
                 fontWeight: 500, 
                 lineHeight: 1.4, 
                 margin: 0, 
@@ -516,16 +518,17 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               <div>
                 <span style={{ 
                   display: 'block', 
-                  fontSize: '1.2rem', 
-                  color: '#718096',
-                  marginBottom: '6px'
+                  fontSize: '1.1rem', 
+                  color: '#4a5568',
+                  marginBottom: '4px',
+                  fontWeight: 600
                 }}>
                   - Lhingneihoi Chongloi
                 </span>
                 <span style={{ 
-                  color: '#a0aec0', 
-                  fontSize: '0.95rem', 
-                  fontWeight: 500 
+                  color: '#4a5568', 
+                  fontSize: '0.9rem', 
+                  fontWeight: 600 
                 }}>
                   Participant &nbsp;|&nbsp; Unity Utsav
                 </span>
