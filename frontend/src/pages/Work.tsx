@@ -42,6 +42,11 @@ import cph1 from '../assets/CPH/1.jpg';
 import cph2 from '../assets/CPH/2.png';
 import cph3 from '../assets/CPH/3.png';
 
+// OP Assets
+import op1 from '../assets/OP/1.png';
+import op2 from '../assets/OP/2.png';
+import op3 from '../assets/OP/3.png';
+
 interface WorkProps {
   setCurrentPage: (page: string) => void;
 }
@@ -114,9 +119,9 @@ export const Work: React.FC<WorkProps> = ({ setCurrentPage }) => {
       theme: "light",
       imagePos: "left",
       images: [
-        contact3,
-        offer_transform,
-        offer_empower
+        op1,
+        op2,
+        op3
       ],
       collageType: "vertical"
     }
