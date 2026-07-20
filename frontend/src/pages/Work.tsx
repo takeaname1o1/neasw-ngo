@@ -37,6 +37,11 @@ import nt1 from '../assets/NT/1.png';
 import nt2 from '../assets/NT/2.png';
 import nt3 from '../assets/NT/3.png';
 
+// CPH Assets
+import cph1 from '../assets/CPH/1.jpg';
+import cph2 from '../assets/CPH/2.png';
+import cph3 from '../assets/CPH/3.png';
+
 interface WorkProps {
   setCurrentPage: (page: string) => void;
 }
@@ -97,9 +102,9 @@ export const Work: React.FC<WorkProps> = ({ setCurrentPage }) => {
       theme: "dark",
       imagePos: "right",
       images: [
-        intro_group_school,
-        intro_group_leader,
-        intro_stage
+        cph1,
+        cph2,
+        cph3
       ],
       collageType: "horizontal"
     },
