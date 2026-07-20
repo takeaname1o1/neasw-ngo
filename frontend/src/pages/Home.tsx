@@ -484,7 +484,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             minHeight: '520px',
             display: 'flex',
             justifyContent: 'flex-end',
-            alignItems: 'center',
+            alignItems: 'flex-end',
             padding: '40px',
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)'
           }} className="stories-banner-card">
@@ -494,19 +494,19 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               background: 'rgba(255, 255, 255, 0.5)', 
               color: '#000000', 
               borderRadius: '24px', 
-              padding: '32px 36px', 
-              maxWidth: '440px',
+              padding: '24px 28px', 
+              maxWidth: '380px',
               width: '100%',
               boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
               textAlign: 'left',
               display: 'flex',
               flexDirection: 'column',
-              gap: '20px',
+              gap: '16px',
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)'
             }}>
               <p style={{ 
-                fontSize: '1.35rem', 
+                fontSize: '1.15rem', 
                 fontWeight: 500, 
                 lineHeight: 1.4, 
                 margin: 0, 
@@ -518,16 +518,16 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               <div>
                 <span style={{ 
                   display: 'block', 
-                  fontSize: '1.1rem', 
+                  fontSize: '1rem', 
                   color: '#4a5568',
-                  marginBottom: '4px',
+                  marginBottom: '2px',
                   fontWeight: 600
                 }}>
                   - Lhingneihoi Chongloi
                 </span>
                 <span style={{ 
                   color: '#4a5568', 
-                  fontSize: '0.9rem', 
+                  fontSize: '0.85rem', 
                   fontWeight: 600 
                 }}>
                   Participant &nbsp;|&nbsp; Unity Utsav
