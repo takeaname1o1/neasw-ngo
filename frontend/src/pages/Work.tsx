@@ -27,6 +27,11 @@ import cws1 from '../assets/CWS/1.png';
 import cws2 from '../assets/CWS/2.png';
 import cws3 from '../assets/CWS/3.png';
 
+// RHA Assets
+import rha1 from '../assets/RHA/1.png';
+import rha2 from '../assets/RHA/2.png';
+import rha3 from '../assets/RHA/3.png';
+
 interface WorkProps {
   setCurrentPage: (page: string) => void;
 }
@@ -63,9 +68,9 @@ export const Work: React.FC<WorkProps> = ({ setCurrentPage }) => {
       theme: "dark",
       imagePos: "right",
       images: [
-        intro_stage,
-        assam_rifles_logo,
-        mha_logo
+        rha1,
+        rha2,
+        rha3
       ],
       collageType: "horizontal"
     },
