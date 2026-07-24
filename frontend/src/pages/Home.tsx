@@ -1222,9 +1222,6 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
         </div>
       </section>
 
-      {/* 8. Conversion Banner (Dark) */}
-      <ConversionBlock setCurrentPage={setCurrentPage} />
-
       {/* 9. Our Partners Section (Compact) */}
       <section style={{ 
         borderTop: '1px solid var(--border-color)', 
@@ -1293,6 +1290,9 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           ))}
         </div>
       </section>
+
+      {/* 8. Conversion Banner (Dark) */}
+      <ConversionBlock setCurrentPage={setCurrentPage} />
 
       {/* Lightbox Modal for UPSC Coaching Program Poster */}
       {showLightbox && (
