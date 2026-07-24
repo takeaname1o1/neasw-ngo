@@ -1206,7 +1206,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             </p>
             <button
               onClick={() => {
-                setCurrentPage('join');
+                setCurrentPage('about');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               style={{
