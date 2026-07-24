@@ -1380,19 +1380,25 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
         }
         @media (max-width: 992px) {
           .partner-logo-grid {
-            flex-wrap: wrap !important;
+            flex-wrap: nowrap !important;
             justify-content: center !important;
+            gap: 16px !important;
           }
           .partner-logo-card {
-            flex: 1 1 calc(50% - 12px) !important;
-            min-width: 120px !important;
-            height: 50px !important;
+            flex: 1 1 0px !important;
+            min-width: 0 !important;
+            max-width: 140px !important;
+            height: 45px !important;
+            padding: 6px !important;
           }
         }
         @media (max-width: 480px) {
+          .partner-logo-grid {
+            gap: 8px !important;
+          }
           .partner-logo-card {
-            flex: 1 1 calc(50% - 12px) !important;
-            height: 50px !important;
+            height: 38px !important;
+            padding: 4px !important;
           }
         }
         @media (min-width: 992px) {
