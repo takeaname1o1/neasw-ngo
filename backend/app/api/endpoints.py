@@ -66,5 +66,5 @@ async def get_contact_info():
         "emails": ["neasw.welfare@gmail.com"],
         "phones": ["+91 876 676 8888", "+91 676 676 8888"],
         "locations": ["Delhi", "Nagaland", "Arunachal Pradesh"],
-        "socials": {"instagram": "@NEASW.Welfare"}
+        "socials": {"instagram": "https://www.instagram.com/neasw__?igsh=MW9xa3MyM3U2bGczOQ=="}
     }

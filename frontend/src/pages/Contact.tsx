@@ -345,7 +345,12 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
           </div>
 
           {/* Social */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center', flex: 1 }}>
+          <a 
+            href="https://www.instagram.com/neasw__?igsh=MW9xa3MyM3U2bGczOQ==" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center', flex: 1, textDecoration: 'none', color: 'inherit' }}
+          >
             <div style={{
               width: '70px',
               height: '70px',
@@ -354,14 +359,18 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-            }}>
+              transition: 'background-color 0.2s'
+            }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e2e8f0'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#f1f2f4'}
+            >
               <Camera size={26} strokeWidth={1.5} style={{ color: '#000000' }} />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 600, fontFamily: 'var(--font-title)', margin: 0, color: '#000000', textAlign: 'center' }}>Our Socials</h3>
-              <p style={{ color: '#718096', fontSize: '1rem', margin: 0, textAlign: 'center' }}>@NEASWWelfare</p>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 600, fontFamily: 'var(--font-title)', margin: 0, color: '#000000', textAlign: 'center' }}>Instagram</h3>
+              <p style={{ color: '#718096', fontSize: '1rem', margin: 0, textAlign: 'center' }}>@neasw__</p>
             </div>
-          </div>
+          </a>
 
           {/* Email */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center', flex: 1 }}>
