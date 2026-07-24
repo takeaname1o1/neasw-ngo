@@ -3,7 +3,7 @@ import { ChevronRight, ChevronLeft, Play, X } from 'lucide-react';
 import { ConversionBlock } from '../components/ConversionBlock';
 
 // Import high-quality local assets
-import homeHeroBg from '../assets/home/home_banner.png'; 
+import homeHeroBg from '../assets/home/home_banner.png';
 import impactPortrait from '../assets/intro_portrait.png';
 import impactHome from '../assets/home/impact.png';
 import introGroupLeader from '../assets/intro_group_leader.png';
@@ -13,7 +13,7 @@ import reliefAidImg from '../assets/programs/ReliefHumanitarianAid.png';
 import northeastTourismImg from '../assets/programs/NortheastTourism.png';
 import contact1 from '../assets/contact1.png';
 import LocalProducts from '../assets/programs/LocalProducts.png';
-import freeUpscCoachingImg from '../assets/programs/Free UPSC coaching to students of Arunachal Nagaland and Manipur.jpeg';
+import freeUpscCoachingImg from '../assets/programs/FreeUPSCcoachingtostudentsofArunachalNagalandandManipur.jpeg';
 import assamRiflesLogo from '../assets/partner/Assam_rifles.png';
 import homeAffairsLogo from '../assets/partner/Home_Affairs.png';
 import neDonerLogo from '../assets/partner/NE_doner.png';
@@ -286,7 +286,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
 
   return (
     <div className="fade-in-section" style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#ffffff' }}>
-      
+
       {/* 1. Hero Section */}
       <section style={{
         height: '85vh',
@@ -311,7 +311,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             textTransform: 'uppercase',
             fontWeight: 500,
           }}>
-            NEASW <br/> WELFARE <br/> FOUNDATION
+            NEASW <br /> WELFARE <br /> FOUNDATION
           </h1>
         </div>
         {/* Slider Pagination Mockup */}
@@ -325,18 +325,18 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
 
       {/* 2. Creating Impact Section */}
       <section className="container" style={{ padding: '90px 24px' }}>
-        <h2 style={{ 
-          textAlign: 'center', 
-          fontSize: '3rem', 
-          fontFamily: 'var(--font-title)', 
+        <h2 style={{
+          textAlign: 'center',
+          fontSize: '3rem',
+          fontFamily: 'var(--font-title)',
           marginBottom: '60px',
           fontWeight: 500,
           color: 'var(--text-primary)',
           lineHeight: 1.15,
         }}>
-          Creating Impact Across <br/> the Northeast
+          Creating Impact Across <br /> the Northeast
         </h2>
-        
+
         <div className="home-impact-grid" style={{
           display: 'grid',
           gridTemplateColumns: '1fr',
@@ -351,17 +351,17 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             <p style={{ color: 'var(--text-muted)', lineHeight: 1.6, margin: 0, fontSize: '1.05rem' }}>
               NEASW works with students. youth leaders, communities and institutions to promote education, cultural preservation, social welfare and national integration.
             </p>
-            <button 
+            <button
               onClick={() => {
                 setCurrentPage('work');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              style={{ 
-                padding: '12px 28px', 
-                background: '#000000', 
-                color: '#ffffff', 
-                borderRadius: '30px', 
-                border: 'none', 
+              style={{
+                padding: '12px 28px',
+                background: '#000000',
+                color: '#ffffff',
+                borderRadius: '30px',
+                border: 'none',
                 cursor: 'pointer',
                 fontWeight: 600,
                 alignSelf: 'flex-start',
@@ -373,20 +373,20 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               About Us
             </button>
           </div>
-          
+
           {/* Center Image */}
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <img 
-              src={impactHome} 
-              alt="Impact" 
-              style={{ 
-                width: '100%', 
-                maxWidth: '320px', 
-                height: '380px', 
-                objectFit: 'cover', 
+            <img
+              src={impactHome}
+              alt="Impact"
+              style={{
+                width: '100%',
+                maxWidth: '320px',
+                height: '380px',
+                objectFit: 'cover',
                 borderRadius: '24px',
                 border: '1px solid var(--border-color)',
-              }} 
+              }}
             />
           </div>
 
@@ -408,20 +408,20 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
         </div>
 
         {/* Partners Strip */}
-        <div style={{ 
-          borderTop: '1px solid var(--border-color)', 
-          paddingTop: '60px', 
-          marginTop: '45px', 
-          display: 'flex', 
-          flexDirection: 'column', 
+        <div style={{
+          borderTop: '1px solid var(--border-color)',
+          paddingTop: '60px',
+          marginTop: '45px',
+          display: 'flex',
+          flexDirection: 'column',
           gap: '35px',
-          alignItems: 'center' 
+          alignItems: 'center'
         }}>
-          <span style={{ 
-            fontWeight: 700, 
-            textTransform: 'uppercase', 
-            fontSize: '0.8rem', 
-            color: 'var(--text-muted)', 
+          <span style={{
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            fontSize: '0.8rem',
+            color: 'var(--text-muted)',
             letterSpacing: '0.12em',
             position: 'relative',
             display: 'inline-block',
@@ -440,14 +440,14 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               borderRadius: '2px'
             }}></span>
           </span>
-          
-          <div 
+
+          <div
             className="partner-logo-grid"
-            style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center', 
-              gap: '24px', 
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: '24px',
               width: '100%',
               maxWidth: '1200px',
               boxSizing: 'border-box'
@@ -459,7 +459,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               { logo: neDonerLogo, alt: "Ministry of Development of North Eastern Region" },
               { logo: scienceTechnoLogo, alt: "Department of Science & Technology" }
             ].map((partner, index) => (
-              <div 
+              <div
                 key={index}
                 className="partner-logo-card"
                 style={{
@@ -478,16 +478,16 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                   boxSizing: 'border-box'
                 }}
               >
-                <img 
-                  src={partner.logo} 
-                  alt={partner.alt} 
-                  style={{ 
-                    maxHeight: '100%', 
-                    maxWidth: '100%', 
-                    objectFit: 'contain', 
+                <img
+                  src={partner.logo}
+                  alt={partner.alt}
+                  style={{
+                    maxHeight: '100%',
+                    maxWidth: '100%',
+                    objectFit: 'contain',
                     filter: 'grayscale(100%) opacity(50%)',
                     transition: 'all 0.3s ease',
-                  }} 
+                  }}
                 />
               </div>
             ))}
@@ -500,27 +500,27 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
         <div className="container home-leadership-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '50px', alignItems: 'center' }}>
           {/* Overlapping images stack */}
           <div className="leadership-collage" style={{ display: 'flex', gap: '16px', justifyContent: 'center', alignItems: 'center' }}>
-             <img src={introGroupLeader} alt="Leader 1" style={{ width: '110px', height: '170px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14' }} />
-             <img src={impactPortrait} alt="Leader 2" style={{ width: '130px', height: '190px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14', marginTop: '-30px' }} />
-             <img src={contact1} alt="Leader 3" style={{ width: '110px', height: '170px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14' }} />
+            <img src={introGroupLeader} alt="Leader 1" style={{ width: '110px', height: '170px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14' }} />
+            <img src={impactPortrait} alt="Leader 2" style={{ width: '130px', height: '190px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14', marginTop: '-30px' }} />
+            <img src={contact1} alt="Leader 3" style={{ width: '110px', height: '170px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14' }} />
           </div>
           <div style={{ textAlign: 'left' }}>
             <h2 style={{ fontSize: '2.8rem', fontFamily: 'var(--font-title)', marginBottom: '20px', fontWeight: 500, color: '#ffffff' }}>Meet Our Leadership</h2>
             <p style={{ color: '#a0aec0', lineHeight: 1.6, marginBottom: '30px', fontSize: '1.05rem' }}>
               Guided by a passionate team committed to building a stronger, united and empowered Northeast.
             </p>
-            <button 
+            <button
               onClick={() => {
                 setCurrentPage('join');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              style={{ 
-                padding: '12px 28px', 
-                background: '#ffffff', 
-                color: '#000000', 
-                borderRadius: '30px', 
-                border: 'none', 
-                cursor: 'pointer', 
+              style={{
+                padding: '12px 28px',
+                background: '#ffffff',
+                color: '#000000',
+                borderRadius: '30px',
+                border: 'none',
+                cursor: 'pointer',
                 fontWeight: 600,
                 transition: 'opacity 0.2s',
               }}
@@ -539,11 +539,11 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <h2 style={{ fontSize: '3rem', fontFamily: 'var(--font-title)', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '8px' }}>Our Flagship Initiatives</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', margin: 0 }}>Major platforms that bring youth together, colobrate culture and drive national integration.</p>
         </div>
-        
+
         {/* Carousel Mockup */}
         <div className="carousel-mockup" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '24px', padding: '0 24px', position: 'relative', maxWidth: '1200px', margin: '0 auto' }}>
           {/* Prev Button */}
-          <button 
+          <button
             onClick={handlePrevInitiative}
             style={{
               position: 'absolute',
@@ -565,9 +565,9 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           </button>
 
           {/* Left card (inactive) */}
-          <div 
+          <div
             onClick={handlePrevInitiative}
-            className="carousel-side-card" 
+            className="carousel-side-card"
             style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)' }}
           >
             <img src={initiatives[(activeInitiative - 1 + initiatives.length) % initiatives.length].image} alt="Previous Initiative" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -575,156 +575,156 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
 
           {/* Center Card */}
           <div className="carousel-center-card" style={{ flexShrink: 0, width: '55%', height: '380px', borderRadius: '16px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '24px', transition: 'var(--transition-smooth)' }}>
-             {/* If video exists and is playing, show video, otherwise show image */}
-             {initiatives[activeInitiative].video && isVideoPlaying ? (
-               <video 
-                 ref={videoRef}
-                 src={initiatives[activeInitiative].video} 
-                 controls 
-                 autoPlay
-                 style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }}
-               />
-             ) : (
-               <>
-                 <img 
-                   src={initiatives[activeInitiative].images ? initiatives[activeInitiative].images[activePhotoIndex] : initiatives[activeInitiative].image} 
-                   alt={initiatives[activeInitiative].title} 
-                   style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }} 
-                 />
+            {/* If video exists and is playing, show video, otherwise show image */}
+            {initiatives[activeInitiative].video && isVideoPlaying ? (
+              <video
+                ref={videoRef}
+                src={initiatives[activeInitiative].video}
+                controls
+                autoPlay
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }}
+              />
+            ) : (
+              <>
+                <img
+                  src={initiatives[activeInitiative].images ? initiatives[activeInitiative].images[activePhotoIndex] : initiatives[activeInitiative].image}
+                  alt={initiatives[activeInitiative].title}
+                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }}
+                />
 
-                 {/* Inner photo gallery navigation */}
-                 {initiatives[activeInitiative].images && (
-                   <>
-                     {/* Counter Badge */}
-                     <div style={{
-                       position: 'absolute',
-                       top: '20px',
-                       right: '20px',
-                       background: 'rgba(0,0,0,0.65)',
-                       color: '#ffffff',
-                       padding: '6px 12px',
-                       borderRadius: '20px',
-                       fontSize: '0.8rem',
-                       fontWeight: 600,
-                       zIndex: 4,
-                       fontFamily: 'var(--font-body)',
-                       letterSpacing: '0.05em'
-                     }}>
-                       {activePhotoIndex + 1} / {initiatives[activeInitiative].images.length}
-                     </div>
+                {/* Inner photo gallery navigation */}
+                {initiatives[activeInitiative].images && (
+                  <>
+                    {/* Counter Badge */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '20px',
+                      right: '20px',
+                      background: 'rgba(0,0,0,0.65)',
+                      color: '#ffffff',
+                      padding: '6px 12px',
+                      borderRadius: '20px',
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      zIndex: 4,
+                      fontFamily: 'var(--font-body)',
+                      letterSpacing: '0.05em'
+                    }}>
+                      {activePhotoIndex + 1} / {initiatives[activeInitiative].images.length}
+                    </div>
 
-                     {/* Inner Left Arrow */}
-                     {activePhotoIndex > 0 && (
-                       <button 
-                         onClick={(e) => {
-                           e.stopPropagation();
-                           setIsVideoPlaying(false);
-                           setActivePhotoIndex(prev => prev - 1);
-                         }}
-                         style={{
-                           position: 'absolute',
-                           left: '20px',
-                           top: '50%',
-                           transform: 'translateY(-50%)',
-                           zIndex: 4,
-                           background: 'rgba(255,255,255,0.9)',
-                           border: 'none',
-                           borderRadius: '50%',
-                           width: '38px',
-                           height: '38px',
-                           display: 'flex',
-                           alignItems: 'center',
-                           justifyContent: 'center',
-                           cursor: 'pointer',
-                           boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                         }}
-                       >
-                         <ChevronLeft size={18} style={{ color: '#000000' }} />
-                       </button>
-                     )}
+                    {/* Inner Left Arrow */}
+                    {activePhotoIndex > 0 && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsVideoPlaying(false);
+                          setActivePhotoIndex(prev => prev - 1);
+                        }}
+                        style={{
+                          position: 'absolute',
+                          left: '20px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          zIndex: 4,
+                          background: 'rgba(255,255,255,0.9)',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: '38px',
+                          height: '38px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                        }}
+                      >
+                        <ChevronLeft size={18} style={{ color: '#000000' }} />
+                      </button>
+                    )}
 
-                     {/* Inner Right Arrow */}
-                     {activePhotoIndex < initiatives[activeInitiative].images.length - 1 && (
-                       <button 
-                         onClick={(e) => {
-                           e.stopPropagation();
-                           setIsVideoPlaying(false);
-                           setActivePhotoIndex(prev => prev + 1);
-                         }}
-                         style={{
-                           position: 'absolute',
-                           right: '20px',
-                           top: '50%',
-                           transform: 'translateY(-50%)',
-                           zIndex: 4,
-                           background: 'rgba(255,255,255,0.9)',
-                           border: 'none',
-                           borderRadius: '50%',
-                           width: '38px',
-                           height: '38px',
-                           display: 'flex',
-                           alignItems: 'center',
-                           justifyContent: 'center',
-                           cursor: 'pointer',
-                           boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                         }}
-                       >
-                         <ChevronRight size={18} style={{ color: '#000000' }} />
-                       </button>
-                     )}
-                   </>
-                 )}
+                    {/* Inner Right Arrow */}
+                    {activePhotoIndex < initiatives[activeInitiative].images.length - 1 && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsVideoPlaying(false);
+                          setActivePhotoIndex(prev => prev + 1);
+                        }}
+                        style={{
+                          position: 'absolute',
+                          right: '20px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          zIndex: 4,
+                          background: 'rgba(255,255,255,0.9)',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: '38px',
+                          height: '38px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                        }}
+                      >
+                        <ChevronRight size={18} style={{ color: '#000000' }} />
+                      </button>
+                    )}
+                  </>
+                )}
 
-                 {initiatives[activeInitiative].video && activePhotoIndex === 0 && (
-                   <button 
-                     onClick={handlePlayPauseVideo}
-                     style={{
-                       position: 'absolute',
-                       top: '50%',
-                       left: '50%',
-                       transform: 'translate(-50%, -50%)',
-                       zIndex: 4,
-                       background: 'rgba(255,255,255,0.9)',
-                       border: 'none',
-                       borderRadius: '50%',
-                       width: '64px',
-                       height: '64px',
-                       display: 'flex',
-                       alignItems: 'center',
-                       justifyContent: 'center',
-                       cursor: 'pointer',
-                       boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
-                     }}
-                   >
-                     <Play size={28} fill="#000000" style={{ color: '#000000', marginLeft: '3px' }} />
-                   </button>
-                 )}
-               </>
-             )}
-             
-             {/* Text Overlay (hide when video is playing to not cover video controls) */}
-             {(!initiatives[activeInitiative].video || !isVideoPlaying) && (
-               <>
-                 <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(transparent, rgba(0,0,0,0.75))', zIndex: 2 }}></div>
-                 <div style={{ zIndex: 3, display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
-                    <h3 style={{ fontSize: '1.85rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: '#ffffff', margin: 0 }}>{initiatives[activeInitiative].title}</h3>
-                    <p style={{ fontSize: '0.98rem', color: '#e2e8f0', margin: 0, lineHeight: 1.45, fontWeight: 400 }}>{initiatives[activeInitiative].description}</p>
-                 </div>
-               </>
-             )}
+                {initiatives[activeInitiative].video && activePhotoIndex === 0 && (
+                  <button
+                    onClick={handlePlayPauseVideo}
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      zIndex: 4,
+                      background: 'rgba(255,255,255,0.9)',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '64px',
+                      height: '64px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+                    }}
+                  >
+                    <Play size={28} fill="#000000" style={{ color: '#000000', marginLeft: '3px' }} />
+                  </button>
+                )}
+              </>
+            )}
+
+            {/* Text Overlay (hide when video is playing to not cover video controls) */}
+            {(!initiatives[activeInitiative].video || !isVideoPlaying) && (
+              <>
+                <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(transparent, rgba(0,0,0,0.75))', zIndex: 2 }}></div>
+                <div style={{ zIndex: 3, display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
+                  <h3 style={{ fontSize: '1.85rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: '#ffffff', margin: 0 }}>{initiatives[activeInitiative].title}</h3>
+                  <p style={{ fontSize: '0.98rem', color: '#e2e8f0', margin: 0, lineHeight: 1.45, fontWeight: 400 }}>{initiatives[activeInitiative].description}</p>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Right card (inactive) */}
-          <div 
+          <div
             onClick={handleNextInitiative}
-            className="carousel-side-card" 
+            className="carousel-side-card"
             style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)' }}
           >
             <img src={initiatives[(activeInitiative + 1) % initiatives.length].image} alt="Next Initiative" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
 
           {/* Next Button */}
-          <button 
+          <button
             onClick={handleNextInitiative}
             style={{
               position: 'absolute',
@@ -784,8 +784,8 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Educational Support</h4>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Scholarships, learning resources, digital literacy initiatives, and guidance for students from underserved communities.</p>
-              <a 
-                href="#learn" 
+              <a
+                href="#learn"
                 onClick={(e) => {
                   e.preventDefault();
                   setCurrentPage('work');
@@ -793,19 +793,19 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                 }}
                 style={{ fontSize: '0.85rem', fontWeight: 600, color: '#000000', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
               >
-                Learn More <ChevronRight size={16}/>
+                Learn More <ChevronRight size={16} />
               </a>
             </div>
           </div>
-          
+
           {/* Program Card 2 */}
           <div className="program-card" style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
             <img src={northeastTourismImg} alt="Northeast Tourism" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Northeast Tourism</h4>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Promoting the natural beauty. culture, and hidden gems of Northeast India. Discover destinations, experiences, and responsible tourism opportunities.</p>
-              <a 
-                href="#learn" 
+              <a
+                href="#learn"
                 onClick={(e) => {
                   e.preventDefault();
                   setCurrentPage('work');
@@ -813,7 +813,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                 }}
                 style={{ fontSize: '0.85rem', fontWeight: 600, color: '#000000', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
               >
-                Learn More <ChevronRight size={16}/>
+                Learn More <ChevronRight size={16} />
               </a>
             </div>
           </div>
@@ -824,8 +824,8 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Relief & Humanitarian Aid</h4>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Providing emergency assistance, relief materials, and support to communities affected by disasters and crises.</p>
-              <a 
-                href="#learn" 
+              <a
+                href="#learn"
                 onClick={(e) => {
                   e.preventDefault();
                   setCurrentPage('work');
@@ -833,7 +833,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                 }}
                 style={{ fontSize: '0.85rem', fontWeight: 600, color: '#000000', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
               >
-                Learn More <ChevronRight size={16}/>
+                Learn More <ChevronRight size={16} />
               </a>
             </div>
           </div>
@@ -844,8 +844,8 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Local Products</h4>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Supporting local farmers and communities by offering pure, natural, and organic products made in the Northeast.</p>
-              <a 
-                href="#learn" 
+              <a
+                href="#learn"
                 onClick={(e) => {
                   e.preventDefault();
                   setCurrentPage('work');
@@ -853,7 +853,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                 }}
                 style={{ fontSize: '0.85rem', fontWeight: 600, color: '#000000', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
               >
-                Learn More <ChevronRight size={16}/>
+                Learn More <ChevronRight size={16} />
               </a>
             </div>
           </div>
@@ -864,37 +864,37 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Free UPSC Coaching</h4>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Providing free UPSC civil services coaching to deserving students from Arunachal Pradesh, Nagaland, and Manipur to support their administrative career aspirations.</p>
-              <a 
-                href="#learn" 
+              <a
+                href="#learn"
                 onClick={(e) => {
                   e.preventDefault();
                   setShowLightbox(true);
                 }}
                 style={{ fontSize: '0.85rem', fontWeight: 600, color: '#000000', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
               >
-                Learn More <ChevronRight size={16}/>
+                Learn More <ChevronRight size={16} />
               </a>
             </div>
           </div>
 
           {/* Program Card 6 (Auto-sliding Photo Gallery) */}
           <div className="program-card" style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
-            <img 
+            <img
               src={
                 activeMedicalPhoto === 0 ? medicalCamp01 :
-                activeMedicalPhoto === 1 ? medicalCamp02 :
-                activeMedicalPhoto === 2 ? medicalCamp03 :
-                activeMedicalPhoto === 3 ? medicalCamp04 :
-                medicalCamp05
-              } 
-              alt="Free Medical Check-up Camp" 
-              style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0, transition: 'all 0.5s ease-in-out' }} 
+                  activeMedicalPhoto === 1 ? medicalCamp02 :
+                    activeMedicalPhoto === 2 ? medicalCamp03 :
+                      activeMedicalPhoto === 3 ? medicalCamp04 :
+                        medicalCamp05
+              }
+              alt="Free Medical Check-up Camp"
+              style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0, transition: 'all 0.5s ease-in-out' }}
             />
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Free Medical Check-up Camp</h4>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>On 22nd Nov 2025, a free medical check-up camp was organized at the SPUNER office in Delhi to support the health and well-being of all Northeasterners.</p>
-              <a 
-                href="#learn" 
+              <a
+                href="#learn"
                 onClick={(e) => {
                   e.preventDefault();
                   setCurrentPage('work');
@@ -902,24 +902,24 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                 }}
                 style={{ fontSize: '0.85rem', fontWeight: 600, color: '#000000', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
               >
-                Learn More <ChevronRight size={16}/>
+                Learn More <ChevronRight size={16} />
               </a>
             </div>
           </div>
         </div>
-        
+
         <div style={{ textAlign: 'center', marginTop: '40px' }}>
-          <button 
+          <button
             onClick={() => {
               setCurrentPage('work');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            style={{ 
-              padding: '12px 36px', 
-              background: '#000000', 
-              color: '#ffffff', 
-              borderRadius: '30px', 
-              border: 'none', 
+            style={{
+              padding: '12px 36px',
+              background: '#000000',
+              color: '#ffffff',
+              borderRadius: '30px',
+              border: 'none',
               cursor: 'pointer',
               fontWeight: 600,
               transition: 'opacity 0.2s',
@@ -936,38 +936,38 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       <section style={{ backgroundColor: '#000000', color: '#ffffff', padding: '90px 24px' }}>
         <div className="container">
           {/* Header Layout */}
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'flex-end', 
-            marginBottom: '48px', 
-            flexWrap: 'wrap', 
-            gap: '24px' 
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            marginBottom: '48px',
+            flexWrap: 'wrap',
+            gap: '24px'
           }}>
-            <h2 style={{ 
-              fontSize: 'clamp(2.5rem, 5vw, 4rem)', 
-              fontFamily: 'var(--font-title)', 
-              fontWeight: 400, 
-              color: '#ffffff', 
+            <h2 style={{
+              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+              fontFamily: 'var(--font-title)',
+              fontWeight: 400,
+              color: '#ffffff',
               margin: 0,
               lineHeight: 1.1
             }}>
               Stories of Change
             </h2>
-            <p style={{ 
-              color: '#8a92a6', 
-              fontSize: '1.05rem', 
-              maxWidth: '320px', 
-              lineHeight: 1.45, 
-              margin: 0, 
-              textAlign: 'left' 
+            <p style={{
+              color: '#8a92a6',
+              fontSize: '1.05rem',
+              maxWidth: '320px',
+              lineHeight: 1.45,
+              margin: 0,
+              textAlign: 'left'
             }}>
               Real stories from real people whose lives have been touched by NEASW Welfare Foundation.
             </p>
           </div>
-          
+
           {/* Main Card with Background Image */}
-          <div style={{ 
+          <div style={{
             position: 'relative',
             backgroundImage: `url(${storiesOfChangeImg})`,
             backgroundSize: 'cover',
@@ -980,13 +980,13 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             padding: '40px',
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)'
           }} className="stories-banner-card">
-            
+
             {/* White Testimonial Card Overlay */}
-            <div style={{ 
-              background: 'rgba(255, 255, 255, 0.5)', 
-              color: '#000000', 
-              borderRadius: '24px', 
-              padding: '24px 28px', 
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.5)',
+              color: '#000000',
+              borderRadius: '24px',
+              padding: '24px 28px',
               maxWidth: '380px',
               width: '100%',
               boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
@@ -997,30 +997,30 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)'
             }}>
-              <p style={{ 
-                fontSize: '1.15rem', 
-                fontWeight: 500, 
-                lineHeight: 1.4, 
-                margin: 0, 
+              <p style={{
+                fontSize: '1.15rem',
+                fontWeight: 500,
+                lineHeight: 1.4,
+                margin: 0,
                 color: '#000000',
                 fontFamily: 'var(--font-body)'
               }}>
                 “Unity Utsav helped me connect with fellow students from across the Northeast and strengthened my sense of identity.”
               </p>
               <div>
-                <span style={{ 
-                  display: 'block', 
-                  fontSize: '1rem', 
+                <span style={{
+                  display: 'block',
+                  fontSize: '1rem',
                   color: '#4a5568',
                   marginBottom: '2px',
                   fontWeight: 600
                 }}>
                   - Lhingneihoi Chongloi
                 </span>
-                <span style={{ 
-                  color: '#4a5568', 
-                  fontSize: '0.85rem', 
-                  fontWeight: 600 
+                <span style={{
+                  color: '#4a5568',
+                  fontSize: '0.85rem',
+                  fontWeight: 600
                 }}>
                   Participant &nbsp;|&nbsp; Unity Utsav
                 </span>
@@ -1030,17 +1030,17 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
 
           {/* View All Button */}
           <div style={{ textAlign: 'center', marginTop: '40px' }}>
-            <button 
+            <button
               onClick={() => {
                 setCurrentPage('work');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              style={{ 
-                padding: '12px 36px', 
-                background: '#ffffff', 
-                color: '#000000', 
-                borderRadius: '30px', 
-                border: 'none', 
+              style={{
+                padding: '12px 36px',
+                background: '#ffffff',
+                color: '#000000',
+                borderRadius: '30px',
+                border: 'none',
                 cursor: 'pointer',
                 fontWeight: 600,
                 transition: 'opacity 0.2s',
@@ -1067,20 +1067,20 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             {Object.keys(faqData).map((cat, idx) => {
               const isActive = activeCategory === cat;
               return (
-                <button 
-                  key={idx} 
+                <button
+                  key={idx}
                   onClick={() => {
                     setActiveCategory(cat);
                     setActiveFaq(0);
                   }}
-                  style={{ 
-                    textAlign: 'center', 
-                    padding: '12px 20px', 
-                    background: isActive ? '#000000' : 'transparent', 
-                    color: isActive ? '#ffffff' : '#666666', 
-                    border: '1px solid ' + (isActive ? '#000000' : '#dddddd'), 
-                    borderRadius: '30px', 
-                    cursor: 'pointer', 
+                  style={{
+                    textAlign: 'center',
+                    padding: '12px 20px',
+                    background: isActive ? '#000000' : 'transparent',
+                    color: isActive ? '#ffffff' : '#666666',
+                    border: '1px solid ' + (isActive ? '#000000' : '#dddddd'),
+                    borderRadius: '30px',
+                    cursor: 'pointer',
                     fontWeight: 600,
                     fontSize: '0.875rem',
                     transition: 'all 0.2s',
@@ -1097,16 +1097,16 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             {faqData[activeCategory].map((faq, idx) => {
               const isOpen = activeFaq === idx;
               return (
-                <div 
-                  key={idx} 
-                  style={{ 
-                    border: '1px solid var(--border-color)', 
-                    borderRadius: '16px', 
-                    padding: '24px', 
+                <div
+                  key={idx}
+                  style={{
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '16px',
+                    padding: '24px',
                     cursor: 'pointer',
                     backgroundColor: isOpen ? '#fafafa' : '#ffffff',
                     transition: 'background-color 0.2s',
-                  }} 
+                  }}
                   onClick={() => setActiveFaq(isOpen ? null : idx)}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)' }}>
@@ -1130,7 +1130,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
 
       {/* Lightbox Modal for UPSC Coaching Program Poster */}
       {showLightbox && (
-        <div 
+        <div
           onClick={() => setShowLightbox(false)}
           style={{
             position: 'fixed',
@@ -1147,7 +1147,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           }}
         >
           {/* Modal Container */}
-          <div 
+          <div
             onClick={(e) => e.stopPropagation()}
             style={{
               position: 'relative',
@@ -1181,16 +1181,16 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             </button>
 
             {/* Poster Image */}
-            <img 
-              src={freeUpscCoachingImg} 
-              alt="Free UPSC Coaching Poster" 
-              style={{ 
-                maxWidth: '100%', 
-                maxHeight: '80vh', 
+            <img
+              src={freeUpscCoachingImg}
+              alt="Free UPSC Coaching Poster"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '80vh',
                 objectFit: 'contain',
                 borderRadius: '12px',
                 boxShadow: '0 12px 40px rgba(0,0,0,0.5)'
-              }} 
+              }}
             />
           </div>
         </div>
