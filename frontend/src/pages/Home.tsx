@@ -417,20 +417,22 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
         position: 'relative',
         transition: 'background-image 1s ease-in-out',
       }}>
-        <div style={{ textAlign: 'center', zIndex: 2, padding: '0 20px' }}>
-          <h1 style={{
-            fontFamily: 'var(--font-title)',
-            fontSize: 'clamp(3rem, 8vw, 6.5rem)',
-            color: '#ffffff',
-            lineHeight: 1.05,
-            letterSpacing: '0.02em',
-            margin: 0,
-            textTransform: 'uppercase',
-            fontWeight: 500,
-          }}>
-            NEASW <br /> WELFARE <br /> FOUNDATION
-          </h1>
-        </div>
+        {activeHeroIndex !== 0 && (
+          <div style={{ textAlign: 'center', zIndex: 2, padding: '0 20px' }}>
+            <h1 style={{
+              fontFamily: 'var(--font-title)',
+              fontSize: 'clamp(3rem, 8vw, 6.5rem)',
+              color: '#ffffff',
+              lineHeight: 1.05,
+              letterSpacing: '0.02em',
+              margin: 0,
+              textTransform: 'uppercase',
+              fontWeight: 500,
+            }}>
+              NEASW <br /> WELFARE <br /> FOUNDATION
+            </h1>
+          </div>
+        )}
       </section>
 
       {/* 2. Creating Impact Section */}
