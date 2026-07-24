@@ -93,6 +93,14 @@ interface Initiative {
   autoSlide?: boolean;
 }
 
+interface ProgramItem {
+  title: string;
+  description: string;
+  image: string;
+  images?: string[];
+  isUPSC?: boolean;
+}
+
 interface HomeProps {
   setCurrentPage: (page: string) => void;
 }
@@ -105,6 +113,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [showLightbox, setShowLightbox] = useState(false);
   const [activeMedicalPhoto, setActiveMedicalPhoto] = useState(0);
+  const [activeProgram, setActiveProgram] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   React.useEffect(() => {
@@ -218,6 +227,57 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       ]
     }
   ];
+
+  const programs: ProgramItem[] = [
+    {
+      title: "Educational Support",
+      description: "Scholarships, learning resources, digital literacy initiatives, and guidance for students from underserved communities.",
+      image: educationalSupportImg
+    },
+    {
+      title: "Northeast Tourism",
+      description: "Promoting the natural beauty, culture, and hidden gems of Northeast India. Discover destinations, experiences, and responsible tourism opportunities.",
+      image: northeastTourismImg
+    },
+    {
+      title: "Relief & Humanitarian Aid",
+      description: "Providing emergency assistance, relief materials, and support to communities affected by disasters and crises.",
+      image: reliefAidImg
+    },
+    {
+      title: "Local Products",
+      description: "Supporting local farmers and communities by offering pure, natural, and organic products made in the Northeast.",
+      image: LocalProducts
+    },
+    {
+      title: "Free UPSC Coaching",
+      description: "Providing free UPSC civil services coaching to deserving students from Arunachal Pradesh, Nagaland, and Manipur to support their administrative career aspirations.",
+      image: freeUpscCoachingImg,
+      isUPSC: true
+    },
+    {
+      title: "Free Medical Check-up Camp",
+      description: "On 22nd Nov 2025, a free medical check-up camp was organized at the SPUNER office in Delhi to support the health and well-being of all Northeasterners.",
+      image: medicalCamp01,
+      images: [medicalCamp01, medicalCamp02, medicalCamp03, medicalCamp04, medicalCamp05]
+    }
+  ];
+
+  const handlePrevProgram = () => {
+    setActiveProgram((prev) => (prev - 1 + programs.length) % programs.length);
+  };
+
+  const handleNextProgram = () => {
+    setActiveProgram((prev) => (prev + 1) % programs.length);
+  };
+
+  // Auto-switch main program slides
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveProgram((prev) => (prev + 1) % programs.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, [programs.length]);
 
   // 1. Auto-switch internal photo slides for all initiatives with multiple images
   React.useEffect(() => {
@@ -789,135 +849,190 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', margin: 0 }}>Initiatives focused on education, welfare, and sustainability.</p>
         </div>
 
-        <div className="home-programs-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
-          {/* Program Card 1 */}
-          <div className="program-card" style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
-            <img src={educationalSupportImg} alt="Educational Support" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Educational Support</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Scholarships, learning resources, digital literacy initiatives, and guidance for students from underserved communities.</p>
-              <a
-                href="#learn"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentPage('work');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                style={{ fontSize: '0.85rem', fontWeight: 600, color: '#000000', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
-              >
-                Learn More <ChevronRight size={16} />
-              </a>
-            </div>
+        {/* Carousel Mockup for Programs */}
+        <div className="carousel-mockup" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '24px', padding: '0 24px', position: 'relative', maxWidth: '1200px', margin: '0 auto' }}>
+          {/* Prev Button */}
+          <button
+            onClick={handlePrevProgram}
+            className="carousel-prev-btn"
+            style={{
+              position: 'absolute',
+              left: '10px',
+              zIndex: 10,
+              background: '#ffffff',
+              border: '1px solid var(--border-color)',
+              borderRadius: '50%',
+              width: '44px',
+              height: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            }}
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          {/* Left card (inactive) */}
+          <div
+            onClick={handlePrevProgram}
+            className="carousel-side-card"
+            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)' }}
+          >
+            <img 
+              src={
+                programs[(activeProgram - 1 + programs.length) % programs.length].images
+                  ? programs[(activeProgram - 1 + programs.length) % programs.length].images![activeMedicalPhoto]
+                  : programs[(activeProgram - 1 + programs.length) % programs.length].image
+              } 
+              alt="Previous Program" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+            />
           </div>
 
-          {/* Program Card 2 */}
-          <div className="program-card" style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
-            <img src={northeastTourismImg} alt="Northeast Tourism" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Northeast Tourism</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Promoting the natural beauty. culture, and hidden gems of Northeast India. Discover destinations, experiences, and responsible tourism opportunities.</p>
-              <a
-                href="#learn"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentPage('work');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                style={{ fontSize: '0.85rem', fontWeight: 600, color: '#000000', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
-              >
-                Learn More <ChevronRight size={16} />
-              </a>
-            </div>
-          </div>
-
-          {/* Program Card 3 */}
-          <div className="program-card" style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
-            <img src={reliefAidImg} alt="Relief Operations" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Relief & Humanitarian Aid</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Providing emergency assistance, relief materials, and support to communities affected by disasters and crises.</p>
-              <a
-                href="#learn"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentPage('work');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                style={{ fontSize: '0.85rem', fontWeight: 600, color: '#000000', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
-              >
-                Learn More <ChevronRight size={16} />
-              </a>
-            </div>
-          </div>
-
-          {/* Program Card 4 */}
-          <div className="program-card" style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
-            <img src={LocalProducts} alt="Local Products" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Local Products</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Supporting local farmers and communities by offering pure, natural, and organic products made in the Northeast.</p>
-              <a
-                href="#learn"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentPage('work');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                style={{ fontSize: '0.85rem', fontWeight: 600, color: '#000000', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
-              >
-                Learn More <ChevronRight size={16} />
-              </a>
-            </div>
-          </div>
-
-          {/* Program Card 5 */}
-          <div className="program-card" style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
-            <img src={freeUpscCoachingImg} alt="Free UPSC Coaching" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0 }} />
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Free UPSC Coaching</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>Providing free UPSC civil services coaching to deserving students from Arunachal Pradesh, Nagaland, and Manipur to support their administrative career aspirations.</p>
-              <a
-                href="#learn"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setShowLightbox(true);
-                }}
-                style={{ fontSize: '0.85rem', fontWeight: 600, color: '#000000', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
-              >
-                Learn More <ChevronRight size={16} />
-              </a>
-            </div>
-          </div>
-
-          {/* Program Card 6 (Auto-sliding Photo Gallery) */}
-          <div className="program-card" style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', display: 'flex', gap: '20px', border: '1px solid var(--border-color)', textAlign: 'left' }}>
+          {/* Center Card */}
+          <div className="carousel-center-card" style={{ flexShrink: 0, width: '55%', height: '380px', borderRadius: '16px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '24px', transition: 'var(--transition-smooth)' }}>
             <img
               src={
-                activeMedicalPhoto === 0 ? medicalCamp01 :
-                  activeMedicalPhoto === 1 ? medicalCamp02 :
-                    activeMedicalPhoto === 2 ? medicalCamp03 :
-                      activeMedicalPhoto === 3 ? medicalCamp04 :
-                        medicalCamp05
+                programs[activeProgram].images
+                  ? programs[activeProgram].images![activeMedicalPhoto]
+                  : programs[activeProgram].image
               }
-              alt="Free Medical Check-up Camp"
-              style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '12px', flexShrink: 0, transition: 'all 0.5s ease-in-out' }}
+              alt={programs[activeProgram].title}
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }}
             />
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <h4 style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Free Medical Check-up Camp</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.45 }}>On 22nd Nov 2025, a free medical check-up camp was organized at the SPUNER office in Delhi to support the health and well-being of all Northeasterners.</p>
-              <a
-                href="#learn"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentPage('work');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                style={{ fontSize: '0.85rem', fontWeight: 600, color: '#000000', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
-              >
-                Learn More <ChevronRight size={16} />
-              </a>
+
+            {/* Inner photo gallery navigation (counter only for Medical Camp) */}
+            {programs[activeProgram].images && (
+              <div style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: 'rgba(0,0,0,0.65)',
+                color: '#ffffff',
+                padding: '6px 12px',
+                borderRadius: '20px',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                zIndex: 4,
+                fontFamily: 'var(--font-body)',
+                letterSpacing: '0.05em'
+              }}>
+                {activeMedicalPhoto + 1} / {programs[activeProgram].images!.length}
+              </div>
+            )}
+
+            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(transparent, rgba(0,0,0,0.75))', zIndex: 2 }}></div>
+            <div style={{ zIndex: 3, display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
+              <h3 style={{ fontSize: '1.85rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: '#ffffff', margin: 0 }}>{programs[activeProgram].title}</h3>
+              <p style={{ fontSize: '0.98rem', color: '#e2e8f0', margin: 0, lineHeight: 1.45, fontWeight: 400, marginBottom: '8px' }}>{programs[activeProgram].description}</p>
+              <div>
+                {programs[activeProgram].isUPSC ? (
+                  <button
+                    onClick={() => setShowLightbox(true)}
+                    style={{
+                      padding: '8px 20px',
+                      background: '#ffffff',
+                      color: '#000000',
+                      borderRadius: '20px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontWeight: 600,
+                      fontSize: '0.85rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    Learn More <ChevronRight size={16} />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setCurrentPage('work');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    style={{
+                      padding: '8px 20px',
+                      background: '#ffffff',
+                      color: '#000000',
+                      borderRadius: '20px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontWeight: 600,
+                      fontSize: '0.85rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    Learn More <ChevronRight size={16} />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
+
+          {/* Right card (inactive) */}
+          <div
+            onClick={handleNextProgram}
+            className="carousel-side-card"
+            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)' }}
+          >
+            <img 
+              src={
+                programs[(activeProgram + 1) % programs.length].images
+                  ? programs[(activeProgram + 1) % programs.length].images![activeMedicalPhoto]
+                  : programs[(activeProgram + 1) % programs.length].image
+              } 
+              alt="Next Program" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+            />
+          </div>
+
+          {/* Next Button */}
+          <button
+            onClick={handleNextProgram}
+            className="carousel-next-btn"
+            style={{
+              position: 'absolute',
+              right: '10px',
+              zIndex: 10,
+              background: '#ffffff',
+              border: '1px solid var(--border-color)',
+              borderRadius: '50%',
+              width: '44px',
+              height: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            }}
+          >
+            <ChevronRight size={20} />
+          </button>
+        </div>
+
+        {/* Carousel Pagination Dots */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '30px' }}>
+          {programs.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveProgram(index)}
+              style={{
+                width: activeProgram === index ? '24px' : '8px',
+                height: '8px',
+                borderRadius: '4px',
+                backgroundColor: activeProgram === index ? '#000000' : '#d1d5db',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+                transition: 'var(--transition-smooth)',
+              }}
+            />
+          ))}
         </div>
 
         <div style={{ textAlign: 'center', marginTop: '40px' }}>
