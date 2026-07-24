@@ -84,6 +84,15 @@ import remoteOutreach02 from '../assets/Reaching Remote Communities/photo_02.jpe
 import remoteOutreach03 from '../assets/Reaching Remote Communities/photo_03.jpeg';
 import remoteOutreach04 from '../assets/Reaching Remote Communities/photo_04.jpeg';
 
+interface Initiative {
+  title: string;
+  description: string;
+  image: string;
+  video?: string;
+  images?: string[];
+  autoSlide?: boolean;
+}
+
 interface HomeProps {
   setCurrentPage: (page: string) => void;
 }
@@ -105,7 +114,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const initiatives = [
+  const initiatives: Initiative[] = [
     {
       title: "Unity Utsav",
       description: "The largest student cultural and sports festival for Northeasterns in Delhi.",
@@ -215,8 +224,9 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
     let interval: any;
     const currentInitiative = initiatives[activeInitiative];
     if (currentInitiative?.images && currentInitiative.images.length > 1 && !isVideoPlaying) {
+      const imgs = currentInitiative.images;
       interval = setInterval(() => {
-        setActivePhotoIndex((prev) => (prev + 1) % currentInitiative.images.length);
+        setActivePhotoIndex((prev) => (prev + 1) % imgs.length);
       }, 3000);
     }
     return () => {
