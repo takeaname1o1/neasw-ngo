@@ -334,7 +334,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       </section>
 
       {/* 2. Creating Impact Section */}
-      <section className="container" style={{ padding: '90px 24px' }}>
+      <section className="container section-padding">
         <h2 style={{
           textAlign: 'center',
           fontSize: '3rem',
@@ -506,7 +506,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       </section>
 
       {/* 3. Meet Our Leadership (Dark Section) */}
-      <section style={{ backgroundColor: '#0a0d14', color: '#ffffff', padding: '90px 24px' }}>
+      <section className="section-padding" style={{ backgroundColor: '#0a0d14', color: '#ffffff' }}>
         <div className="container home-leadership-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '50px', alignItems: 'center' }}>
           {/* Overlapping images stack */}
           <div className="leadership-collage" style={{ display: 'flex', gap: '16px', justifyContent: 'center', alignItems: 'center' }}>
@@ -544,7 +544,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       </section>
 
       {/* 4. Flagship Initiatives */}
-      <section style={{ padding: '90px 0', overflow: 'hidden' }}>
+      <section className="section-padding-vertical" style={{ overflow: 'hidden' }}>
         <div className="container" style={{ marginBottom: '50px', textAlign: 'center' }}>
           <h2 style={{ fontSize: '3rem', fontFamily: 'var(--font-title)', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '8px' }}>Our Flagship Initiatives</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', margin: 0 }}>Major platforms that bring youth together, colobrate culture and drive national integration.</p>
@@ -555,6 +555,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           {/* Prev Button */}
           <button
             onClick={handlePrevInitiative}
+            className="carousel-prev-btn"
             style={{
               position: 'absolute',
               left: '10px',
@@ -736,6 +737,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           {/* Next Button */}
           <button
             onClick={handleNextInitiative}
+            className="carousel-next-btn"
             style={{
               position: 'absolute',
               right: '10px',
@@ -781,7 +783,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       </section>
 
       {/* 5. Explore Our Programs */}
-      <section className="container" style={{ padding: '80px 24px', backgroundColor: '#fafafa', borderRadius: '40px', marginBottom: '80px' }}>
+      <section className="container section-padding" style={{ backgroundColor: '#fafafa', borderRadius: '40px', marginBottom: '80px' }}>
         <div style={{ textAlign: 'center', marginBottom: '50px' }}>
           <h2 style={{ fontSize: '3rem', fontFamily: 'var(--font-title)', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '8px' }}>Explore Our Programs</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', margin: 0 }}>Initiatives focused on education, welfare, and sustainability.</p>
@@ -943,7 +945,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       </section>
 
       {/* 6. Stories of Change (Testimonials) */}
-      <section style={{ backgroundColor: '#000000', color: '#ffffff', padding: '90px 24px' }}>
+      <section className="section-padding" style={{ backgroundColor: '#000000', color: '#ffffff' }}>
         <div className="container">
           {/* Header Layout */}
           <div style={{
@@ -1065,7 +1067,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       </section>
 
       {/* 7. Frequently Asked Questions */}
-      <section className="container" style={{ padding: '90px 24px' }}>
+      <section className="container section-padding">
         <div style={{ textAlign: 'center', marginBottom: '50px' }}>
           <h2 style={{ fontSize: '3rem', fontFamily: 'var(--font-title)', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '8px' }}>Frequently Asked Questions</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', margin: 0 }}>Answers to the questions we get asked the most.</p>
@@ -1073,7 +1075,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
 
         <div className="home-faq-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px', alignItems: 'start' }}>
           {/* FAQ Sidebar */}
-          <div style={{ display: 'flex', flexDirection: 'row', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <div className="faq-category-container" style={{ display: 'flex', flexDirection: 'row', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
             {Object.keys(faqData).map((cat, idx) => {
               const isActive = activeCategory === cat;
               return (
@@ -1208,6 +1210,12 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
 
       {/* Responsive Styles Injection */}
       <style>{`
+        .section-padding {
+          padding: 90px 24px !important;
+        }
+        .section-padding-vertical {
+          padding: 90px 0 !important;
+        }
         .partner-logo-card:hover {
           transform: translateY(-4px);
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06) !important;
@@ -1249,6 +1257,33 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           }
         }
         @media (max-width: 768px) {
+          .section-padding {
+            padding: 50px 20px !important;
+          }
+          .section-padding-vertical {
+            padding: 50px 0 !important;
+          }
+          .carousel-prev-btn, .carousel-next-btn {
+            width: 36px !important;
+            height: 36px !important;
+          }
+          .carousel-prev-btn { left: 4px !important; }
+          .carousel-next-btn { right: 4px !important; }
+
+          .carousel-center-card h3 {
+            font-size: 1.4rem !important; 
+          }
+          .faq-category-container {
+            flex-wrap: nowrap !important;
+            justify-content: flex-start !important;
+            overflow-x: auto !important;
+            padding-bottom: 12px !important;
+            -webkit-overflow-scrolling: touch !important;
+            gap: 12px !important;
+          }
+          .faq-category-container::-webkit-scrollbar {
+            height: 4px !important;
+          }
           .home-testimonial-card {
             flex-direction: column !important;
             padding: 30px 20px !important;
@@ -1282,6 +1317,21 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           .program-card > div {
             align-items: center !important;
             text-align: center !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .leadership-collage {
+            gap: 8px !important;
+          }
+          .leadership-collage img:nth-child(1),
+          .leadership-collage img:nth-child(3) {
+            width: 80px !important;
+            height: 120px !important;
+          }
+          .leadership-collage img:nth-child(2) {
+            width: 100px !important;
+            height: 140px !important;
+            margin-top: -15px !important;
           }
         }
       `}</style>
