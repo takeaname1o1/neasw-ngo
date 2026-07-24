@@ -17,13 +17,14 @@ import neDonerLogo from '../assets/partner/NE_doner.png';
 import scienceTechnoLogo from '../assets/partner/science_techno.png';
 import storiesOfChangeImg from '../assets/UnityUtsav/stoories_of_chnage.png';
 
-// Delhi Chapter Leadership Assets
-import pratikPresident from '../assets/delhi_chapter/Pratik Thaomung_Delhi chapter_President.jpeg';
-import lanchenbiVP from '../assets/delhi_chapter/Lanchenbi Urungpurel_Delhi chapter_VP.jpeg';
-import boazLepcha from '../assets/delhi_chapter/BOAZ Lepcha_Delhi chapter.jpeg';
-import michiSheela from '../assets/delhi_chapter/Michi Sheela_Delhi chapter.jpeg';
-import pemaKhandu from '../assets/delhi_chapter/Pema Khandu Thungon_Delhi chapter.jpeg';
-import tashiChotton from '../assets/delhi_chapter/Tashi Chotton_Delhi chapter.jpeg';
+// Delhi Chapter Leadership Assets (from team directory)
+import leader3 from '../assets/team/3.jpg';
+import leader4 from '../assets/team/4.jpg';
+import leader5 from '../assets/team/5.jpg';
+import leader6 from '../assets/team/6.jpg';
+import leader7 from '../assets/team/7.jpg';
+import leader8 from '../assets/team/8.jpg';
+import leader9 from '../assets/team/9.jpg';
 
 // Free Medical Check-up Camp Assets
 import medicalCamp01 from '../assets/programs/Free Medical Check-up Camp/photo_01.jpeg';
@@ -133,18 +134,19 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
 
   React.useEffect(() => {
     const interval = setInterval(() => {
-      setActiveLeaderIndex((prev) => (prev + 1) % 6);
+      setActiveLeaderIndex((prev) => (prev + 1) % 7);
     }, 3500);
     return () => clearInterval(interval);
   }, []);
 
   const delhiLeaders = [
-    { img: pratikPresident, name: "Pratik Thaomung", role: "Delhi Chapter President" },
-    { img: lanchenbiVP, name: "Lanchenbi Urungpurel", role: "Delhi Chapter Vice President" },
-    { img: boazLepcha, name: "BOAZ Lepcha", role: "Delhi Chapter Member" },
-    { img: michiSheela, name: "Michi Sheela", role: "Delhi Chapter Member" },
-    { img: pemaKhandu, name: "Pema Khandu Thungon", role: "Delhi Chapter Member" },
-    { img: tashiChotton, name: "Tashi Chotton", role: "Delhi Chapter Member" }
+    { img: leader3, name: "Pratik Thaomung", role: "President" },
+    { img: leader4, name: "Lanchenbi Urungpurel", role: "Vice President" },
+    { img: leader5, name: "Krishanu Pratim Medhi", role: "General Secretary" },
+    { img: leader6, name: "Boaz Lepcha", role: "Joint Secretary" },
+    { img: leader7, name: "Michi Sheela", role: "Joint Secretary" },
+    { img: leader8, name: "Pema Khandu Thungon", role: "Convenor" },
+    { img: leader9, name: "Tashi Chotton", role: "Delhi Chapter Coordinator" }
   ];
 
   const initiatives: Initiative[] = [

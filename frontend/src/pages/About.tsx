@@ -12,13 +12,25 @@ import wwo1 from '../assets/WWO/1.png';
 import wwo2 from '../assets/WWO/2.png';
 import wwo3 from '../assets/WWO/3.png';
 
-// Delhi Chapter Leadership Images
-import pratikPresident from '../assets/delhi_chapter/Pratik Thaomung_Delhi chapter_President.jpeg';
-import lanchenbiVP from '../assets/delhi_chapter/Lanchenbi Urungpurel_Delhi chapter_VP.jpeg';
-import boazLepcha from '../assets/delhi_chapter/BOAZ Lepcha_Delhi chapter.jpeg';
-import michiSheela from '../assets/delhi_chapter/Michi Sheela_Delhi chapter.jpeg';
-import pemaKhandu from '../assets/delhi_chapter/Pema Khandu Thungon_Delhi chapter.jpeg';
-import tashiChotton from '../assets/delhi_chapter/Tashi Chotton_Delhi chapter.jpeg';
+// New Team Leadership Images
+import leader1 from '../assets/team/1.jpg';
+import leader2 from '../assets/team/2.jpg';
+import leader3 from '../assets/team/3.jpg';
+import leader4 from '../assets/team/4.jpg';
+import leader5 from '../assets/team/5.jpg';
+import leader6 from '../assets/team/6.jpg';
+import leader7 from '../assets/team/7.jpg';
+import leader8 from '../assets/team/8.jpg';
+import leader9 from '../assets/team/9.jpg';
+import leader10 from '../assets/team/10.jpg';
+import leader11 from '../assets/team/11.jpg';
+import leader12 from '../assets/team/12.jpg';
+import leader13 from '../assets/team/13.jpg';
+import leader14 from '../assets/team/14.jpg';
+import leader15 from '../assets/team/15.jpg';
+import leader16 from '../assets/team/16.jpg';
+import leader17 from '../assets/team/17.jpg';
+import leader18 from '../assets/team/18.jpg';
 
 interface AboutProps {
   setCurrentPage: (page: string) => void;
@@ -263,41 +275,46 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '80px' }}>
             {[
               {
+                title: "Executive Board",
+                members: [
+                  { name: "Nyaken Riba", role: "Director & Founder", image: leader1 },
+                  { name: "Kiren Acharya", role: "Overall Gen Sec", image: leader2 }
+                ]
+              },
+              {
                 title: "Delhi Chapter",
                 members: [
-                  { name: "Pratik Thaomung", role: "President", image: pratikPresident },
-                  { name: "Lanchenbi Urungpurel", role: "Vice President", image: lanchenbiVP },
-                  { name: "Michi Sheela", role: "Secretary", image: michiSheela },
-                  { name: "Boaz Lepcha", role: "Joint Secretary", image: boazLepcha },
-                  { name: "Pema Khandu Thungon", role: "Treasurer", image: pemaKhandu },
-                  { name: "Tashi Chotton", role: "Coordinator", image: tashiChotton }
+                  { name: "Pratik Thaomung", role: "President", image: leader3 },
+                  { name: "Lanchenbi Urungpurel", role: "Vice President", image: leader4 },
+                  { name: "Krishanu Pratim Medhi", role: "General Secretary", image: leader5 },
+                  { name: "Boaz Lepcha", role: "Joint Secretary", image: leader6 },
+                  { name: "Michi Sheela", role: "Joint Secretary", image: leader7 },
+                  { name: "Pema Khandu Thungon", role: "Convenor", image: leader8 },
+                  { name: "Tashi Chotton", role: "Delhi Chapter Coordinator", image: leader9 }
                 ]
               },
               {
                 title: "Nagaland Chapter",
                 members: [
-                  { name: "Zuboni Humtsoe", role: "Chapter Head", image: introPortrait },
-                  { name: "Imotemjen Longkumer", role: "Secretary", image: introGroupLeader },
-                  { name: "Vezosa Yietsu", role: "Coordinator", image: introChildrenClassroom },
-                  { name: "Sentila Ao", role: "Advisor", image: introStage }
+                  { name: "Shomwang Wangnao", role: "President", image: leader10 },
+                  { name: "S. Birila Brianna", role: "Vice President & Legal Advisor", image: leader11 },
+                  { name: "Mangam Walem", role: "Finance Incharge", image: leader12 },
+                  { name: "Tokheto", role: "Media Secretary", image: leader13 },
+                  { name: "Manai Konyak", role: "Technical Support Specialist", image: leader14 }
                 ]
               },
               {
                 title: "Manipur Chapter",
                 members: [
-                  { name: "Thanglenmang Haokip", role: "Chapter Head", image: introPortrait },
-                  { name: "Nganba Singh", role: "Joint Secretary", image: introGroupLeader },
-                  { name: "Hoinu Kipgen", role: "Treasurer", image: introChildrenClassroom },
-                  { name: "RK Sanayaima", role: "Executive Member", image: introStage }
+                  { name: "Rajkumar Napoleon Singh", role: "Core Member", image: leader15 },
+                  { name: "Thongbam Aarti Chanu", role: "Core Member", image: leader16 }
                 ]
               },
               {
-                title: "Arunachal Pradesh Chapter",
+                title: "Arunachal Chapter",
                 members: [
-                  { name: "Tasso Robin", role: "Chapter Head", image: introPortrait },
-                  { name: "Likha Taji", role: "Secretary", image: introGroupLeader },
-                  { name: "Yomge Riba", role: "Coordinator", image: introChildrenClassroom },
-                  { name: "Koj Tari", role: "Executive Member", image: introStage }
+                  { name: "Komok Hassen", role: "Core Member", image: leader17 },
+                  { name: "Kina Khishum", role: "Core Member", image: leader18 }
                 ]
               }
             ].map((chapter, idx) => (
