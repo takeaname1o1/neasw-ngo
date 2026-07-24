@@ -418,12 +418,6 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             NEASW <br /> WELFARE <br /> FOUNDATION
           </h1>
         </div>
-        {/* Slider Pagination Mockup */}
-        <div style={{ position: 'absolute', bottom: '40px', display: 'flex', gap: '8px', background: '#ffffff', padding: '10px 20px', borderRadius: '30px', alignItems: 'center', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#000000' }}></span>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#cccccc' }}></span>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#cccccc' }}></span>
-        </div>
       </section>
 
       {/* 2. Creating Impact Section */}
