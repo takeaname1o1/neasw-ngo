@@ -423,7 +423,6 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#000000' }}></span>
           <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#cccccc' }}></span>
           <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#cccccc' }}></span>
-          <span style={{ marginLeft: '10px', fontSize: '1.2rem', lineHeight: 1, cursor: 'pointer' }}>→</span>
         </div>
       </section>
 
