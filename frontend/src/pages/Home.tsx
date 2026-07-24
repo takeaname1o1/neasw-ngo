@@ -548,13 +548,13 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <div
             onClick={handlePrevInitiative}
             className="carousel-side-card"
-            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)', backgroundColor: '#000000' }}
+            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)', backgroundColor: '#ffffff' }}
           >
             <img src={initiatives[(activeInitiative - 1 + initiatives.length) % initiatives.length].image} alt="Previous Initiative" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
 
           {/* Center Card */}
-          <div className="carousel-center-card" style={{ flexShrink: 0, width: '55%', height: '380px', borderRadius: '16px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '24px', transition: 'var(--transition-smooth)', backgroundColor: '#000000' }}>
+          <div className="carousel-center-card" style={{ flexShrink: 0, width: '55%', height: '380px', borderRadius: '16px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '24px', transition: 'var(--transition-smooth)', backgroundColor: '#ffffff' }}>
             {/* If video exists and is playing, show video, otherwise show image */}
             {initiatives[activeInitiative].video && isVideoPlaying ? (
               <video
@@ -689,7 +689,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <div
             onClick={handleNextInitiative}
             className="carousel-side-card"
-            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)', backgroundColor: '#000000' }}
+            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)', backgroundColor: '#ffffff' }}
           >
             <img src={initiatives[(activeInitiative + 1) % initiatives.length].image} alt="Next Initiative" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
@@ -838,7 +838,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <div
             onClick={handlePrevProgram}
             className="carousel-side-card"
-            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)', backgroundColor: '#000000' }}
+            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)', backgroundColor: '#ffffff' }}
           >
             <img 
               src={
@@ -859,7 +859,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               }
             }}
             className="carousel-center-card" 
-            style={{ flexShrink: 0, width: '55%', height: '380px', borderRadius: '16px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '24px', transition: 'var(--transition-smooth)', backgroundColor: '#000000', cursor: programs[activeProgram].isUPSC ? 'pointer' : 'default' }}
+            style={{ flexShrink: 0, width: '55%', height: '380px', borderRadius: '16px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '24px', transition: 'var(--transition-smooth)', backgroundColor: '#ffffff', cursor: programs[activeProgram].isUPSC ? 'pointer' : 'default' }}
           >
             <img
               src={
@@ -898,7 +898,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <div
             onClick={handleNextProgram}
             className="carousel-side-card"
-            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)', backgroundColor: '#000000' }}
+            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)', backgroundColor: '#ffffff' }}
           >
             <img 
               src={
