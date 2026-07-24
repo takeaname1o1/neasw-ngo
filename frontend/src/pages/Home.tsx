@@ -482,93 +482,6 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             </div>
           </div>
         </div>
-
-        {/* Partners Strip */}
-        <div style={{
-          borderTop: '1px solid var(--border-color)',
-          paddingTop: '60px',
-          marginTop: '45px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '35px',
-          alignItems: 'center'
-        }}>
-          <span style={{
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            fontSize: '0.8rem',
-            color: 'var(--text-muted)',
-            letterSpacing: '0.12em',
-            position: 'relative',
-            display: 'inline-block',
-            paddingBottom: '10px',
-            margin: 0
-          }}>
-            Our Partners
-            <span style={{
-              position: 'absolute',
-              bottom: 0,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '24px',
-              height: '2px',
-              backgroundColor: '#000000',
-              borderRadius: '2px'
-            }}></span>
-          </span>
-
-          <div
-            className="partner-logo-grid"
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              gap: '24px',
-              width: '100%',
-              maxWidth: '1200px',
-              boxSizing: 'border-box'
-            }}
-          >
-            {[
-              { logo: assamRiflesLogo, alt: "Assam Rifles" },
-              { logo: homeAffairsLogo, alt: "Ministry of Home Affairs" },
-              { logo: neDonerLogo, alt: "Ministry of Development of North Eastern Region" },
-              { logo: scienceTechnoLogo, alt: "Department of Science & Technology" }
-            ].map((partner, index) => (
-              <div
-                key={index}
-                className="partner-logo-card"
-                style={{
-                  background: '#ffffff',
-                  border: '1px solid rgba(0, 0, 0, 0.06)',
-                  borderRadius: '16px',
-                  padding: '20px 32px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '100px',
-                  flex: '1 1 0px',
-                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.015)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  cursor: 'pointer',
-                  boxSizing: 'border-box'
-                }}
-              >
-                <img
-                  src={partner.logo}
-                  alt={partner.alt}
-                  style={{
-                    maxHeight: '100%',
-                    maxWidth: '100%',
-                    objectFit: 'contain',
-                    filter: 'grayscale(100%) opacity(50%)',
-                    transition: 'all 0.3s ease',
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
 
       {/* 3. Meet Our Leadership (Dark Section) */}
@@ -1312,6 +1225,75 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       {/* 8. Conversion Banner (Dark) */}
       <ConversionBlock setCurrentPage={setCurrentPage} />
 
+      {/* 9. Our Partners Section (Compact) */}
+      <section style={{ 
+        borderTop: '1px solid var(--border-color)', 
+        backgroundColor: '#fafafa',
+        padding: '30px 24px', 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '20px'
+      }}>
+        <div style={{
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          fontSize: '0.75rem',
+          color: 'var(--text-muted)',
+          letterSpacing: '0.12em',
+          margin: 0
+        }}>
+          Our Partners
+        </div>
+
+        <div
+          className="partner-logo-grid"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '32px',
+            width: '100%',
+            maxWidth: '1000px',
+            boxSizing: 'border-box'
+          }}
+        >
+          {[
+            { logo: assamRiflesLogo, alt: "Assam Rifles" },
+            { logo: homeAffairsLogo, alt: "Ministry of Home Affairs" },
+            { logo: neDonerLogo, alt: "Ministry of Development of North Eastern Region" },
+            { logo: scienceTechnoLogo, alt: "Department of Science & Technology" }
+          ].map((partner, index) => (
+            <div
+              key={index}
+              className="partner-logo-card"
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '50px',
+                width: '140px',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer'
+              }}
+            >
+              <img
+                src={partner.logo}
+                alt={partner.alt}
+                style={{
+                  maxHeight: '100%',
+                  maxWidth: '100%',
+                  objectFit: 'contain',
+                  filter: 'grayscale(100%) opacity(50%)',
+                  transition: 'all 0.3s ease',
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Lightbox Modal for UPSC Coaching Program Poster */}
       {showLightbox && (
         <div
@@ -1403,14 +1385,14 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           }
           .partner-logo-card {
             flex: 1 1 calc(50% - 12px) !important;
-            min-width: 180px !important;
-            height: 90px !important;
+            min-width: 120px !important;
+            height: 50px !important;
           }
         }
         @media (max-width: 480px) {
           .partner-logo-card {
-            flex: 1 1 100% !important;
-            height: 80px !important;
+            flex: 1 1 calc(50% - 12px) !important;
+            height: 50px !important;
           }
         }
         @media (min-width: 992px) {
