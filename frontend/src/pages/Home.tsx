@@ -114,6 +114,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
   const [showLightbox, setShowLightbox] = useState(false);
   const [activeMedicalPhoto, setActiveMedicalPhoto] = useState(0);
   const [activeProgram, setActiveProgram] = useState(0);
+  const [showInitiativeDesc, setShowInitiativeDesc] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   React.useEffect(() => {
@@ -307,6 +308,11 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       if (interval) clearInterval(interval);
     };
   }, [activeInitiative, isVideoPlaying, initiatives.length]);
+
+  // Reset description visibility on initiative change
+  React.useEffect(() => {
+    setShowInitiativeDesc(false);
+  }, [activeInitiative]);
 
   const handlePlayPauseVideo = () => {
     if (videoRef.current) {
@@ -773,16 +779,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               </>
             )}
 
-            {/* Text Overlay (hide when video is playing to not cover video controls) */}
-            {(!initiatives[activeInitiative].video || !isVideoPlaying) && (
-              <>
-                <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(transparent, rgba(0,0,0,0.75))', zIndex: 2 }}></div>
-                <div style={{ zIndex: 3, display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
-                  <h3 style={{ fontSize: '1.85rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: '#ffffff', margin: 0 }}>{initiatives[activeInitiative].title}</h3>
-                  <p style={{ fontSize: '0.98rem', color: '#e2e8f0', margin: 0, lineHeight: 1.45, fontWeight: 400 }}>{initiatives[activeInitiative].description}</p>
-                </div>
-              </>
-            )}
+            {/* Text overlay moved below card */}
           </div>
 
           {/* Right card (inactive) */}
@@ -839,6 +836,66 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               }}
             />
           ))}
+        </div>
+
+        {/* Caption below the Flagship Initiatives card */}
+        <div style={{ 
+          maxWidth: '800px', 
+          margin: '24px auto 0 auto', 
+          padding: '0 24px', 
+          textAlign: 'center' 
+        }}>
+          <h3 style={{ 
+            fontSize: '1.85rem', 
+            fontWeight: 600, 
+            fontFamily: 'var(--font-title)', 
+            color: 'var(--text-primary)', 
+            margin: '0 0 8px 0' 
+          }}>
+            {initiatives[activeInitiative].title}
+          </h3>
+          
+          <div>
+            <button
+              onClick={() => setShowInitiativeDesc(!showInitiativeDesc)}
+              style={{
+                background: 'none',
+                color: '#000000',
+                fontWeight: 600,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                padding: '4px 12px',
+                borderRadius: '20px',
+                border: '1px solid #000000',
+                transition: 'all 0.2s ease',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                marginBottom: '12px'
+              }}
+            >
+              {showInitiativeDesc ? 'Show Less' : 'Read More'}
+            </button>
+          </div>
+
+          <div style={{
+            maxHeight: showInitiativeDesc ? '300px' : '0px',
+            overflow: 'hidden',
+            transition: 'max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+            opacity: showInitiativeDesc ? 1 : 0,
+            transform: showInitiativeDesc ? 'translateY(0)' : 'translateY(-10px)',
+            transitionProperty: 'max-height, opacity, transform'
+          }}>
+            <p style={{ 
+              fontSize: '1rem', 
+              color: 'var(--text-muted)', 
+              margin: '0 0 16px 0', 
+              lineHeight: 1.6, 
+              fontWeight: 400 
+            }}>
+              {initiatives[activeInitiative].description}
+            </p>
+          </div>
         </div>
       </section>
 
