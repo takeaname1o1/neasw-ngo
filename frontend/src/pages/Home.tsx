@@ -115,6 +115,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
   const [activeMedicalPhoto, setActiveMedicalPhoto] = useState(0);
   const [activeProgram, setActiveProgram] = useState(0);
   const [showInitiativeDesc, setShowInitiativeDesc] = useState(false);
+  const [showProgramDesc, setShowProgramDesc] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   React.useEffect(() => {
@@ -313,6 +314,11 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
   React.useEffect(() => {
     setShowInitiativeDesc(false);
   }, [activeInitiative]);
+
+  // Reset program description visibility on program change
+  React.useEffect(() => {
+    setShowProgramDesc(false);
+  }, [activeProgram]);
 
   const handlePlayPauseVideo = () => {
     if (videoRef.current) {
@@ -855,55 +861,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               </div>
             )}
 
-            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(transparent, rgba(0,0,0,0.75))', zIndex: 2 }}></div>
-            <div style={{ zIndex: 3, display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
-              <h3 style={{ fontSize: '1.85rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: '#ffffff', margin: 0 }}>{programs[activeProgram].title}</h3>
-              <p style={{ fontSize: '0.98rem', color: '#e2e8f0', margin: 0, lineHeight: 1.45, fontWeight: 400, marginBottom: '8px' }}>{programs[activeProgram].description}</p>
-              <div>
-                {programs[activeProgram].isUPSC ? (
-                  <button
-                    onClick={() => setShowLightbox(true)}
-                    style={{
-                      padding: '8px 20px',
-                      background: '#ffffff',
-                      color: '#000000',
-                      borderRadius: '20px',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontWeight: 600,
-                      fontSize: '0.85rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}
-                  >
-                    Learn More <ChevronRight size={16} />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setCurrentPage('work');
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    style={{
-                      padding: '8px 20px',
-                      background: '#ffffff',
-                      color: '#000000',
-                      borderRadius: '20px',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontWeight: 600,
-                      fontSize: '0.85rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}
-                  >
-                    Learn More <ChevronRight size={16} />
-                  </button>
-                )}
-              </div>
-            </div>
+            {/* Text overlay moved below card */}
           </div>
 
           {/* Right card (inactive) */}
@@ -965,6 +923,117 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               }}
             />
           ))}
+        </div>
+
+        {/* Caption below the Programs card */}
+        <div style={{ 
+          maxWidth: '800px', 
+          margin: '24px auto 0 auto', 
+          padding: '0 24px', 
+          textAlign: 'center' 
+        }}>
+          <h3 style={{ 
+            fontSize: '1.85rem', 
+            fontWeight: 600, 
+            fontFamily: 'var(--font-title)', 
+            color: 'var(--text-primary)', 
+            margin: '0 0 8px 0' 
+          }}>
+            {programs[activeProgram].title}
+          </h3>
+          
+          <div>
+            <button
+              onClick={() => setShowProgramDesc(!showProgramDesc)}
+              style={{
+                background: 'none',
+                color: '#000000',
+                fontWeight: 600,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                padding: '4px 12px',
+                borderRadius: '20px',
+                border: '1px solid #000000',
+                transition: 'all 0.2s ease',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                marginBottom: '12px'
+              }}
+            >
+              {showProgramDesc ? 'Show Less' : 'Read More'}
+            </button>
+          </div>
+
+          <div style={{
+            maxHeight: showProgramDesc ? '400px' : '0px',
+            overflow: 'hidden',
+            transition: 'max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+            opacity: showProgramDesc ? 1 : 0,
+            transform: showProgramDesc ? 'translateY(0)' : 'translateY(-10px)',
+            transitionProperty: 'max-height, opacity, transform'
+          }}>
+            <p style={{ 
+              fontSize: '1rem', 
+              color: 'var(--text-muted)', 
+              margin: '0 0 16px 0', 
+              lineHeight: 1.6, 
+              fontWeight: 400 
+            }}>
+              {programs[activeProgram].description}
+            </p>
+            
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+              {programs[activeProgram].isUPSC ? (
+                <button
+                  onClick={() => setShowLightbox(true)}
+                  style={{
+                    padding: '8px 24px',
+                    background: '#000000',
+                    color: '#ffffff',
+                    borderRadius: '20px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    fontSize: '0.85rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    transition: 'opacity 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
+                  onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+                >
+                  Learn More <ChevronRight size={16} />
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    setCurrentPage('work');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  style={{
+                    padding: '8px 24px',
+                    background: '#000000',
+                    color: '#ffffff',
+                    borderRadius: '20px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    fontSize: '0.85rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    transition: 'opacity 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
+                  onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+                >
+                  Learn More <ChevronRight size={16} />
+                </button>
+              )}
+            </div>
+          </div>
         </div>
 
         <div style={{ textAlign: 'center', marginTop: '40px' }}>
