@@ -1,10 +1,5 @@
 import React from 'react';
 import homeTopBanner from '../assets/home_top_banner.png';
-import introPortrait from '../assets/intro_portrait.png';
-import introGroupLeader from '../assets/intro_group_leader.png';
-import introChildrenClassroom from '../assets/intro_children_classroom.png';
-import introGroupSchool from '../assets/intro_group_school.png';
-import introStage from '../assets/intro_stage.png';
 import { ConversionBlock } from '../components/ConversionBlock';
 
 // WWO Assets
@@ -79,7 +74,7 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
         </div>
       </section>
 
-      {/* 2. Intro Collage Grid */}
+      {/* 2. Intro Section */}
       <section className="container" style={{ padding: '90px 24px' }}>
         <div className="intro-collage-layout" style={{
           display: 'grid',
@@ -87,7 +82,7 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
           gap: '50px',
           alignItems: 'start',
         }}>
-          {/* Left Text & Portrait column */}
+          {/* Text & Portrait column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', textAlign: 'left' }}>
             <p style={{
               fontSize: '1.45rem',
@@ -99,40 +94,7 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
             }}>
               At NEASW Welfare Foundation, we are committed to empowering communities, preserving cultural heritage, and creating opportunities for youth through meaningful social initiatives.
             </p>
-            <img 
-              src={introPortrait} 
-              alt="Volunteer Portrait" 
-              style={{ 
-                width: '100%', 
-                borderRadius: 'var(--border-radius-card)', 
-                objectFit: 'cover', 
-                height: '420px',
-                border: '1px solid var(--border-color)' 
-              }} 
-            />
-          </div>
-
-          {/* Right Collage column: 3 columns of varying heights */}
-          <div className="collage-container" style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: '16px',
-            alignItems: 'start',
-          }}>
-            {/* Collage Column 1 */}
-            <div className="collage-col" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <img src={introGroupSchool} alt="Traditional Dress Group" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '220px', objectFit: 'cover' }} />
-              <img src={introGroupSchool} alt="School Group" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '160px', objectFit: 'cover' }} />
-            </div>
-            {/* Collage Column 2 */}
-            <div className="collage-col" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <img src={introGroupLeader} alt="Group Leader" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '320px', objectFit: 'cover' }} />
-              <img src={introStage} alt="Stage Performance" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '170px', objectFit: 'cover' }} />
-            </div>
-            {/* Collage Column 3 */}
-            <div className="collage-col collage-col-hide" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <img src={introChildrenClassroom} alt="Children in Classroom" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '320px', objectFit: 'cover' }} />
-            </div>
+        
           </div>
         </div>
       </section>
@@ -418,25 +380,11 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
       {/* Responsive Styles Injection */}
       <style>{`
         @media (min-width: 992px) {
-          .intro-collage-layout {
-            grid-template-columns: 1fr 1fr !important;
-          }
           .offer-intro-grid {
             grid-template-columns: 1fr 1.5fr !important;
           }
         }
-        @media (max-width: 768px) {
-          .collage-col-hide {
-            display: none !important;
-          }
-          .collage-container {
-            grid-template-columns: 1fr 1fr !important;
-          }
-        }
         @media (max-width: 480px) {
-          .collage-container {
-            grid-template-columns: 1fr !important;
-          }
           .member-card {
             max-width: 100% !important;
             height: 380px !important;
