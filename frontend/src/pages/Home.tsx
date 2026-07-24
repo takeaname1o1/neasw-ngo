@@ -526,13 +526,13 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <div
             onClick={handlePrevInitiative}
             className="carousel-side-card"
-            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)' }}
+            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)', backgroundColor: '#000000' }}
           >
-            <img src={initiatives[(activeInitiative - 1 + initiatives.length) % initiatives.length].image} alt="Previous Initiative" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={initiatives[(activeInitiative - 1 + initiatives.length) % initiatives.length].image} alt="Previous Initiative" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
 
           {/* Center Card */}
-          <div className="carousel-center-card" style={{ flexShrink: 0, width: '55%', height: '380px', borderRadius: '16px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '24px', transition: 'var(--transition-smooth)' }}>
+          <div className="carousel-center-card" style={{ flexShrink: 0, width: '55%', height: '380px', borderRadius: '16px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '24px', transition: 'var(--transition-smooth)', backgroundColor: '#000000' }}>
             {/* If video exists and is playing, show video, otherwise show image */}
             {initiatives[activeInitiative].video && isVideoPlaying ? (
               <video
@@ -540,14 +540,14 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                 src={initiatives[activeInitiative].video}
                 controls
                 autoPlay
-                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }}
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'contain', zIndex: 1 }}
               />
             ) : (
               <>
                 <img
                   src={initiatives[activeInitiative].images ? initiatives[activeInitiative].images[activePhotoIndex] : initiatives[activeInitiative].image}
                   alt={initiatives[activeInitiative].title}
-                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }}
+                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'contain', zIndex: 1 }}
                 />
 
                 {/* Inner photo gallery navigation */}
@@ -667,9 +667,9 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <div
             onClick={handleNextInitiative}
             className="carousel-side-card"
-            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)' }}
+            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)', backgroundColor: '#000000' }}
           >
-            <img src={initiatives[(activeInitiative + 1) % initiatives.length].image} alt="Next Initiative" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={initiatives[(activeInitiative + 1) % initiatives.length].image} alt="Next Initiative" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
 
           {/* Next Button */}
@@ -816,7 +816,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <div
             onClick={handlePrevProgram}
             className="carousel-side-card"
-            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)' }}
+            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)', backgroundColor: '#000000' }}
           >
             <img 
               src={
@@ -825,12 +825,12 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                   : programs[(activeProgram - 1 + programs.length) % programs.length].image
               } 
               alt="Previous Program" 
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
             />
           </div>
 
           {/* Center Card */}
-          <div className="carousel-center-card" style={{ flexShrink: 0, width: '55%', height: '380px', borderRadius: '16px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '24px', transition: 'var(--transition-smooth)' }}>
+          <div className="carousel-center-card" style={{ flexShrink: 0, width: '55%', height: '380px', borderRadius: '16px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '24px', transition: 'var(--transition-smooth)', backgroundColor: '#000000' }}>
             <img
               src={
                 programs[activeProgram].images
@@ -838,7 +838,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                   : programs[activeProgram].image
               }
               alt={programs[activeProgram].title}
-              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }}
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'contain', zIndex: 1 }}
             />
 
             {/* Inner photo gallery navigation (counter only for Medical Camp) */}
@@ -868,7 +868,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           <div
             onClick={handleNextProgram}
             className="carousel-side-card"
-            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)' }}
+            style={{ flexShrink: 0, width: '20%', height: '220px', borderRadius: '16px', overflow: 'hidden', opacity: 0.3, cursor: 'pointer', transition: 'var(--transition-smooth)', backgroundColor: '#000000' }}
           >
             <img 
               src={
@@ -877,7 +877,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                   : programs[(activeProgram + 1) % programs.length].image
               } 
               alt="Next Program" 
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
             />
           </div>
 
