@@ -1015,28 +1015,6 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           </div>
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: '40px' }}>
-          <button
-            onClick={() => {
-              setCurrentPage('work');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            style={{
-              padding: '12px 36px',
-              background: '#000000',
-              color: '#ffffff',
-              borderRadius: '30px',
-              border: 'none',
-              cursor: 'pointer',
-              fontWeight: 600,
-              transition: 'opacity 0.2s',
-            }}
-            onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
-            onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
-          >
-            View All
-          </button>
-        </div>
       </section>
 
       {/* 6. Stories of Change (Testimonials) */}
