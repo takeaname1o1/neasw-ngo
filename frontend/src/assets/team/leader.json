@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "name": "Nyaken Riba",
+    "designation": "Director & Founder",
+    "chapter": "Executive Board"
+  },
+  {
+    "id": 2,
+    "name": "Kiren Acharya",
+    "designation": "Overall Gen Sec",
+    "chapter": "Executive Board"
+  },
+  {
+    "id": 3,
+    "name": "Pratik Thaomung",
+    "designation": "President",
+    "chapter": "Delhi Chapter"
+  },
+  {
+    "id": 4,
+    "name": "Lanchenbi Urungpurel",
+    "designation": "Vice President",
+    "chapter": "Delhi Chapter"
+  },
+  {
+    "id": 5,
+    "name": "Krishanu Pratim Medhi",
+    "designation": "General Secretary",
+    "chapter": "Delhi Chapter"
+  },
+  {
+    "id": 6,
+    "name": "Boaz Lepcha",
+    "designation": "Joint Secretary",
+    "chapter": "Delhi Chapter"
+  },
+  {
+    "id": 7,
+    "name": "Michi Sheela",
+    "designation": "Joint Secretary",
+    "chapter": "Delhi Chapter"
+  },
+  {
+    "id": 8,
+    "name": "Pema Khandu Thungon",
+    "designation": "Convenor",
+    "chapter": "Delhi Chapter"
+  },
+  {
+    "id": 9,
+    "name": "Tashi Chotton",
+    "designation": "",
+    "chapter": "Delhi Chapter"
+  },
+  {
+    "id": 10,
+    "name": "Shomwang Wangnao",
+    "designation": "President",
+    "chapter": "Nagaland Chapter"
+  },
+  {
+    "id": 11,
+    "name": "S. Birila Brianna",
+    "designation": "Vice President & Legal Advisor",
+    "chapter": "Nagaland Chapter"
+  },
+  {
+    "id": 12,
+    "name": "Mangam Walem",
+    "designation": "Finance Incharge",
+    "chapter": "Nagaland Chapter"
+  },
+  {
+    "id": 13,
+    "name": "Tokheto",
+    "designation": "Media Secretary",
+    "chapter": "Nagaland Chapter"
+  },
+  {
+    "id": 14,
+    "name": "Manai Konyak",
+    "designation": "Technical Support Specialist",
+    "chapter": "Nagaland Chapter"
+  },
+  {
+    "id": 15,
+    "name": "Rajkumar Napoleon Singh",
+    "designation": "Core Member",
+    "chapter": "Manipur Chapter"
+  },
+  {
+    "id": 16,
+    "name": "Thongbam Aarti Chanu",
+    "designation": "Core Member",
+    "chapter": "Manipur Chapter"
+  },
+  {
+    "id": 17,
+    "name": "Komok Hassen",
+    "designation": "Core Member",
+    "chapter": "Arunachal Chapter"
+  },
+  {
+    "id": 18,
+    "name": "Kina Khishum",
+    "designation": "Core Member",
+    "chapter": "Arunachal Chapter"
+  }
+]
