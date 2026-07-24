@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ChevronRight, ChevronLeft, Play, X } from 'lucide-react';
 import { ConversionBlock } from '../components/ConversionBlock';
 
@@ -123,7 +123,17 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
   const [showInitiativeDesc, setShowInitiativeDesc] = useState(false);
   const [showProgramDesc, setShowProgramDesc] = useState(false);
   const [activeLeaderIndex, setActiveLeaderIndex] = useState(0);
+  const [activeHeroIndex, setActiveHeroIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const heroBanners = [unityUtsavBanner, storiesOfChangeImg, homeHeroBg];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveHeroIndex((prev) => (prev + 1) % heroBanners.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -397,7 +407,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       <section style={{
         height: '85vh',
         minHeight: '600px',
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${homeHeroBg})`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${heroBanners[activeHeroIndex]})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         display: 'flex',
@@ -405,6 +415,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
+        transition: 'background-image 1s ease-in-out',
       }}>
         <div style={{ textAlign: 'center', zIndex: 2, padding: '0 20px' }}>
           <h1 style={{
