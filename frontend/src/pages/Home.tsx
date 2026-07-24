@@ -4,14 +4,11 @@ import { ConversionBlock } from '../components/ConversionBlock';
 
 // Import high-quality local assets
 import homeHeroBg from '../assets/home/home_banner.png';
-import impactPortrait from '../assets/intro_portrait.png';
 import impactHome from '../assets/home/impact.png';
-import introGroupLeader from '../assets/intro_group_leader.png';
 import unityUtsavBanner from '../assets/UnityUtsav/bannerUU.png';
 import educationalSupportImg from '../assets/programs/EducationalSupport.png';
 import reliefAidImg from '../assets/programs/ReliefHumanitarianAid.png';
 import northeastTourismImg from '../assets/programs/NortheastTourism.png';
-import contact1 from '../assets/contact1.png';
 import LocalProducts from '../assets/programs/LocalProducts.png';
 import freeUpscCoachingImg from '../assets/programs/FreeUPSCcoachingtostudentsofArunachalNagalandandManipur.jpeg';
 import assamRiflesLogo from '../assets/partner/Assam_rifles.png';
@@ -19,6 +16,14 @@ import homeAffairsLogo from '../assets/partner/Home_Affairs.png';
 import neDonerLogo from '../assets/partner/NE_doner.png';
 import scienceTechnoLogo from '../assets/partner/science_techno.png';
 import storiesOfChangeImg from '../assets/UnityUtsav/stoories_of_chnage.png';
+
+// Delhi Chapter Leadership Assets
+import pratikPresident from '../assets/delhi_chapter/Pratik Thaomung_Delhi chapter_President.jpeg';
+import lanchenbiVP from '../assets/delhi_chapter/Lanchenbi Urungpurel_Delhi chapter_VP.jpeg';
+import boazLepcha from '../assets/delhi_chapter/BOAZ Lepcha_Delhi chapter.jpeg';
+import michiSheela from '../assets/delhi_chapter/Michi Sheela_Delhi chapter.jpeg';
+import pemaKhandu from '../assets/delhi_chapter/Pema Khandu Thungon_Delhi chapter.jpeg';
+import tashiChotton from '../assets/delhi_chapter/Tashi Chotton_Delhi chapter.jpeg';
 
 // Free Medical Check-up Camp Assets
 import medicalCamp01 from '../assets/programs/Free Medical Check-up Camp/photo_01.jpeg';
@@ -116,6 +121,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
   const [activeProgram, setActiveProgram] = useState(0);
   const [showInitiativeDesc, setShowInitiativeDesc] = useState(false);
   const [showProgramDesc, setShowProgramDesc] = useState(false);
+  const [activeLeaderIndex, setActiveLeaderIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   React.useEffect(() => {
@@ -124,6 +130,22 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveLeaderIndex((prev) => (prev + 1) % 6);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
+
+  const delhiLeaders = [
+    { img: pratikPresident, name: "Pratik Thaomung", role: "Delhi Chapter President" },
+    { img: lanchenbiVP, name: "Lanchenbi Urungpurel", role: "Delhi Chapter Vice President" },
+    { img: boazLepcha, name: "BOAZ Lepcha", role: "Delhi Chapter Member" },
+    { img: michiSheela, name: "Michi Sheela", role: "Delhi Chapter Member" },
+    { img: pemaKhandu, name: "Pema Khandu Thungon", role: "Delhi Chapter Member" },
+    { img: tashiChotton, name: "Tashi Chotton", role: "Delhi Chapter Member" }
+  ];
 
   const initiatives: Initiative[] = [
     {
@@ -1142,11 +1164,62 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       {/* 3. Meet Our Leadership (Dark Section) */}
       <section className="section-padding" style={{ backgroundColor: '#0a0d14', color: '#ffffff' }}>
         <div className="container home-leadership-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '50px', alignItems: 'center' }}>
-          {/* Overlapping images stack */}
-          <div className="leadership-collage" style={{ display: 'flex', gap: '16px', justifyContent: 'center', alignItems: 'center' }}>
-            <img src={introGroupLeader} alt="Leader 1" style={{ width: '110px', height: '170px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14' }} />
-            <img src={impactPortrait} alt="Leader 2" style={{ width: '130px', height: '190px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14', marginTop: '-30px' }} />
-            <img src={contact1} alt="Leader 3" style={{ width: '110px', height: '170px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14' }} />
+          {/* Delhi Chapter Leaders Carousel Card */}
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{
+              width: '280px',
+              height: '380px',
+              borderRadius: '24px',
+              overflow: 'hidden',
+              position: 'relative',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}>
+              {delhiLeaders.map((leader, index) => (
+                <div
+                  key={index}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    opacity: activeLeaderIndex === index ? 1 : 0,
+                    transition: 'opacity 0.8s ease-in-out',
+                    zIndex: activeLeaderIndex === index ? 2 : 1
+                  }}
+                >
+                  <img
+                    src={leader.img}
+                    alt={leader.name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover'
+                    }}
+                  />
+                  {/* Glassmorphic Overlay for Leader info */}
+                  <div style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    padding: '20px',
+                    background: 'linear-gradient(transparent, rgba(0,0,0,0.85))',
+                    backdropFilter: 'blur(4px)',
+                    color: '#ffffff',
+                    textAlign: 'left'
+                  }}>
+                    <h4 style={{ margin: '0 0 4px 0', fontSize: '1.25rem', fontWeight: 600, fontFamily: 'var(--font-title)' }}>
+                      {leader.name}
+                    </h4>
+                    <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e0', fontWeight: 500 }}>
+                      {leader.role}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
           <div style={{ textAlign: 'left' }}>
             <h2 style={{ fontSize: '2.8rem', fontFamily: 'var(--font-title)', marginBottom: '20px', fontWeight: 500, color: '#ffffff' }}>Meet Our Leadership</h2>
