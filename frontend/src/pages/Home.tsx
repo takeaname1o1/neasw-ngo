@@ -1051,100 +1051,126 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             </p>
           </div>
 
-          {/* Main Card with Background Image */}
-          <div className="stories-banner-card" style={{
+          {/* Main Card Wrapper */}
+          <div className="stories-banner-card-wrapper" style={{
             position: 'relative',
             borderRadius: '32px',
+            overflow: 'hidden',
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)',
-            minHeight: '520px',
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
-            padding: '40px',
-            overflow: 'hidden'
+            backgroundColor: '#ffffff'
           }}>
-            {/* Desktop Background Layer */}
-            <div className="stories-desktop-bg" style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundImage: `url(${storiesOfChangeImg})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              zIndex: 1
-            }} />
-
-            {/* Mobile Image (shows complete photo) */}
+            {/* The Image (shows complete photo, never cropped!) */}
             <img 
               src={storiesOfChangeImg} 
               alt="Stories of Change" 
-              className="stories-mobile-img" 
+              className="stories-banner-img"
               style={{
-                display: 'none',
                 width: '100%',
                 height: 'auto',
-                borderRadius: '24px',
-                zIndex: 2
-              }}
+                display: 'block',
+                maxHeight: '520px',
+                objectFit: 'contain',
+                backgroundColor: '#ffffff'
+              }} 
             />
 
-            {/* White Testimonial Card Overlay */}
-            <div className="stories-overlay-box" style={{
-              position: 'relative',
-              background: 'rgba(255, 255, 255, 0.9)',
-              color: '#000000',
-              borderRadius: '24px',
-              padding: '24px 28px',
-              maxWidth: '380px',
+            {/* Desktop Overlay: displays the full testimonial overlay */}
+            <div className="stories-overlay-desktop" style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
               width: '100%',
-              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
-              textAlign: 'left',
+              height: '100%',
               display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
-              zIndex: 3
+              justifyContent: 'flex-end',
+              alignItems: 'flex-end',
+              padding: '40px',
+              boxSizing: 'border-box'
             }}>
-              <p style={{
-                fontSize: '1.15rem',
-                fontWeight: 500,
-                lineHeight: 1.4,
-                margin: 0,
-                color: '#000000',
-                fontFamily: 'var(--font-body)'
-              }}>
-                “Unity Utsav helped me connect with fellow students from across the Northeast and strengthened my sense of identity.”
-              </p>
-              
-              {/* Blur for name only */}
               <div style={{
                 background: 'rgba(255, 255, 255, 0.5)',
+                color: '#000000',
+                borderRadius: '24px',
+                padding: '24px 28px',
+                maxWidth: '380px',
+                width: '100%',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+                textAlign: 'left',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
                 backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                padding: '12px 18px',
-                borderRadius: '16px',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
-                display: 'inline-block'
+                WebkitBackdropFilter: 'blur(12px)'
               }}>
-                <span style={{
-                  display: 'block',
-                  fontSize: '1rem',
-                  color: '#1a202c',
-                  marginBottom: '2px',
-                  fontWeight: 600
+                <p style={{
+                  fontSize: '1.15rem',
+                  fontWeight: 500,
+                  lineHeight: 1.4,
+                  margin: 0,
+                  color: '#000000',
+                  fontFamily: 'var(--font-body)'
                 }}>
-                  - Lhingneihoi Chongloi
-                </span>
-                <span style={{
-                  color: '#4a5568',
-                  fontSize: '0.85rem',
-                  fontWeight: 600
-                }}>
-                  Participant &nbsp;|&nbsp; Unity Utsav
-                </span>
+                  “Unity Utsav helped me connect with fellow students from across the Northeast and strengthened my sense of identity.”
+                </p>
+                <div>
+                  <span style={{
+                    display: 'block',
+                    fontSize: '1rem',
+                    color: '#4a5568',
+                    marginBottom: '2px',
+                    fontWeight: 600
+                  }}>
+                    - Lhingneihoi Chongloi
+                  </span>
+                  <span style={{
+                    color: '#4a5568',
+                    fontSize: '0.85rem',
+                    fontWeight: 600
+                  }}>
+                    Participant &nbsp;|&nbsp; Unity Utsav
+                  </span>
+                </div>
               </div>
             </div>
+
+            {/* Mobile Name Overlay Badge (only for name, blurred and dynamic small box) */}
+            <div className="stories-overlay-mobile-badge" style={{
+              position: 'absolute',
+              bottom: '16px',
+              right: '16px',
+              background: 'rgba(255, 255, 255, 0.55)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              padding: '8px 16px',
+              borderRadius: '16px',
+              color: '#000000',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
+              display: 'none',
+              maxWidth: 'calc(100% - 32px)',
+              boxSizing: 'border-box'
+            }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, display: 'block' }}>Lhingneihoi Chongloi</span>
+              <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#4a5568' }}>Participant, Unity Utsav</span>
+            </div>
+          </div>
+
+          {/* Mobile Quote Block (rendered underneath the card, so it never covers the photo!) */}
+          <div className="stories-mobile-quote-container" style={{
+            display: 'none',
+            marginTop: '20px',
+            textAlign: 'center',
+            padding: '0 16px'
+          }}>
+            <p style={{
+              fontSize: '1.1rem',
+              fontWeight: 500,
+              lineHeight: 1.5,
+              margin: '0 0 8px 0',
+              color: '#ffffff',
+              fontStyle: 'italic'
+            }}>
+              “Unity Utsav helped me connect with fellow students from across the Northeast and strengthened my sense of identity.”
+            </p>
           </div>
 
           {/* View All Button */}
@@ -1589,33 +1615,17 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             align-items: center !important;
             text-align: center !important;
           }
-          .stories-desktop-bg {
+          .stories-overlay-desktop {
             display: none !important;
           }
-          .stories-mobile-img {
+          .stories-overlay-mobile-badge {
             display: block !important;
-            margin-bottom: 24px !important;
-            box-shadow: 0 10px 35px rgba(0,0,0,0.5) !important;
           }
-          .stories-banner-card {
+          .stories-mobile-quote-container {
             display: block !important;
-            min-height: auto !important;
-            padding: 0 !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
-            background: transparent !important;
           }
-          .stories-overlay-box {
-            background: transparent !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            width: 100% !important;
-            margin: 0 !important;
-            max-width: 100% !important;
-            color: #ffffff !important;
-          }
-          .stories-overlay-box p {
-            color: #ffffff !important;
+          .stories-banner-img {
+            max-height: 280px !important;
           }
         }
         @media (max-width: 480px) {
