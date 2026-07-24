@@ -830,7 +830,15 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           </div>
 
           {/* Center Card */}
-          <div className="carousel-center-card" style={{ flexShrink: 0, width: '55%', height: '380px', borderRadius: '16px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '24px', transition: 'var(--transition-smooth)', backgroundColor: '#000000' }}>
+          <div 
+            onClick={() => {
+              if (programs[activeProgram].isUPSC) {
+                setShowLightbox(true);
+              }
+            }}
+            className="carousel-center-card" 
+            style={{ flexShrink: 0, width: '55%', height: '380px', borderRadius: '16px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '24px', transition: 'var(--transition-smooth)', backgroundColor: '#000000', cursor: programs[activeProgram].isUPSC ? 'pointer' : 'default' }}
+          >
             <img
               src={
                 programs[activeProgram].images
@@ -982,57 +990,6 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             }}>
               {programs[activeProgram].description}
             </p>
-            
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
-              {programs[activeProgram].isUPSC ? (
-                <button
-                  onClick={() => setShowLightbox(true)}
-                  style={{
-                    padding: '8px 24px',
-                    background: '#000000',
-                    color: '#ffffff',
-                    borderRadius: '20px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    fontWeight: 600,
-                    fontSize: '0.85rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    transition: 'opacity 0.2s'
-                  }}
-                  onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
-                  onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
-                >
-                  Learn More <ChevronRight size={16} />
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    setCurrentPage('work');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  style={{
-                    padding: '8px 24px',
-                    background: '#000000',
-                    color: '#ffffff',
-                    borderRadius: '20px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    fontWeight: 600,
-                    fontSize: '0.85rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    transition: 'opacity 0.2s'
-                  }}
-                  onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
-                  onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
-                >
-                  Learn More <ChevronRight size={16} />
-                </button>
-              )}
-            </div>
           </div>
         </div>
 
