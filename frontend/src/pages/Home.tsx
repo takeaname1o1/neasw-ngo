@@ -1266,8 +1266,9 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             </p>
             <button
               onClick={() => {
+                localStorage.setItem('scrollToLeadership', 'true');
                 setCurrentPage('about');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.scrollTo({ top: 0, behavior: 'auto' });
               }}
               style={{
                 padding: '12px 28px',

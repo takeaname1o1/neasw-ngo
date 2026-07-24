@@ -25,6 +25,18 @@ interface AboutProps {
 }
 
 export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
+  React.useEffect(() => {
+    if (localStorage.getItem('scrollToLeadership') === 'true') {
+      localStorage.removeItem('scrollToLeadership');
+      setTimeout(() => {
+        const element = document.getElementById('meet-our-leadership');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 250);
+    }
+  }, []);
+
   return (
     <div className="fade-in-section" style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#ffffff' }}>
       
@@ -211,7 +223,7 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
       </section>
 
       {/* 4. Meet Our Leadership */}
-      <section style={{ backgroundColor: '#F5F5F5', padding: '100px 24px' }}>
+      <section id="meet-our-leadership" style={{ backgroundColor: '#F5F5F5', padding: '100px 24px' }}>
         <div className="container">
           {/* Header */}
           <div style={{ 
