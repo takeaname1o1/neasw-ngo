@@ -1052,36 +1052,11 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           </div>
 
           {/* Main Card with Background Image */}
-          <div style={{
-            position: 'relative',
-            backgroundImage: `url(${storiesOfChangeImg})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            borderRadius: '32px',
-            minHeight: '520px',
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
-            padding: '40px',
-            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)'
-          }} className="stories-banner-card">
+          <div className="stories-banner-card">
+            <img src={storiesOfChangeImg} alt="Stories of Change" className="stories-mobile-img" />
 
             {/* White Testimonial Card Overlay */}
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.5)',
-              color: '#000000',
-              borderRadius: '24px',
-              padding: '24px 28px',
-              maxWidth: '380px',
-              width: '100%',
-              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
-              textAlign: 'left',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)'
-            }}>
+            <div className="stories-testimonial-box">
               <p style={{
                 fontSize: '1.15rem',
                 fontWeight: 500,
@@ -1441,6 +1416,38 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
 
       {/* Responsive Styles Injection */}
       <style>{`
+        .stories-banner-card {
+          position: relative;
+          background-image: url(${storiesOfChangeImg});
+          background-size: cover;
+          background-position: center;
+          border-radius: 32px;
+          min-height: 520px;
+          display: flex;
+          justify-content: flex-end;
+          align-items: flex-end;
+          padding: 40px;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+          transition: all 0.3s ease;
+        }
+        .stories-mobile-img {
+          display: none;
+        }
+        .stories-testimonial-box {
+          background: rgba(255, 255, 255, 0.5);
+          color: #000000;
+          border-radius: 24px;
+          padding: 24px 28px;
+          max-width: 380px;
+          width: 100%;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+          text-align: left;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+        }
         .section-padding {
           padding: 90px 24px !important;
         }
@@ -1554,6 +1561,31 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           .program-card > div {
             align-items: center !important;
             text-align: center !important;
+          }
+          .stories-banner-card {
+            background-image: none !important;
+            min-height: auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            background-color: transparent !important;
+          }
+          .stories-mobile-img {
+            display: block !important;
+            width: 100% !important;
+            height: auto !important;
+            border-radius: 24px !important;
+            margin-bottom: 16px !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+          }
+          .stories-testimonial-box {
+            max-width: 100% !important;
+            background: #ffffff !important;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05) !important;
+            padding: 20px !important;
+            border: 1px solid var(--border-color) !important;
           }
         }
         @media (max-width: 480px) {
