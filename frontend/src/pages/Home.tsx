@@ -1159,7 +1159,6 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                     right: 0,
                     padding: '20px',
                     background: 'linear-gradient(transparent, rgba(0,0,0,0.85))',
-                    backdropFilter: 'blur(4px)',
                     color: '#ffffff',
                     textAlign: 'left'
                   }}>
