@@ -96,17 +96,17 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
             alignItems: 'start',
           }}>
             {/* Collage Column 1 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="collage-col" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <img src={introGroupSchool} alt="Traditional Dress Group" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '220px', objectFit: 'cover' }} />
               <img src={introGroupSchool} alt="School Group" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '160px', objectFit: 'cover' }} />
             </div>
             {/* Collage Column 2 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="collage-col" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <img src={introGroupLeader} alt="Group Leader" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '320px', objectFit: 'cover' }} />
               <img src={introStage} alt="Stage Performance" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '170px', objectFit: 'cover' }} />
             </div>
             {/* Collage Column 3 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="collage-col collage-col-hide" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <img src={introChildrenClassroom} alt="Children in Classroom" style={{ width: '100%', borderRadius: 'var(--border-radius-card)', height: '320px', objectFit: 'cover' }} />
             </div>
           </div>
@@ -309,7 +309,7 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
                   gap: '40px 30px' 
                 }}>
                   {chapter.members.map((member, mIdx) => (
-                    <div key={mIdx} style={{ 
+                    <div key={mIdx} className="member-card" style={{ 
                       position: 'relative', 
                       width: '100%', 
                       maxWidth: '283px', 
@@ -394,6 +394,27 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
           }
           .offer-intro-grid {
             grid-template-columns: 1fr 1.5fr !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .collage-col-hide {
+            display: none !important;
+          }
+          .collage-container {
+            grid-template-columns: 1fr 1fr !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .collage-container {
+            grid-template-columns: 1fr !important;
+          }
+          .member-card {
+            max-width: 100% !important;
+            height: 380px !important;
+          }
+          .member-card > div:nth-child(1),
+          .member-card > div:nth-child(2) {
+            height: 280px !important;
           }
         }
       `}</style>

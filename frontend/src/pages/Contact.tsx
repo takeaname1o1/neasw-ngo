@@ -80,7 +80,7 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
           alignItems: 'stretch',
         }}>
           {/* Left Form Card */}
-          <div style={{
+          <div className="contact-form-panel" style={{
             backgroundColor: '#fafafa',
             border: '1px solid var(--border-color)',
             boxShadow: '0 10px 30px rgba(0,0,0,0.01)',
@@ -316,7 +316,7 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
 
       {/* 3. Channels info block (Phone, Social, Mail) */}
       <section className="container" style={{ padding: '60px 24px', borderTop: '1px solid var(--border-color)' }}>
-        <div style={{
+        <div className="contact-channels" style={{
           display: 'flex',
           flexDirection: 'row',
           flexWrap: 'nowrap',
@@ -505,6 +505,14 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
           }
           .promo-grid {
             grid-template-columns: 1fr !important;
+          }
+          .contact-channels {
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 30px !important;
+          }
+          .contact-form-panel {
+            padding: 30px 20px !important;
           }
         }
       `}</style>
