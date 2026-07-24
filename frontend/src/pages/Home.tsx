@@ -484,44 +484,6 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
         </div>
       </section>
 
-      {/* 3. Meet Our Leadership (Dark Section) */}
-      <section className="section-padding" style={{ backgroundColor: '#0a0d14', color: '#ffffff' }}>
-        <div className="container home-leadership-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '50px', alignItems: 'center' }}>
-          {/* Overlapping images stack */}
-          <div className="leadership-collage" style={{ display: 'flex', gap: '16px', justifyContent: 'center', alignItems: 'center' }}>
-            <img src={introGroupLeader} alt="Leader 1" style={{ width: '110px', height: '170px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14' }} />
-            <img src={impactPortrait} alt="Leader 2" style={{ width: '130px', height: '190px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14', marginTop: '-30px' }} />
-            <img src={contact1} alt="Leader 3" style={{ width: '110px', height: '170px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14' }} />
-          </div>
-          <div style={{ textAlign: 'left' }}>
-            <h2 style={{ fontSize: '2.8rem', fontFamily: 'var(--font-title)', marginBottom: '20px', fontWeight: 500, color: '#ffffff' }}>Meet Our Leadership</h2>
-            <p style={{ color: '#a0aec0', lineHeight: 1.6, marginBottom: '30px', fontSize: '1.05rem' }}>
-              Guided by a passionate team committed to building a stronger, united and empowered Northeast.
-            </p>
-            <button
-              onClick={() => {
-                setCurrentPage('join');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              style={{
-                padding: '12px 28px',
-                background: '#ffffff',
-                color: '#000000',
-                borderRadius: '30px',
-                border: 'none',
-                cursor: 'pointer',
-                fontWeight: 600,
-                transition: 'opacity 0.2s',
-              }}
-              onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
-              onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
-            >
-              View All
-            </button>
-          </div>
-        </div>
-      </section>
-
       {/* 4. Flagship Initiatives */}
       <section className="section-padding-vertical" style={{ overflow: 'hidden' }}>
         <div className="container" style={{ marginBottom: '50px', textAlign: 'center' }}>
@@ -1134,6 +1096,44 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               }}
               style={{
                 padding: '12px 36px',
+                background: '#ffffff',
+                color: '#000000',
+                borderRadius: '30px',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: 600,
+                transition: 'opacity 0.2s',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
+              onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+            >
+              View All
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Meet Our Leadership (Dark Section) */}
+      <section className="section-padding" style={{ backgroundColor: '#0a0d14', color: '#ffffff' }}>
+        <div className="container home-leadership-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '50px', alignItems: 'center' }}>
+          {/* Overlapping images stack */}
+          <div className="leadership-collage" style={{ display: 'flex', gap: '16px', justifyContent: 'center', alignItems: 'center' }}>
+            <img src={introGroupLeader} alt="Leader 1" style={{ width: '110px', height: '170px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14' }} />
+            <img src={impactPortrait} alt="Leader 2" style={{ width: '130px', height: '190px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14', marginTop: '-30px' }} />
+            <img src={contact1} alt="Leader 3" style={{ width: '110px', height: '170px', objectFit: 'cover', borderRadius: '16px', border: '2px solid #0a0d14' }} />
+          </div>
+          <div style={{ textAlign: 'left' }}>
+            <h2 style={{ fontSize: '2.8rem', fontFamily: 'var(--font-title)', marginBottom: '20px', fontWeight: 500, color: '#ffffff' }}>Meet Our Leadership</h2>
+            <p style={{ color: '#a0aec0', lineHeight: 1.6, marginBottom: '30px', fontSize: '1.05rem' }}>
+              Guided by a passionate team committed to building a stronger, united and empowered Northeast.
+            </p>
+            <button
+              onClick={() => {
+                setCurrentPage('join');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              style={{
+                padding: '12px 28px',
                 background: '#ffffff',
                 color: '#000000',
                 borderRadius: '30px',
