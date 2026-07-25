@@ -5,6 +5,8 @@ import { ConversionBlock } from '../components/ConversionBlock';
 // Import high-quality local assets
 import homeHeroBg from '../assets/home/home_banner.png';
 import impactHome from '../assets/home/impact.png';
+import tribeImg from '../assets/tribe.jpeg';
+import tribe2Img from '../assets/tribe2.jpeg';
 import unityUtsavBanner from '../assets/UnityUtsav/bannerUU.png';
 import educationalSupportImg from '../assets/programs/EducationalSupport.png';
 import reliefAidImg from '../assets/programs/ReliefHumanitarianAid.png';
@@ -17,14 +19,33 @@ import neDonerLogo from '../assets/partner/NE_doner.png';
 import scienceTechnoLogo from '../assets/partner/science_techno.png';
 import storiesOfChangeImg from '../assets/UnityUtsav/stoories_of_chnage.png';
 
-// Delhi Chapter Leadership Assets (from team directory)
-import leader3 from '../assets/team/3.jpg';
-import leader4 from '../assets/team/4.jpg';
-import leader5 from '../assets/team/5.jpg';
-import leader6 from '../assets/team/6.jpg';
-import leader7 from '../assets/team/7.jpg';
-import leader8 from '../assets/team/8.jpg';
-import leader9 from '../assets/team/9.jpg';
+// Leadership photo assets (IDs 1–18 match leader.json)
+import teamPhoto1 from '../assets/team/1.jpg';
+import teamPhoto2 from '../assets/team/2.jpg';
+import teamPhoto3 from '../assets/team/3.jpg';
+import teamPhoto4 from '../assets/team/4.jpg';
+import teamPhoto5 from '../assets/team/5.jpg';
+import teamPhoto6 from '../assets/team/6.jpg';
+import teamPhoto7 from '../assets/team/7.jpg';
+import teamPhoto8 from '../assets/team/8.jpg';
+import teamPhoto9 from '../assets/team/9.jpg';
+import teamPhoto10 from '../assets/team/10.jpg';
+import teamPhoto11 from '../assets/team/11.jpg';
+import teamPhoto12 from '../assets/team/12.jpg';
+import teamPhoto13 from '../assets/team/13.jpg';
+import teamPhoto14 from '../assets/team/14.jpg';
+import teamPhoto15 from '../assets/team/15.jpg';
+import teamPhoto16 from '../assets/team/16.jpg';
+import teamPhoto17 from '../assets/team/17.jpg';
+import teamPhoto18 from '../assets/team/18.jpg';
+
+const leaderPhotoMap: Record<number, string> = {
+  1: teamPhoto1, 2: teamPhoto2, 3: teamPhoto3, 4: teamPhoto4,
+  5: teamPhoto5, 6: teamPhoto6, 7: teamPhoto7, 8: teamPhoto8,
+  9: teamPhoto9, 10: teamPhoto10, 11: teamPhoto11, 12: teamPhoto12,
+  13: teamPhoto13, 14: teamPhoto14, 15: teamPhoto15, 16: teamPhoto16,
+  17: teamPhoto17, 18: teamPhoto18,
+};
 
 // Free Medical Check-up Camp Assets
 import medicalCamp01 from '../assets/programs/Free Medical Check-up Camp/photo_01.jpeg';
@@ -124,15 +145,37 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
   const [showProgramDesc, setShowProgramDesc] = useState(false);
   const [activeLeaderIndex, setActiveLeaderIndex] = useState(0);
   const [activeHeroIndex, setActiveHeroIndex] = useState(0);
+  const [activeCenterImageIndex, setActiveCenterImageIndex] = useState(0);
+  const [leaders, setLeaders] = useState<{ id: number; name: string; position: string; chapter: string }[]>([]);
+  const [leadersLoading, setLeadersLoading] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const heroBanners = [unityUtsavBanner, storiesOfChangeImg, homeHeroBg];
+  const centerImages = [impactHome, tribeImg, tribe2Img];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveHeroIndex((prev) => (prev + 1) % heroBanners.length);
     }, 5000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveCenterImageIndex((prev) => (prev + 1) % centerImages.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Fetch leaders from backend
+  useEffect(() => {
+    fetch('/api/about/leadership')
+      .then((res) => res.json())
+      .then((data) => {
+        setLeaders(data);
+        setLeadersLoading(false);
+      })
+      .catch(() => setLeadersLoading(false));
   }, []);
 
   React.useEffect(() => {
@@ -142,22 +185,14 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
     return () => clearInterval(interval);
   }, []);
 
+  // Auto-cycle leaders — driven by fetched leaders count
   React.useEffect(() => {
+    if (leaders.length === 0) return;
     const interval = setInterval(() => {
-      setActiveLeaderIndex((prev) => (prev + 1) % 7);
+      setActiveLeaderIndex((prev) => (prev + 1) % leaders.length);
     }, 3500);
     return () => clearInterval(interval);
-  }, []);
-
-  const delhiLeaders = [
-    { img: leader3, name: "Pratik Thaomung", role: "President" },
-    { img: leader4, name: "Lanchenbi Urungpurel", role: "Vice President" },
-    { img: leader5, name: "Krishanu Pratim Medhi", role: "General Secretary" },
-    { img: leader6, name: "Boaz Lepcha", role: "Joint Secretary" },
-    { img: leader7, name: "Michi Sheela", role: "Joint Secretary" },
-    { img: leader8, name: "Pema Khandu Thungon", role: "Convenor" },
-    { img: leader9, name: "Tashi Chotton", role: "Delhi Chapter Coordinator" }
-  ];
+  }, [leaders.length]);
 
   const initiatives: Initiative[] = [
     {
@@ -486,20 +521,69 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             </button>
           </div>
 
-          {/* Center Image */}
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <img
-              src={impactHome}
-              alt="Impact"
-              style={{
-                width: '100%',
-                maxWidth: '320px',
-                height: '380px',
-                objectFit: 'cover',
-                borderRadius: '24px',
-                border: '1px solid var(--border-color)',
-              }}
-            />
+          {/* Center Image Carousel */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            position: 'relative',
+            width: '100%',
+            maxWidth: '320px',
+            height: '380px',
+            borderRadius: '24px',
+            overflow: 'hidden',
+            margin: '0 auto',
+            border: '1px solid var(--border-color)',
+          }}>
+            {centerImages.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt={`NEASW Community & Culture ${index + 1}`}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  borderRadius: '24px',
+                  opacity: activeCenterImageIndex === index ? 1 : 0,
+                  transition: 'opacity 1s ease-in-out',
+                }}
+              />
+            ))}
+            {/* Navigation Dots */}
+            <div style={{
+              position: 'absolute',
+              bottom: '12px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              gap: '6px',
+              zIndex: 2,
+              backgroundColor: 'rgba(0,0,0,0.35)',
+              padding: '5px 10px',
+              borderRadius: '16px',
+              backdropFilter: 'blur(4px)',
+            }}>
+              {centerImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveCenterImageIndex(index)}
+                  style={{
+                    width: activeCenterImageIndex === index ? '18px' : '6px',
+                    height: '6px',
+                    borderRadius: '3px',
+                    backgroundColor: activeCenterImageIndex === index ? '#ffffff' : 'rgba(255,255,255,0.5)',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                  }}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Right Stats/Features */}
@@ -1221,50 +1305,55 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
               border: '1px solid rgba(255,255,255,0.1)'
             }}>
-              {delhiLeaders.map((leader, index) => (
-                <div
-                  key={index}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    opacity: activeLeaderIndex === index ? 1 : 0,
-                    transition: 'opacity 0.8s ease-in-out',
-                    zIndex: activeLeaderIndex === index ? 2 : 1
-                  }}
-                >
-                  <img
-                    src={leader.img}
-                    alt={leader.name}
+              {leadersLoading ? (
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', color: '#a0aec0', fontSize: '0.9rem' }}>
+                  Loading...
+                </div>
+              ) : (
+                leaders.map((leader, index) => (
+                  <div
+                    key={leader.id}
                     style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
                       width: '100%',
                       height: '100%',
-                      objectFit: 'cover'
+                      opacity: activeLeaderIndex === index ? 1 : 0,
+                      transition: 'opacity 0.8s ease-in-out',
+                      zIndex: activeLeaderIndex === index ? 2 : 1
                     }}
-                  />
-                  {/* Glassmorphic Overlay for Leader info */}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    padding: '20px',
-                    background: 'linear-gradient(transparent, rgba(0,0,0,0.85))',
-                    backdropFilter: 'blur(4px)',
-                    color: '#ffffff',
-                    textAlign: 'left'
-                  }}>
-                    <h4 style={{ margin: '0 0 4px 0', fontSize: '1.25rem', fontWeight: 600, fontFamily: 'var(--font-title)' }}>
-                      {leader.name}
-                    </h4>
-                    <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e0', fontWeight: 500 }}>
-                      {leader.role}
-                    </p>
+                  >
+                    <img
+                      src={leaderPhotoMap[leader.id] ?? teamPhoto1}
+                      alt={leader.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                    {/* Glassmorphic Overlay for Leader info */}
+                    <div style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      padding: '20px',
+                      background: 'linear-gradient(transparent, rgba(0,0,0,0.85))',
+                      backdropFilter: 'blur(4px)',
+                      color: '#ffffff',
+                      textAlign: 'left'
+                    }}>
+                      <h4 style={{ margin: '0 0 2px 0', fontSize: '1.1rem', fontWeight: 600, fontFamily: 'var(--font-title)' }}>
+                        {leader.name}
+                      </h4>
+                      <p style={{ margin: '0 0 2px 0', fontSize: '0.8rem', color: '#cbd5e0', fontWeight: 500 }}>
+                        {leader.position}
+                      </p>
+                      <p style={{ margin: 0, fontSize: '0.75rem', color: '#90a4ae', fontWeight: 400 }}>
+                        {leader.chapter}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
           <div style={{ textAlign: 'left' }}>

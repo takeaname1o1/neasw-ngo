@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, Camera, Mail } from 'lucide-react';
 import { submitContactForm } from '../services/api';
 import { ConversionBlock } from '../components/ConversionBlock';
 import contact1 from '../assets/contact1.png';
 import contact2 from '../assets/contact2.png';
 import contact3 from '../assets/contact3.png';
+import tibe from '../assets/tibe.jpeg';
 
 interface ContactProps {
   setCurrentPage: (page: string) => void;
@@ -21,6 +22,17 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const images = [contact1, tibe, contact2, contact3];
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 3500);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -294,22 +306,64 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
             )}
           </div>
 
-          {/* Right Image Card */}
+          {/* Right Image Card Carousel */}
           <div style={{
             borderRadius: '24px',
             overflow: 'hidden',
+            position: 'relative',
+            height: '100%',
+            minHeight: '480px',
           }}>
-            <img
-              src={contact1}
-              alt="People of Northeast India"
-              style={{
-                width: '100%',
-                height: '100%',
-                minHeight: '450px',
-                objectFit: 'cover',
-                borderRadius: '24px',
-              }}
-            />
+            {[contact1, tibe, contact2, contact3].map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt={`NEASW Impact ${index + 1}`}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  borderRadius: '24px',
+                  opacity: currentImageIndex === index ? 1 : 0,
+                  transition: 'opacity 1s ease-in-out',
+                }}
+              />
+            ))}
+            {/* Carousel Navigation Indicators */}
+            <div style={{
+              position: 'absolute',
+              bottom: '16px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              gap: '8px',
+              zIndex: 2,
+              backgroundColor: 'rgba(0,0,0,0.3)',
+              padding: '6px 12px',
+              borderRadius: '20px',
+              backdropFilter: 'blur(4px)',
+            }}>
+              {[contact1, tibe, contact2, contact3].map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  style={{
+                    width: currentImageIndex === index ? '20px' : '8px',
+                    height: '8px',
+                    borderRadius: '4px',
+                    backgroundColor: currentImageIndex === index ? '#ffffff' : 'rgba(255,255,255,0.5)',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                  }}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
