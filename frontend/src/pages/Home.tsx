@@ -146,12 +146,40 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
   const [activeLeaderIndex, setActiveLeaderIndex] = useState(0);
   const [activeHeroIndex, setActiveHeroIndex] = useState(0);
   const [activeCenterImageIndex, setActiveCenterImageIndex] = useState(0);
+  const centerTouchStartX = useRef<number | null>(null);
   const [leaders, setLeaders] = useState<{ id: number; name: string; position: string; chapter: string }[]>([]);
   const [leadersLoading, setLeadersLoading] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const heroBanners = [unityUtsavBanner, storiesOfChangeImg, homeHeroBg];
   const centerImages = [impactHome, tribeImg, tribe2Img];
+
+  const handleCenterNext = () => {
+    setActiveCenterImageIndex((prev) => (prev + 1) % centerImages.length);
+  };
+
+  const handleCenterPrev = () => {
+    setActiveCenterImageIndex((prev) => (prev - 1 + centerImages.length) % centerImages.length);
+  };
+
+  const handleCenterTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    centerTouchStartX.current = clientX;
+  };
+
+  const handleCenterTouchEnd = (e: React.TouchEvent | React.MouseEvent) => {
+    if (centerTouchStartX.current === null) return;
+    const clientX = 'changedTouches' in e ? e.changedTouches[0].clientX : e.clientX;
+    const diffX = centerTouchStartX.current - clientX;
+    if (Math.abs(diffX) > 30) {
+      if (diffX > 0) {
+        handleCenterNext();
+      } else {
+        handleCenterPrev();
+      }
+    }
+    centerTouchStartX.current = null;
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -167,15 +195,44 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch leaders from backend
+  // Fallback complete leadership list
+  const defaultLeadersList = [
+    { id: 1, name: "Nyaken Riba", position: "Director & Founder", chapter: "Executive Board" },
+    { id: 2, name: "Kiren Acharya", position: "Overall Gen Sec", chapter: "Executive Board" },
+    { id: 3, name: "Pratik Thaomung", position: "President", chapter: "Delhi Chapter" },
+    { id: 4, name: "Lanchenbi Urungpurel", position: "Vice President", chapter: "Delhi Chapter" },
+    { id: 5, name: "Krishanu Pratim Medhi", position: "General Secretary", chapter: "Delhi Chapter" },
+    { id: 6, name: "Boaz Lepcha", position: "Joint Secretary", chapter: "Delhi Chapter" },
+    { id: 7, name: "Michi Sheela", position: "Joint Secretary", chapter: "Delhi Chapter" },
+    { id: 8, name: "Pema Khandu Thungon", position: "Convenor", chapter: "Delhi Chapter" },
+    { id: 9, name: "Tashi Chotton", position: "Delhi Chapter Coordinator", chapter: "Delhi Chapter" },
+    { id: 10, name: "Shomwang Wangnao", position: "President", chapter: "Nagaland Chapter" },
+    { id: 11, name: "S. Birila Brianna", position: "Vice President & Legal Advisor", chapter: "Nagaland Chapter" },
+    { id: 12, name: "Mangam Walem", position: "Finance Incharge", chapter: "Nagaland Chapter" },
+    { id: 13, name: "Tokheto", position: "Media Secretary", chapter: "Nagaland Chapter" },
+    { id: 14, name: "Manai Konyak", position: "Technical Support Specialist", chapter: "Nagaland Chapter" },
+    { id: 15, name: "Rajkumar Napoleon Singh", position: "Core Member", chapter: "Manipur Chapter" },
+    { id: 16, name: "Thongbam Aarti Chanu", position: "Core Member", chapter: "Manipur Chapter" },
+    { id: 17, name: "Komok Hassen", position: "Core Member", chapter: "Arunachal Chapter" },
+    { id: 18, name: "Kina Khishum", position: "Core Member", chapter: "Arunachal Chapter" }
+  ];
+
+  // Fetch leaders from backend with fallback
   useEffect(() => {
     fetch('/api/about/leadership')
       .then((res) => res.json())
       .then((data) => {
-        setLeaders(data);
+        if (Array.isArray(data) && data.length > 0) {
+          setLeaders(data);
+        } else {
+          setLeaders(defaultLeadersList);
+        }
         setLeadersLoading(false);
       })
-      .catch(() => setLeadersLoading(false));
+      .catch(() => {
+        setLeaders(defaultLeadersList);
+        setLeadersLoading(false);
+      });
   }, []);
 
   React.useEffect(() => {
@@ -522,23 +579,32 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           </div>
 
           {/* Center Image Carousel */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            position: 'relative',
-            width: '100%',
-            maxWidth: '320px',
-            height: '380px',
-            borderRadius: '24px',
-            overflow: 'hidden',
-            margin: '0 auto',
-            border: '1px solid var(--border-color)',
-          }}>
+          <div 
+            onTouchStart={handleCenterTouchStart}
+            onTouchEnd={handleCenterTouchEnd}
+            onMouseDown={handleCenterTouchStart}
+            onMouseUp={handleCenterTouchEnd}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              position: 'relative',
+              width: '100%',
+              maxWidth: '320px',
+              height: '380px',
+              borderRadius: '24px',
+              overflow: 'hidden',
+              margin: '0 auto',
+              border: '1px solid var(--border-color)',
+              cursor: 'grab',
+              userSelect: 'none',
+            }}
+          >
             {centerImages.map((img, index) => (
               <img
                 key={index}
                 src={img}
                 alt={`NEASW Community & Culture ${index + 1}`}
+                draggable={false}
                 style={{
                   position: 'absolute',
                   top: 0,
@@ -552,6 +618,64 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                 }}
               />
             ))}
+
+            {/* Minimal Arrow Navigation Buttons */}
+            <button
+              onClick={(e) => { e.stopPropagation(); handleCenterPrev(); }}
+              aria-label="Previous slide"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '10px',
+                transform: 'translateY(-50%)',
+                width: '30px',
+                height: '30px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                color: '#ffffff',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 3,
+                backdropFilter: 'blur(4px)',
+                transition: 'background-color 0.2s, transform 0.2s',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'}
+            >
+              <ChevronLeft size={16} />
+            </button>
+
+            <button
+              onClick={(e) => { e.stopPropagation(); handleCenterNext(); }}
+              aria-label="Next slide"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: '10px',
+                transform: 'translateY(-50%)',
+                width: '30px',
+                height: '30px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                color: '#ffffff',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 3,
+                backdropFilter: 'blur(4px)',
+                transition: 'background-color 0.2s, transform 0.2s',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'}
+            >
+              <ChevronRight size={16} />
+            </button>
+
             {/* Navigation Dots */}
             <div style={{
               position: 'absolute',
@@ -560,7 +684,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               transform: 'translateX(-50%)',
               display: 'flex',
               gap: '6px',
-              zIndex: 2,
+              zIndex: 3,
               backgroundColor: 'rgba(0,0,0,0.35)',
               padding: '5px 10px',
               borderRadius: '16px',
@@ -569,7 +693,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               {centerImages.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => setActiveCenterImageIndex(index)}
+                  onClick={(e) => { e.stopPropagation(); setActiveCenterImageIndex(index); }}
                   style={{
                     width: activeCenterImageIndex === index ? '18px' : '6px',
                     height: '6px',
@@ -1294,65 +1418,167 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       {/* 3. Meet Our Leadership (Dark Section) */}
       <section className="section-padding" style={{ backgroundColor: '#0a0d14', color: '#ffffff' }}>
         <div className="container home-leadership-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '50px', alignItems: 'center' }}>
-          {/* Delhi Chapter Leaders Carousel Card */}
+          {/* Leadership Leaders Carousel Card */}
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div style={{
-              width: '280px',
-              height: '380px',
-              borderRadius: '24px',
-              overflow: 'hidden',
-              position: 'relative',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
-              border: '1px solid rgba(255,255,255,0.1)'
-            }}>
+            <div 
+              onTouchStart={(e) => {
+                const clientX = e.touches[0].clientX;
+                (e.currentTarget as any)._startX = clientX;
+              }}
+              onTouchEnd={(e) => {
+                const startX = (e.currentTarget as any)._startX;
+                if (startX === undefined) return;
+                const clientX = e.changedTouches[0].clientX;
+                const diffX = startX - clientX;
+                if (Math.abs(diffX) > 30) {
+                  if (diffX > 0) {
+                    setActiveLeaderIndex((prev) => (prev + 1) % leaders.length);
+                  } else {
+                    setActiveLeaderIndex((prev) => (prev - 1 + leaders.length) % leaders.length);
+                  }
+                }
+              }}
+              onMouseDown={(e) => {
+                (e.currentTarget as any)._startX = e.clientX;
+              }}
+              onMouseUp={(e) => {
+                const startX = (e.currentTarget as any)._startX;
+                if (startX === undefined) return;
+                const diffX = startX - e.clientX;
+                if (Math.abs(diffX) > 30) {
+                  if (diffX > 0) {
+                    setActiveLeaderIndex((prev) => (prev + 1) % leaders.length);
+                  } else {
+                    setActiveLeaderIndex((prev) => (prev - 1 + leaders.length) % leaders.length);
+                  }
+                }
+              }}
+              style={{
+                width: '280px',
+                height: '380px',
+                borderRadius: '24px',
+                overflow: 'hidden',
+                position: 'relative',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                cursor: 'grab',
+                userSelect: 'none',
+              }}
+            >
               {leadersLoading ? (
                 <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', color: '#a0aec0', fontSize: '0.9rem' }}>
                   Loading...
                 </div>
               ) : (
-                leaders.map((leader, index) => (
-                  <div
-                    key={leader.id}
+                <>
+                  {leaders.map((leader, index) => (
+                    <div
+                      key={leader.id}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        opacity: activeLeaderIndex === index ? 1 : 0,
+                        transition: 'opacity 0.8s ease-in-out',
+                        zIndex: activeLeaderIndex === index ? 2 : 1
+                      }}
+                    >
+                      <img
+                        src={leaderPhotoMap[leader.id] ?? teamPhoto1}
+                        alt={leader.name}
+                        draggable={false}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                      {/* Glassmorphic Overlay for Leader info */}
+                      <div style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        padding: '20px',
+                        background: 'linear-gradient(transparent, rgba(0,0,0,0.85))',
+                        backdropFilter: 'blur(4px)',
+                        color: '#ffffff',
+                        textAlign: 'left'
+                      }}>
+                        <h4 style={{ margin: '0 0 2px 0', fontSize: '1.1rem', fontWeight: 600, fontFamily: 'var(--font-title)' }}>
+                          {leader.name}
+                        </h4>
+                        <p style={{ margin: '0 0 2px 0', fontSize: '0.8rem', color: '#cbd5e0', fontWeight: 500 }}>
+                          {leader.position}
+                        </p>
+                        <p style={{ margin: 0, fontSize: '0.75rem', color: '#90a4ae', fontWeight: 400 }}>
+                          {leader.chapter}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Minimal Arrow Buttons */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveLeaderIndex((prev) => (prev - 1 + leaders.length) % leaders.length);
+                    }}
+                    aria-label="Previous leader"
                     style={{
                       position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      opacity: activeLeaderIndex === index ? 1 : 0,
-                      transition: 'opacity 0.8s ease-in-out',
-                      zIndex: activeLeaderIndex === index ? 2 : 1
-                    }}
-                  >
-                    <img
-                      src={leaderPhotoMap[leader.id] ?? teamPhoto1}
-                      alt={leader.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                    {/* Glassmorphic Overlay for Leader info */}
-                    <div style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      padding: '20px',
-                      background: 'linear-gradient(transparent, rgba(0,0,0,0.85))',
-                      backdropFilter: 'blur(4px)',
+                      top: '40%',
+                      left: '8px',
+                      transform: 'translateY(-50%)',
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(0, 0, 0, 0.4)',
                       color: '#ffffff',
-                      textAlign: 'left'
-                    }}>
-                      <h4 style={{ margin: '0 0 2px 0', fontSize: '1.1rem', fontWeight: 600, fontFamily: 'var(--font-title)' }}>
-                        {leader.name}
-                      </h4>
-                      <p style={{ margin: '0 0 2px 0', fontSize: '0.8rem', color: '#cbd5e0', fontWeight: 500 }}>
-                        {leader.position}
-                      </p>
-                      <p style={{ margin: 0, fontSize: '0.75rem', color: '#90a4ae', fontWeight: 400 }}>
-                        {leader.chapter}
-                      </p>
-                    </div>
-                  </div>
-                ))
+                      border: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      zIndex: 4,
+                      backdropFilter: 'blur(4px)',
+                      transition: 'background-color 0.2s',
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'}
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveLeaderIndex((prev) => (prev + 1) % leaders.length);
+                    }}
+                    aria-label="Next leader"
+                    style={{
+                      position: 'absolute',
+                      top: '40%',
+                      right: '8px',
+                      transform: 'translateY(-50%)',
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                      color: '#ffffff',
+                      border: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      zIndex: 4,
+                      backdropFilter: 'blur(4px)',
+                      transition: 'background-color 0.2s',
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'}
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </>
               )}
             </div>
           </div>

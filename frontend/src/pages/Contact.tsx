@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Phone, Camera, Mail } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Phone, Camera, Mail, ChevronLeft, ChevronRight } from 'lucide-react';
 import { submitContactForm } from '../services/api';
 import { ConversionBlock } from '../components/ConversionBlock';
 import contact1 from '../assets/contact1.png';
@@ -24,9 +24,38 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
   const [error, setError] = useState<string | null>(null);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+
+  const images = [contact1, tibe, contact2, contact3];
+
+  const handleNext = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    touchStartX.current = clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent | React.MouseEvent) => {
+    if (touchStartX.current === null) return;
+    const clientX = 'changedTouches' in e ? e.changedTouches[0].clientX : e.clientX;
+    const diffX = touchStartX.current - clientX;
+    if (Math.abs(diffX) > 40) {
+      if (diffX > 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
+    touchStartX.current = null;
+  };
 
   useEffect(() => {
-    const images = [contact1, tibe, contact2, contact3];
     const timer = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 3500);
@@ -307,18 +336,27 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
           </div>
 
           {/* Right Image Card Carousel */}
-          <div style={{
-            borderRadius: '24px',
-            overflow: 'hidden',
-            position: 'relative',
-            height: '100%',
-            minHeight: '480px',
-          }}>
-            {[contact1, tibe, contact2, contact3].map((img, index) => (
+          <div 
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={handleTouchStart}
+            onMouseUp={handleTouchEnd}
+            style={{
+              borderRadius: '24px',
+              overflow: 'hidden',
+              position: 'relative',
+              height: '100%',
+              minHeight: '480px',
+              cursor: 'grab',
+              userSelect: 'none',
+            }}
+          >
+            {images.map((img, index) => (
               <img
                 key={index}
                 src={img}
                 alt={`NEASW Impact ${index + 1}`}
+                draggable={false}
                 style={{
                   position: 'absolute',
                   top: 0,
@@ -332,6 +370,64 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
                 }}
               />
             ))}
+
+            {/* Minimal Arrow Navigation Buttons */}
+            <button
+              onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+              aria-label="Previous slide"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '12px',
+                transform: 'translateY(-50%)',
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                color: '#ffffff',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 3,
+                backdropFilter: 'blur(4px)',
+                transition: 'background-color 0.2s, transform 0.2s',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'}
+            >
+              <ChevronLeft size={18} />
+            </button>
+
+            <button
+              onClick={(e) => { e.stopPropagation(); handleNext(); }}
+              aria-label="Next slide"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: '12px',
+                transform: 'translateY(-50%)',
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                color: '#ffffff',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 3,
+                backdropFilter: 'blur(4px)',
+                transition: 'background-color 0.2s, transform 0.2s',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'}
+            >
+              <ChevronRight size={18} />
+            </button>
+
             {/* Carousel Navigation Indicators */}
             <div style={{
               position: 'absolute',
@@ -340,16 +436,16 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
               transform: 'translateX(-50%)',
               display: 'flex',
               gap: '8px',
-              zIndex: 2,
+              zIndex: 3,
               backgroundColor: 'rgba(0,0,0,0.3)',
               padding: '6px 12px',
               borderRadius: '20px',
               backdropFilter: 'blur(4px)',
             }}>
-              {[contact1, tibe, contact2, contact3].map((_, index) => (
+              {images.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => setCurrentImageIndex(index)}
+                  onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(index); }}
                   style={{
                     width: currentImageIndex === index ? '20px' : '8px',
                     height: '8px',
