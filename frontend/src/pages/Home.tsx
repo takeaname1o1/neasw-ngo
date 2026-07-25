@@ -619,63 +619,6 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               />
             ))}
 
-            {/* Minimal Arrow Navigation Buttons */}
-            <button
-              onClick={(e) => { e.stopPropagation(); handleCenterPrev(); }}
-              aria-label="Previous slide"
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '10px',
-                transform: 'translateY(-50%)',
-                width: '30px',
-                height: '30px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                color: '#ffffff',
-                border: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                zIndex: 3,
-                backdropFilter: 'blur(4px)',
-                transition: 'background-color 0.2s, transform 0.2s',
-              }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'}
-            >
-              <ChevronLeft size={16} />
-            </button>
-
-            <button
-              onClick={(e) => { e.stopPropagation(); handleCenterNext(); }}
-              aria-label="Next slide"
-              style={{
-                position: 'absolute',
-                top: '50%',
-                right: '10px',
-                transform: 'translateY(-50%)',
-                width: '30px',
-                height: '30px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                color: '#ffffff',
-                border: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                zIndex: 3,
-                backdropFilter: 'blur(4px)',
-                transition: 'background-color 0.2s, transform 0.2s',
-              }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'}
-            >
-              <ChevronRight size={16} />
-            </button>
-
             {/* Navigation Dots */}
             <div style={{
               position: 'absolute',
@@ -1516,68 +1459,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                     </div>
                   ))}
 
-                  {/* Minimal Arrow Buttons */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActiveLeaderIndex((prev) => (prev - 1 + leaders.length) % leaders.length);
-                    }}
-                    aria-label="Previous leader"
-                    style={{
-                      position: 'absolute',
-                      top: '40%',
-                      left: '8px',
-                      transform: 'translateY(-50%)',
-                      width: '28px',
-                      height: '28px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                      color: '#ffffff',
-                      border: 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      zIndex: 4,
-                      backdropFilter: 'blur(4px)',
-                      transition: 'background-color 0.2s',
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'}
-                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'}
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActiveLeaderIndex((prev) => (prev + 1) % leaders.length);
-                    }}
-                    aria-label="Next leader"
-                    style={{
-                      position: 'absolute',
-                      top: '40%',
-                      right: '8px',
-                      transform: 'translateY(-50%)',
-                      width: '28px',
-                      height: '28px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                      color: '#ffffff',
-                      border: 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      zIndex: 4,
-                      backdropFilter: 'blur(4px)',
-                      transition: 'background-color 0.2s',
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'}
-                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'}
-                  >
-                    <ChevronRight size={16} />
-                  </button>
+                  {/* Glassmorphic Overlay for Leader info is rendered inside */}
                 </>
               )}
             </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Phone, Camera, Mail, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Phone, Camera, Mail } from 'lucide-react';
 import { submitContactForm } from '../services/api';
 import { ConversionBlock } from '../components/ConversionBlock';
 import contact1 from '../assets/contact1.png';
@@ -370,63 +370,6 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
                 }}
               />
             ))}
-
-            {/* Minimal Arrow Navigation Buttons */}
-            <button
-              onClick={(e) => { e.stopPropagation(); handlePrev(); }}
-              aria-label="Previous slide"
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '12px',
-                transform: 'translateY(-50%)',
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                color: '#ffffff',
-                border: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                zIndex: 3,
-                backdropFilter: 'blur(4px)',
-                transition: 'background-color 0.2s, transform 0.2s',
-              }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'}
-            >
-              <ChevronLeft size={18} />
-            </button>
-
-            <button
-              onClick={(e) => { e.stopPropagation(); handleNext(); }}
-              aria-label="Next slide"
-              style={{
-                position: 'absolute',
-                top: '50%',
-                right: '12px',
-                transform: 'translateY(-50%)',
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                color: '#ffffff',
-                border: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                zIndex: 3,
-                backdropFilter: 'blur(4px)',
-                transition: 'background-color 0.2s, transform 0.2s',
-              }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'}
-            >
-              <ChevronRight size={18} />
-            </button>
 
             {/* Carousel Navigation Indicators */}
             <div style={{
