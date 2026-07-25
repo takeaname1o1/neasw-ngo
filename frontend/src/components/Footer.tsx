@@ -97,7 +97,7 @@ export const Footer: React.FC<FooterProps> = () => {
           gap: '15px',
         }}>
           <div>
-            © 2025 NEASW Welfare Foundation
+            © 2026 NEASW Welfare Foundation
           </div>
           <div style={{ display: 'flex', gap: '20px' }}>
             <a href="#" style={{ color: 'inherit' }}>Terms of Use</a>
