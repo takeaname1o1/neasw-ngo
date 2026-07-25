@@ -40,7 +40,7 @@ export const Footer: React.FC<FooterProps> = () => {
               color: '#ffffff',
             }}>
               Contact
-              </h4>
+            </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', color: '#a0aec0', padding: 0 }}>
               {contactInfo?.phones.map((phone, idx) => (
                 <li key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -52,7 +52,10 @@ export const Footer: React.FC<FooterProps> = () => {
                 </li>
               )}
               <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                ✉️ {contactInfo?.emails[0] || 'neasw.welfare@gmail.com'}
+                ✉️ <a href="mailto:ne.association.for.socialwelfare@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>ne.association.for.socialwelfare@gmail.com</a>
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                📸 <a href={contactInfo?.socials.instagram || "https://www.instagram.com/neasw__?igsh=MW9xa3MyM3U2bGczOQ=="} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>@neasw__</a>
               </li>
             </ul>
           </div>

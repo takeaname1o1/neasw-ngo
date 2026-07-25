@@ -63,7 +63,7 @@ async def submit_contact_form(form_data: ContactFormSubmit, db: Session = Depend
 async def get_contact_info():
     """Returns global contact information used in the footer and contact page."""
     return {
-        "emails": ["neasw.welfare@gmail.com"],
+        "emails": ["ne.association.for.socialwelfare@gmail.com"],
         "phones": ["+91 876 676 8888", "+91 676 676 8888"],
         "locations": ["Delhi", "Nagaland", "Arunachal Pradesh"],
         "socials": {"instagram": "https://www.instagram.com/neasw__?igsh=MW9xa3MyM3U2bGczOQ=="}
