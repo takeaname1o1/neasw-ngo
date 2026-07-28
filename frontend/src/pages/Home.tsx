@@ -368,8 +368,8 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
       image: northeastTourismImg
     },
     {
-      title: "Relief & Humanitarian Aid",
-      description: "Providing emergency assistance, relief materials, and support to communities affected by disasters and crises.",
+      title: "Relief & Humanitarian Support",
+      description: "Providing timely emergency assistance, essential relief materials, and vital resources to vulnerable communities across remote border areas including Mon District & Noklak (Nagaland), and Anjaw & Lazu (Arunachal Pradesh).",
       image: reliefAidImg
     },
     {
@@ -672,7 +672,26 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             </div>
             <div>
               <h4 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px', color: 'var(--text-primary)' }}>Relief & Humanitarian Support</h4>
-              <p style={{ fontSize: '0.925rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>Providing timely assistance during emergencies and supporting vulnerable communities with essential resources.</p>
+              <p style={{ fontSize: '0.925rem', color: 'var(--text-muted)', margin: '0 0 10px 0', lineHeight: 1.5 }}>
+                Providing timely assistance during emergencies and supporting vulnerable communities with essential resources.
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {['Mon district, Nagaland', 'Anjaw, Arunachal Pradesh', 'Noklak, Nagaland', 'Lazu, Arunachal Pradesh'].map((loc, idx) => (
+                  <span key={idx} style={{
+                    fontSize: '0.75rem',
+                    backgroundColor: '#edf2f7',
+                    color: '#2d3748',
+                    padding: '4px 10px',
+                    borderRadius: '12px',
+                    fontWeight: 500,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}>
+                    📍 {loc}
+                  </span>
+                ))}
+              </div>
             </div>
             <div>
               <h4 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px', color: 'var(--text-primary)' }}>Cultural Preservation</h4>

@@ -67,8 +67,8 @@ export const Work: React.FC<WorkProps> = ({ setCurrentPage }) => {
       collageType: "vertical"
     },
     {
-      title: "Relief &\nHumanitarian Aid",
-      desc: "In times of crisis, we deliver essential food supplies, medical kits, and clothing. Working in active coordination with security bodies like the Assam Rifles, we coordinate distribution logistics into remote hills.\n\nOur rapid response teams are trained to navigate difficult terrains to ensure that aid reaches the most vulnerable populations promptly and effectively, helping rebuild lives after natural disasters.",
+      title: "Relief &\nHumanitarian Support",
+      desc: "Providing timely assistance during emergencies and supporting vulnerable communities with essential resources. Working in active coordination with security bodies like the Assam Rifles, we deliver essential food supplies, medical kits, and clothing into remote border circles.\n\nOur field operations have successfully reached critical remote locations including Mon district (Nagaland), Anjaw (Arunachal Pradesh), Noklak (Nagaland), and Lazu (Arunachal Pradesh), ensuring rapid emergency relief to vulnerable populations.",
       theme: "dark",
       imagePos: "right",
       images: [
