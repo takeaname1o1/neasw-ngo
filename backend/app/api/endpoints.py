@@ -68,5 +68,11 @@ async def get_contact_info():
         "emails": ["ne.association.for.socialwelfare@gmail.com"],
         "phones": ["+91 6009-313275"],
         "locations": ["Delhi", "Nagaland", "Arunachal Pradesh", "Manipur"],
-        "socials": {"instagram": "https://www.instagram.com/neasw__?igsh=MW9xa3MyM3U2bGczOQ=="}
+        "socials": {"instagram": "https://www.instagram.com/neasw__?igsh=MW9xa3MyM3U2bGczOQ=="},
+        "partners": [
+            {"name": "Assam Rifles", "url": "https://assamrifles.gov.in/"},
+            {"name": "Ministry of Home Affairs", "url": "https://www.mha.gov.in/"},
+            {"name": "Ministry of Development of North Eastern Region", "url": "https://mdoner.gov.in/"},
+            {"name": "Department of Science & Technology", "url": "https://dst.gov.in/"}
+        ]
     }

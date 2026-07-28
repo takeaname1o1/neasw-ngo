@@ -1611,14 +1611,18 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
           }}
         >
           {[
-            { logo: assamRiflesLogo, alt: "Assam Rifles" },
-            { logo: homeAffairsLogo, alt: "Ministry of Home Affairs" },
-            { logo: neDonerLogo, alt: "Ministry of Development of North Eastern Region" },
-            { logo: scienceTechnoLogo, alt: "Department of Science & Technology" }
+            { logo: assamRiflesLogo, alt: "Assam Rifles", url: "https://assamrifles.gov.in/" },
+            { logo: homeAffairsLogo, alt: "Ministry of Home Affairs", url: "https://www.mha.gov.in/" },
+            { logo: neDonerLogo, alt: "Ministry of Development of North Eastern Region", url: "https://mdoner.gov.in/" },
+            { logo: scienceTechnoLogo, alt: "Department of Science & Technology", url: "https://dst.gov.in/" }
           ].map((partner, index) => (
-            <div
+            <a
               key={index}
+              href={partner.url}
+              target="_blank"
+              rel="noopener noreferrer"
               className="partner-logo-card"
+              title={partner.alt}
               style={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -1626,7 +1630,8 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                 height: '50px',
                 width: '140px',
                 transition: 'all 0.3s ease',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                textDecoration: 'none',
               }}
             >
               <img
@@ -1640,7 +1645,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
                   transition: 'all 0.3s ease',
                 }}
               />
-            </div>
+            </a>
           ))}
         </div>
       </section>

@@ -132,6 +132,35 @@ export const Footer: React.FC<FooterProps> = () => {
               )}
             </ul>
           </div>
+
+          {/* Our Partners column */}
+          <div>
+            <h4 style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '1rem',
+              fontWeight: 700,
+              marginBottom: '20px',
+              color: '#ffffff',
+            }}>
+              Our Partners
+            </h4>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', color: '#a0aec0', padding: 0 }}>
+              {contactInfo?.partners?.map((partner, idx) => (
+                <li key={idx}>
+                  <a href={partner.url} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#ffffff'} onMouseOut={(e) => e.currentTarget.style.color = '#a0aec0'}>
+                    {partner.name}
+                  </a>
+                </li>
+              )) || (
+                <>
+                  <li><a href="https://assamrifles.gov.in/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Assam Rifles</a></li>
+                  <li><a href="https://www.mha.gov.in/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Ministry of Home Affairs</a></li>
+                  <li><a href="https://mdoner.gov.in/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Ministry of DoNER</a></li>
+                  <li><a href="https://dst.gov.in/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Dept of Science & Technology</a></li>
+                </>
+              )}
+            </ul>
+          </div>
         </div>
 
         <hr style={{ borderColor: 'rgba(255, 255, 255, 0.1)', margin: '30px 0 20px 0' }} />

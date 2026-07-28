@@ -30,6 +30,7 @@ export interface ContactInfo {
   socials: {
     instagram?: string;
   };
+  partners?: { name: string; url: string }[];
 }
 
 export async function getLeadership(): Promise<LeadershipMember[]> {
