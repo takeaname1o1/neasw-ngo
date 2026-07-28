@@ -151,8 +151,16 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
   const [leadersLoading, setLeadersLoading] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  const [activeReliefLocationIndex, setActiveReliefLocationIndex] = useState(0);
+
   const heroBanners = [unityUtsavBanner, storiesOfChangeImg, homeHeroBg];
   const centerImages = [impactHome, tribeImg, tribe2Img];
+  const reliefLocations = [
+    "Mon district, Nagaland",
+    "Anjaw, Arunachal Pradesh",
+    "Noklak, Nagaland",
+    "Lazu, Arunachal Pradesh"
+  ];
 
   const handleCenterNext = () => {
     setActiveCenterImageIndex((prev) => (prev + 1) % centerImages.length);
@@ -192,6 +200,13 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
     const interval = setInterval(() => {
       setActiveCenterImageIndex((prev) => (prev + 1) % centerImages.length);
     }, 3500);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveReliefLocationIndex((prev) => (prev + 1) % reliefLocations.length);
+    }, 2600);
     return () => clearInterval(interval);
   }, []);
 
@@ -369,7 +384,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
     },
     {
       title: "Relief & Humanitarian Support",
-      description: "Providing timely assistance during emergencies and supporting vulnerable communities with essential resources.",
+      description: "Providing timely emergency assistance, essential relief materials, and vital resources to vulnerable communities across remote border areas including Mon District & Noklak (Nagaland), and Anjaw & Lazu (Arunachal Pradesh).",
       image: reliefAidImg
     },
     {
@@ -672,14 +687,43 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             </div>
             <div>
               <h4 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px', color: 'var(--text-primary)' }}>Relief & Humanitarian Support</h4>
-              <p style={{ fontSize: '0.925rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>
+              <p style={{ fontSize: '0.925rem', color: 'var(--text-muted)', margin: '0 0 12px 0', lineHeight: 1.5 }}>
                 Providing timely assistance during emergencies and supporting vulnerable communities with essential resources.
               </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 16px', marginTop: '8px', fontSize: '0.825rem', color: '#718096' }}>
-                <span>📍 Mon district, Nagaland</span>
-                <span>📍 Anjaw, Arunachal Pradesh</span>
-                <span>📍 Noklak, Nagaland</span>
-                <span>📍 Lazu, Arunachal Pradesh</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Locations Reached:
+                </span>
+                <div style={{ position: 'relative', display: 'inline-block', height: '28px', minWidth: '220px' }}>
+                  {reliefLocations.map((loc, idx) => (
+                    <span
+                      key={idx}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        fontSize: '0.8rem',
+                        backgroundColor: '#edf2f7',
+                        color: '#1a202c',
+                        padding: '4px 12px',
+                        borderRadius: '16px',
+                        fontWeight: 600,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+                        border: '1px solid #e2e8f0',
+                        whiteSpace: 'nowrap',
+                        opacity: activeReliefLocationIndex === idx ? 1 : 0,
+                        transform: activeReliefLocationIndex === idx ? 'translateY(0) scale(1)' : 'translateY(8px) scale(0.95)',
+                        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                        pointerEvents: activeReliefLocationIndex === idx ? 'auto' : 'none',
+                      }}
+                    >
+                      📍 {loc}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
             <div>
