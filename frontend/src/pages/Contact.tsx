@@ -1,11 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Phone, Camera, Mail } from 'lucide-react';
+import { Phone, Mail, MapPin } from 'lucide-react';
 import { submitContactForm } from '../services/api';
 import { ConversionBlock } from '../components/ConversionBlock';
 import contact1 from '../assets/contact1.png';
 import contact2 from '../assets/contact2.png';
 import contact3 from '../assets/contact3.png';
 import tibe from '../assets/tibe.jpeg';
+
+const InstagramIcon: React.FC<{ size?: number; color?: string; strokeWidth?: number; style?: React.CSSProperties }> = ({ size = 26, color = "currentColor", strokeWidth = 1.5, style }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth={strokeWidth}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={style}
+  >
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+);
 
 interface ContactProps {
   setCurrentPage: (page: string) => void;
@@ -109,6 +127,16 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
           }}>
             Contact Us
           </h1>
+          <p style={{
+            fontSize: '1.25rem',
+            color: '#2b6cb0',
+            fontStyle: 'italic',
+            fontWeight: 600,
+            margin: '12px 0 0 0',
+            letterSpacing: '0.02em',
+          }}>
+            Motto: “Unity & Service”
+          </p>
         </div>
       </section>
 
@@ -432,8 +460,7 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 600, fontFamily: 'var(--font-title)', margin: 0, color: '#000000', textAlign: 'center' }}>Call & Whatsapp</h3>
-              <p style={{ color: '#718096', fontSize: '1rem', margin: 0, textAlign: 'center' }}>+91 876 676 8888</p>
-              <p style={{ color: '#718096', fontSize: '1rem', margin: 0, textAlign: 'center' }}>+91 876 676 8888</p>
+              <p style={{ color: '#718096', fontSize: '1rem', margin: 0, textAlign: 'center' }}>+91 6009-313275</p>
             </div>
           </div>
 
@@ -457,7 +484,7 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
               onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e2e8f0'}
               onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#f1f2f4'}
             >
-              <Camera size={26} strokeWidth={1.5} style={{ color: '#000000' }} />
+              <InstagramIcon size={26} strokeWidth={1.5} style={{ color: '#000000' }} />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 600, fontFamily: 'var(--font-title)', margin: 0, color: '#000000', textAlign: 'center' }}>Instagram</h3>
@@ -481,6 +508,27 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 600, fontFamily: 'var(--font-title)', margin: 0, color: '#000000', textAlign: 'center' }}>Write Us</h3>
               <p style={{ color: '#718096', fontSize: '1rem', margin: 0, textAlign: 'center' }}>ne.association.for.socialwelfare@gmail.com</p>
+            </div>
+          </div>
+
+          {/* Headquarters */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center', flex: 1.2 }}>
+            <div style={{
+              width: '70px',
+              height: '70px',
+              borderRadius: '50%',
+              backgroundColor: '#f1f2f4',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <MapPin size={26} strokeWidth={1.5} style={{ color: '#000000' }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 600, fontFamily: 'var(--font-title)', margin: 0, color: '#000000', textAlign: 'center' }}>Headquarters</h3>
+              <p style={{ color: '#718096', fontSize: '0.925rem', margin: 0, textAlign: 'center', lineHeight: '1.4' }}>
+                50, Pandit Deen Dayal Upadhyaya Marg, Mata Sundari Railway Colony, Mandi House, Delhi, India 110002
+              </p>
             </div>
           </div>
         </div>

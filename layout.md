@@ -12,7 +12,7 @@ Based on the provided document images, here is a comprehensive website layout an
 * **Action Blocks:** Two distinct boxes for "Become a Volunteer" and "Partner With Us".
 
 
-* **Contact Info:** Phone number, email address, and physical location tags (Delhi, Nagaland, Arunachal Pradesh).
+* **Contact Info:** Phone number, email address, Motto (“Unity & Service”), Headquarters address (50, Pandit Deen Dayal Upadhyaya Marg, Mata Sundari Railway Colony, Mandi House, Delhi, India 110002), and physical location tags (Delhi, Nagaland, Arunachal Pradesh, Manipur).
 
 
 * **Legal/Copyright:** 2025 NEASW Welfare Foundation, Terms & Conditions, and Privacy Policy links.
@@ -302,8 +302,8 @@ async def get_contact_info():
     """Returns global contact information used in the footer and contact page."""
     return {
         "emails": ["neasw.welfare@gmail.com"],
-        "phones": ["+91 876 676 8888", "+91 676 676 8888"],
-        "locations": ["Delhi", "Nagaland", "Arunachal Pradesh"],
+        "phones": ["+91 6009-313275"],
+        "locations": ["Delhi", "Nagaland", "Arunachal Pradesh", "Manipur"],
         "socials": {"instagram": "@NEASW.Welfare"}
     } #[cite: 1]
 

@@ -22,6 +22,8 @@ export interface ContactFormSubmit {
 }
 
 export interface ContactInfo {
+  motto?: string;
+  headquarters?: string;
   emails: string[];
   phones: string[];
   locations: string[];

@@ -63,8 +63,10 @@ async def submit_contact_form(form_data: ContactFormSubmit, db: Session = Depend
 async def get_contact_info():
     """Returns global contact information used in the footer and contact page."""
     return {
+        "motto": "Unity & Service",
+        "headquarters": "50, Pandit Deen Dayal Upadhyaya Marg, Mata Sundari Railway Colony, Mandi House, Delhi, India 110002",
         "emails": ["ne.association.for.socialwelfare@gmail.com"],
-        "phones": ["+91 876 676 8888", "+91 676 676 8888"],
-        "locations": ["Delhi", "Nagaland", "Arunachal Pradesh"],
+        "phones": ["+91 6009-313275"],
+        "locations": ["Delhi", "Nagaland", "Arunachal Pradesh", "Manipur"],
         "socials": {"instagram": "https://www.instagram.com/neasw__?igsh=MW9xa3MyM3U2bGczOQ=="}
     }

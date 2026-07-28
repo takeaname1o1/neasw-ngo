@@ -523,6 +523,17 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             }}>
               NEASW <br /> WELFARE <br /> FOUNDATION
             </h1>
+            <p style={{
+              fontSize: '1.25rem',
+              letterSpacing: '0.2em',
+              marginTop: '20px',
+              color: 'rgba(255, 255, 255, 0.9)',
+              textTransform: 'uppercase',
+              fontWeight: 500,
+              fontFamily: 'var(--font-body)',
+            }}>
+              Motto: “Unity & Service”
+            </p>
           </div>
         )}
       </section>

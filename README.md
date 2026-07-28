@@ -21,27 +21,116 @@ A modern, highly interactive web application for the **NEASW Welfare Foundation*
 
 ---
 
+## 🏗️ Technical Overview & Architecture
+
+The application is built on a modern, decoupled client-server architecture designed for high performance, maintainability, and scalability.
+
+```
++-------------------------------------------------------------------+
+|                        Client Browser                             |
+|    Vite + React SPA (TypeScript) | Custom Router | Vanilla CSS    |
++-------------------------------------------------------------------+
+                                 |
+                         HTTP JSON (/api/*)
+                                 |
+                                 v
++-------------------------------------------------------------------+
+|                    FastAPI Backend (Python)                       |
+|   Uvicorn Server | REST Endpoints | Pydantic Schemas | ORM        |
++-------------------------------------------------------------------+
+                                 |
+                                 v
++-------------------------------------------------------------------+
+|                     SQLite Data Store (SQLAlchemy)                |
+|       contact_submissions | leadership_members | volunteer_plans  |
++-------------------------------------------------------------------+
+```
+
+### 💻 Technology Stack
+
+* **Frontend**:
+  * **Framework**: React 18 (TypeScript) built with Vite for sub-millisecond HMR and optimized production bundles.
+  * **Styling**: Vanilla CSS with custom `:root` tokens, smooth CSS transitions, custom animations, glassmorphic accents, and dynamic layout bounds.
+  * **Icons & UI**: `lucide-react` icons.
+  * **State & Routing**: Custom light state-based router providing instant view transitions without heavy external router dependencies.
+  * **HTTP Client**: Native browser `fetch` API wrapping `/api/*` endpoints.
+
+* **Backend**:
+  * **Framework**: FastAPI (Python 3.10+) with async request processing and automatic Swagger OpenAPI documentation (`/docs`).
+  * **Database & ORM**: SQLite (`neasw.db`) managed through SQLAlchemy ORM.
+  * **Data Validation**: Pydantic v2 schemas (`EmailStr`, type coercion, and JSON validation).
+  * **Server**: Uvicorn ASGI server.
+  * **Seeding & Booting**: Automated DB seeder script executed at startup to ensure default data presence.
+
+---
+
+## 🔌 Technical Details & API Endpoints
+
+### 💾 Database Schema (`neasw.db`)
+
+The backend utilizes SQLAlchemy ORM with three core tables:
+
+1. **`contact_submissions`**:
+   * `id` (INTEGER, Primary Key, Autoincrement)
+   * `name` (VARCHAR, Required)
+   * `email` (VARCHAR, Required)
+   * `phone_number` (VARCHAR, Required)
+   * `organization_name` (VARCHAR, Optional)
+   * `preferred_date` (VARCHAR, Optional)
+   * `message` (TEXT, Required)
+   * `created_at` (DATETIME, Default: UTC Now)
+
+2. **`leadership_members`**:
+   * `id` (INTEGER, Primary Key)
+   * `name` (VARCHAR, Required)
+   * `position` (VARCHAR, Required)
+   * `chapter` (VARCHAR, Required)
+
+3. **`volunteer_plans`**:
+   * `id` (INTEGER, Primary Key)
+   * `duration_months` (INTEGER, Required)
+   * `title` (VARCHAR, Required)
+   * `features` (JSON / TEXT Array, Required)
+
+---
+
+### 🌐 Backend REST API Specs
+
+| Method | Route | Description | Request Payload | Response Schema |
+| :--- | :--- | :--- | :--- | :--- |
+| **GET** | `/api/about/leadership` | Fetches active roster of regional chapter leadership. | None | `List[LeadershipMember]` |
+| **GET** | `/api/join/volunteer-plans` | Fetches tiered volunteering plans & durations. | None | `List[VolunteerPlan]` |
+| **POST** | `/api/contact/submit` | Validates & saves user contact/volunteer inquiries. | `ContactFormSubmit` (JSON) | `{ "status": "success", "id": int, "message": str }` |
+| **GET** | `/api/contact/info` | Returns organizational contact details & social channels. | None | `ContactInfo` |
+
+> 📖 **Full Documentation:** For an in-depth dive into internal backend file structures, frontend CSS variable design tokens, component hierarchies, and mock email services, view [TECHNICAL_DOCUMENTATION.md](file:///Users/g10/Sync/deploy_project/ngo/TECHNICAL_DOCUMENTATION.md).
+
+---
+
 ## 📂 Project Directory Structure
 
 ```
 ├── backend/                  # FastAPI Application
 │   ├── app/
-│   │   ├── api/              # API endpoints (leadership, plans, contacts)
-│   │   ├── core/             # Database connection, seeder & config
-│   │   └── models/           # SQLAlchemy schemas & Pydantic models
+│   │   ├── api/              # Controller endpoints & routing logic
+│   │   ├── core/             # DB configuration, session management & seeder
+│   │   ├── models/           # SQLAlchemy DB models & Pydantic validation schemas
+│   │   └── services/         # Mock email service & helper integrations
 │   ├── run.py                # Server entry point
 │   ├── requirements.txt      # Python dependencies
 │   └── neasw.db              # SQLite Database
 ├── frontend/                 # Vite React Application
 │   ├── src/
-│   │   ├── assets/           # High-resolution local image files
+│   │   ├── assets/           # High-resolution local image files & brand assets
 │   │   ├── components/       # Header, Footer, Conversion blocks
-│   │   ├── pages/            # Home, About, Work, Join, Contact
-│   │   └── services/         # API services (relative path routing)
+│   │   ├── pages/            # View components (Home, About, Work, Join, Contact)
+│   │   └── services/         # API HTTP client wrapper (`api.ts`)
 │   ├── package.json          # Node dependencies
 │   └── vite.config.ts        # Vite configuration
 ├── run.sh                    # Startup boot script (port cleanup & launch)
-└── vercel.json               # Vercel deployment routing & API rewrites
+├── vercel.json               # Vercel deployment routing & API rewrites
+├── TECHNICAL_DOCUMENTATION.md # Comprehensive technical specifications
+└── README.md                 # Project Overview & Setup Guide
 ```
 
 ---
