@@ -369,7 +369,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
     },
     {
       title: "Relief & Humanitarian Support",
-      description: "Providing timely emergency assistance, essential relief materials, and vital resources to vulnerable communities across remote border areas including Mon District & Noklak (Nagaland), and Anjaw & Lazu (Arunachal Pradesh).",
+      description: "Providing timely assistance during emergencies and supporting vulnerable communities with essential resources.",
       image: reliefAidImg
     },
     {
@@ -672,25 +672,14 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
             </div>
             <div>
               <h4 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '6px', color: 'var(--text-primary)' }}>Relief & Humanitarian Support</h4>
-              <p style={{ fontSize: '0.925rem', color: 'var(--text-muted)', margin: '0 0 10px 0', lineHeight: 1.5 }}>
+              <p style={{ fontSize: '0.925rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>
                 Providing timely assistance during emergencies and supporting vulnerable communities with essential resources.
               </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                {['Mon district, Nagaland', 'Anjaw, Arunachal Pradesh', 'Noklak, Nagaland', 'Lazu, Arunachal Pradesh'].map((loc, idx) => (
-                  <span key={idx} style={{
-                    fontSize: '0.75rem',
-                    backgroundColor: '#edf2f7',
-                    color: '#2d3748',
-                    padding: '4px 10px',
-                    borderRadius: '12px',
-                    fontWeight: 500,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}>
-                    📍 {loc}
-                  </span>
-                ))}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 16px', marginTop: '8px', fontSize: '0.825rem', color: '#718096' }}>
+                <span>📍 Mon district, Nagaland</span>
+                <span>📍 Anjaw, Arunachal Pradesh</span>
+                <span>📍 Noklak, Nagaland</span>
+                <span>📍 Lazu, Arunachal Pradesh</span>
               </div>
             </div>
             <div>
