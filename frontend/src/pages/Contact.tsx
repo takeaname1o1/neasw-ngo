@@ -171,42 +171,26 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
                 <p style={{ fontWeight: 600, color: '#000000', margin: 0 }}>{success}</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '25px', textAlign: 'left' }}>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '22px', textAlign: 'left' }}>
                 {/* Name / Email row */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase' }}>Name</label>
+                    <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Name</label>
                     <input
                       type="text"
                       required
                       value={name}
-                      style={{
-                        backgroundColor: '#f1f2f4',
-                        border: 'none',
-                        borderRadius: '8px',
-                        padding: '12px 16px',
-                        fontSize: '0.95rem',
-                        fontFamily: 'var(--font-body)',
-                        color: '#000000',
-                      }}
+                      className="contact-form-input"
                       onChange={(e) => setName(e.target.value)}
                     />
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase' }}>Email</label>
+                    <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Email</label>
                     <input
                       type="email"
                       required
                       value={email}
-                      style={{
-                        backgroundColor: '#f1f2f4',
-                        border: 'none',
-                        borderRadius: '8px',
-                        padding: '12px 16px',
-                        fontSize: '0.95rem',
-                        fontFamily: 'var(--font-body)',
-                        color: '#000000',
-                      }}
+                      className="contact-form-input"
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
@@ -215,37 +199,21 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
                 {/* Phone Number / Organization Name row */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase' }}>Phone Number</label>
+                    <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Phone Number</label>
                     <input
                       type="tel"
                       required
                       value={phone}
-                      style={{
-                        backgroundColor: '#f1f2f4',
-                        border: 'none',
-                        borderRadius: '8px',
-                        padding: '12px 16px',
-                        fontSize: '0.95rem',
-                        fontFamily: 'var(--font-body)',
-                        color: '#000000',
-                      }}
+                      className="contact-form-input"
                       onChange={(e) => setPhone(e.target.value)}
                     />
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase' }}>Organization Name</label>
+                    <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Organization Name</label>
                     <input
                       type="text"
                       value={orgName}
-                      style={{
-                        backgroundColor: '#f1f2f4',
-                        border: 'none',
-                        borderRadius: '8px',
-                        padding: '12px 16px',
-                        fontSize: '0.95rem',
-                        fontFamily: 'var(--font-body)',
-                        color: '#000000',
-                      }}
+                      className="contact-form-input"
                       onChange={(e) => setOrgName(e.target.value)}
                     />
                   </div>
@@ -254,56 +222,32 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
                 {/* Preferred date / Subject row */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase' }}>Preferred date</label>
+                    <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Preferred date</label>
                     <input
                       type="date"
                       value={date}
-                      style={{
-                        backgroundColor: '#f1f2f4',
-                        border: 'none',
-                        borderRadius: '8px',
-                        padding: '12px 16px',
-                        fontSize: '0.95rem',
-                        fontFamily: 'var(--font-body)',
-                        color: '#000000',
-                      }}
+                      className="contact-form-input"
                       onChange={(e) => setDate(e.target.value)}
                     />
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase' }}>Subject</label>
+                    <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Subject</label>
                     <input
                       type="text"
-                      style={{
-                        backgroundColor: '#f1f2f4',
-                        border: 'none',
-                        borderRadius: '8px',
-                        padding: '12px 16px',
-                        fontSize: '0.95rem',
-                        fontFamily: 'var(--font-body)',
-                        color: '#000000',
-                      }}
+                      className="contact-form-input"
                     />
                   </div>
                 </div>
 
                 {/* Message / Special Requests */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase' }}>Message / Special Requests</label>
+                  <label style={{ fontSize: '0.8rem', color: '#4a5568', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Message / Special Requests</label>
                   <textarea
                     required
                     rows={4}
                     value={message}
-                    style={{
-                      backgroundColor: '#f1f2f4',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '12px 16px',
-                      fontSize: '0.95rem',
-                      fontFamily: 'var(--font-body)',
-                      color: '#000000',
-                      resize: 'none',
-                    }}
+                    className="contact-form-input"
+                    style={{ resize: 'none' }}
                     onChange={(e) => setMessage(e.target.value)}
                   />
                 </div>
@@ -314,49 +258,32 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
                   </div>
                 )}
 
-                {/* Buttons block */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '10px' }}>
+                {/* Unified Action Button */}
+                <div style={{ display: 'flex', alignItems: 'center', marginTop: '6px' }}>
                   <button
                     type="submit"
                     disabled={submitting}
                     style={{
-                      padding: '14px 28px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: '14px 32px',
                       backgroundColor: '#000000',
                       color: '#ffffff',
                       borderRadius: '9999px',
                       border: 'none',
                       fontWeight: 600,
                       cursor: 'pointer',
-                      fontSize: '0.925rem',
+                      fontSize: '0.95rem',
                       fontFamily: 'var(--font-body)',
-                      transition: 'opacity 0.2s',
+                      transition: 'all 0.2s ease',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                     }}
-                    onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
-                    onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+                    onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#222222'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                    onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#000000'; e.currentTarget.style.transform = 'none'; }}
                   >
-                    {submitting ? 'Reserving...' : 'Reserve a Spot'}
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    style={{
-                      width: '46px',
-                      height: '46px',
-                      borderRadius: '50%',
-                      backgroundColor: '#000000',
-                      color: '#ffffff',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: '1.25rem',
-                      transition: 'opacity 0.2s',
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
-                    onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
-                  >
-                    ↗
+                    {submitting ? 'Submitting...' : 'Reserve a Spot'}
+                    <span style={{ fontSize: '1.1rem' }}>↗</span>
                   </button>
                 </div>
               </form>
@@ -365,6 +292,7 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
 
           {/* Right Image Card Carousel */}
           <div 
+            className="contact-image-panel"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
             onMouseDown={handleTouchStart}
@@ -377,6 +305,7 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
               minHeight: '480px',
               cursor: 'grab',
               userSelect: 'none',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
             }}
           >
             {images.map((img, index) => (
@@ -646,7 +575,21 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
       <style>{`
         @media (min-width: 992px) {
           .contact-main-grid {
-            grid-template-columns: 1.3fr 1fr !important;
+            grid-template-columns: 1fr 1fr !important;
+            align-items: stretch !important;
+          }
+          .contact-image-panel {
+            height: 100% !important;
+            min-height: 520px !important;
+          }
+        }
+        @media (max-width: 991px) {
+          .contact-main-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .contact-image-panel {
+            height: 380px !important;
+            min-height: 380px !important;
           }
         }
         @media (max-width: 768px) {
@@ -664,6 +607,24 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
           .contact-form-panel {
             padding: 30px 20px !important;
           }
+        }
+        .contact-form-input {
+          width: 100%;
+          box-sizing: border-box;
+          background-color: #f1f2f4;
+          border: 1px solid transparent;
+          border-radius: 8px;
+          padding: 12px 16px;
+          font-size: 0.95rem;
+          font-family: var(--font-body);
+          color: #000000;
+          outline: none;
+          transition: all 0.2s ease;
+        }
+        .contact-form-input:focus {
+          background-color: #ffffff;
+          border-color: #000000;
+          box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
         }
       `}</style>
     </div>
