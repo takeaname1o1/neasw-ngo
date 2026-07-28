@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import { submitContactForm } from '../services/api';
 import { ConversionBlock } from '../components/ConversionBlock';
-import contact1 from '../assets/contact1.png';
+//import contact1 from '../assets/contact1.png';
 import contact2 from '../assets/contact2.png';
 import contact3 from '../assets/contact3.png';
 import tibe from '../assets/tibe.jpeg';
@@ -44,7 +44,7 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
 
-  const images = [contact1, tibe, contact2, contact3];
+  const images = [ tibe, contact2, contact3];
 
   const handleNext = () => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
