@@ -436,7 +436,7 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 600, fontFamily: 'var(--font-title)', margin: 0, color: '#000000', textAlign: 'center' }}>Write Us</h3>
-              <p style={{ color: '#718096', fontSize: '1rem', margin: 0, textAlign: 'center' }}>ne.association.for.socialwelfare@gmail.com</p>
+              <p style={{ color: '#718096', fontSize: '1rem', margin: 0, textAlign: 'center', wordBreak: 'break-all', overflowWrap: 'anywhere' }}>ne.association.for.socialwelfare@gmail.com</p>
             </div>
           </div>
 

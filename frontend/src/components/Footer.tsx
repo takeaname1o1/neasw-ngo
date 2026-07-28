@@ -96,9 +96,17 @@ export const Footer: React.FC<FooterProps> = () => {
                   <Phone size={16} style={{ flexShrink: 0 }} /> +91 6009-313275
                 </li>
               )}
-              <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Mail size={16} style={{ flexShrink: 0 }} /> <a href="mailto:ne.association.for.socialwelfare@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>ne.association.for.socialwelfare@gmail.com</a>
-              </li>
+              {contactInfo?.emails && contactInfo.emails.length > 0 ? (
+                contactInfo.emails.map((email, idx) => (
+                  <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                    <Mail size={16} style={{ flexShrink: 0, marginTop: '3px' }} /> <a href={`mailto:${email}`} style={{ color: 'inherit', textDecoration: 'none', wordBreak: 'break-all', overflowWrap: 'anywhere' }}>{email}</a>
+                  </li>
+                ))
+              ) : (
+                <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                  <Mail size={16} style={{ flexShrink: 0, marginTop: '3px' }} /> <a href="mailto:ne.association.for.socialwelfare@gmail.com" style={{ color: 'inherit', textDecoration: 'none', wordBreak: 'break-all', overflowWrap: 'anywhere' }}>ne.association.for.socialwelfare@gmail.com</a>
+                </li>
+              )}
               <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <InstagramIcon size={16} style={{ color: '#e1306c', flexShrink: 0 }} /> <a href={contactInfo?.socials.instagram || "https://www.instagram.com/neasw__?igsh=MW9xa3MyM3U2bGczOQ=="} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>@neasw__</a>
               </li>
