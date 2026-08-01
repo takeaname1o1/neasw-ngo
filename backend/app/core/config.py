@@ -12,12 +12,13 @@ class Settings(BaseSettings):
     MAIL_FROM: str = "neaswsubmission@zohomail.in"
     MAIL_FROM_NAME: str = "NEASW Submission"
     MAIL_SERVER: str = "smtp.zoho.in"
-    MAIL_PORT: int = 465
-    MAIL_STARTTLS: bool = False
-    MAIL_SSL_TLS: bool = True
+    MAIL_PORT: int = 587
+    MAIL_STARTTLS: bool = True
+    MAIL_SSL_TLS: bool = False
     USE_CREDENTIALS: bool = True
     VALIDATE_CERTS: bool = True
     MAIL_TO_ADMIN: str = "neaswsubmission@zohomail.in"
+
 
 
     model_config = SettingsConfigDict(

@@ -27,7 +27,7 @@ graph TD
     end
 
     subgraph External [External Services]
-        ZohoSMTP[Zoho India SMTP Server<br/>smtp.zoho.in:465]
+        ZohoSMTP[Zoho India SMTP Server<br/>smtp.zoho.in:587]
     end
 
     subgraph DataStore [SQLite Storage]
@@ -40,7 +40,7 @@ graph TD
     Endpoints --> Database_ORM[SQLAlchemy Session]
     Database_ORM --> DB
     Endpoints --> EmailService
-    EmailService -- "SSL/TLS (Port 465)" --> ZohoSMTP
+    EmailService -- "STARTTLS (Port 587)" --> ZohoSMTP
     Main --> DB_Seed
     DB_Seed --> Database_ORM
 ```
@@ -114,7 +114,7 @@ Pydantic schemas enforce type-safety and structural validity for HTTP payloads:
 *   **Startup Server Activation Email:** On application boot, FastAPI's `lifespan` context manager in `app/main.py` triggers `EmailService.send_startup_email()` asynchronously, notifying `settings.MAIL_TO_ADMIN` that the server is online and the mail service is active.
 *   **Async Background Dispatch:** The `/api/contact/submit` endpoint utilizes FastAPI's `BackgroundTasks` to trigger `send_contact_form_email` asynchronously. This allows instant HTTP responses to client requests without waiting for SMTP network round-trips.
 *   **Self-Notification & Reply-To:** Form entries are emailed directly to `settings.MAIL_TO_ADMIN` (`neaswsubmission@zohomail.in`), including a dynamic `Reply-To` header set to the submitter's email address for quick replies.
-*   **Zoho India SMTP Setup:** Configured for Zoho India (`smtp.zoho.in`) on port `465` with SSL/TLS enabled (`MAIL_SSL_TLS=True`).
+*   **Zoho India SMTP Setup:** Configured for Zoho India (`smtp.zoho.in`) on port `587` with STARTTLS enabled (`MAIL_STARTTLS=True`, `MAIL_SSL_TLS=False`) for Render cloud deployment compatibility.
 *   **Connection Configuration:** Managed dynamically via Pydantic `BaseSettings` (`app/core/config.py`), reading from `.env`:
     ```env
     MAIL_USERNAME=neaswsubmission@zohomail.in
@@ -122,9 +122,9 @@ Pydantic schemas enforce type-safety and structural validity for HTTP payloads:
     MAIL_FROM=neaswsubmission@zohomail.in
     MAIL_FROM_NAME=NEASW Submission
     MAIL_SERVER=smtp.zoho.in
-    MAIL_PORT=465
-    MAIL_STARTTLS=False
-    MAIL_SSL_TLS=True
+    MAIL_PORT=587
+    MAIL_STARTTLS=True
+    MAIL_SSL_TLS=False
     USE_CREDENTIALS=True
     VALIDATE_CERTS=True
     MAIL_TO_ADMIN=neaswsubmission@zohomail.in
