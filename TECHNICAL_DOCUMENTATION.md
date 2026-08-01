@@ -268,7 +268,7 @@ The decoupled codebase is structured to allow independent deployment of the back
       "rewrites": [
         {
           "source": "/api/:path*",
-          "destination": "https://neasw-backend-production.up.railway.app/api/:path*"
+          "destination": "https://neasw-ngo.onrender.com/api/:path*"
         },
         {
           "source": "/(.*)",
