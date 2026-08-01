@@ -34,25 +34,32 @@ export interface ContactInfo {
 }
 
 const RENDER_BACKEND_URL = 'https://neasw-ngo.onrender.com/api';
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '/api';
+
+const isLocalhost = typeof window !== 'undefined' && (
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1'
+);
+
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || (isLocalhost ? '/api' : RENDER_BACKEND_URL);
 
 async function fetchWithFallback(endpoint: string, options?: RequestInit): Promise<Response> {
   const primaryUrl = `${API_BASE_URL}${endpoint}`;
   try {
     const res = await fetch(primaryUrl, options);
-    if (res.status === 404 && API_BASE_URL === '/api') {
+    if (res.status === 404 && API_BASE_URL !== RENDER_BACKEND_URL) {
       console.warn(`Primary endpoint ${primaryUrl} returned 404. Falling back to Render backend directly.`);
       return await fetch(`${RENDER_BACKEND_URL}${endpoint}`, options);
     }
     return res;
   } catch (err) {
-    if (API_BASE_URL === '/api') {
+    if (API_BASE_URL !== RENDER_BACKEND_URL) {
       console.warn(`Primary fetch to ${primaryUrl} failed. Falling back to Render backend directly:`, err);
       return await fetch(`${RENDER_BACKEND_URL}${endpoint}`, options);
     }
     throw err;
   }
 }
+
 
 async function handleResponse<T>(response: Response, defaultErrorMsg: string): Promise<T> {
   const rawText = await response.text();
