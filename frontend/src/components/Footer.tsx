@@ -25,7 +25,7 @@ interface FooterProps {
   setCurrentPage: (page: string) => void;
 }
 
-export const Footer: React.FC<FooterProps> = () => {
+export const Footer: React.FC<FooterProps> = ({ setCurrentPage }) => {
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
 
   useEffect(() => {
@@ -51,13 +51,20 @@ export const Footer: React.FC<FooterProps> = () => {
         }}>
           {/* Brand & Motto column */}
           <div>
-            <h4 style={{
-              fontFamily: 'var(--font-title)',
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              marginBottom: '12px',
-              color: '#ffffff',
-            }}>
+            <h4
+              onClick={() => {
+                setCurrentPage('home');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              style={{
+                fontFamily: 'var(--font-title)',
+                fontSize: '1.1rem',
+                fontWeight: 600,
+                marginBottom: '12px',
+                color: '#ffffff',
+                cursor: 'pointer',
+              }}
+            >
               NEASW Welfare Foundation
             </h4>
             <p style={{

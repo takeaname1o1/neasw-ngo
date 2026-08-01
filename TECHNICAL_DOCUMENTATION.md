@@ -22,8 +22,12 @@ graph TD
     subgraph Server [Backend FastAPI Web Service]
         Main[main.py App Host]
         Endpoints[API Routes /endpoints.py]
-        EmailStub[Email Service]
+        EmailService[FastAPI-Mail Service]
         DB_Seed[Database Seeder]
+    end
+
+    subgraph External [External Services]
+        ZohoSMTP[Zoho India SMTP Server<br/>smtp.zoho.in:465]
     end
 
     subgraph DataStore [SQLite Storage]
@@ -35,7 +39,8 @@ graph TD
     APIService -- "/api/* (JSON over HTTP)" --> Endpoints
     Endpoints --> Database_ORM[SQLAlchemy Session]
     Database_ORM --> DB
-    Endpoints --> EmailStub
+    Endpoints --> EmailService
+    EmailService -- "SSL/TLS (Port 465)" --> ZohoSMTP
     Main --> DB_Seed
     DB_Seed --> Database_ORM
 ```
@@ -60,14 +65,16 @@ backend/
 │   ├── api/
 │   │   └── endpoints.py     # API controller endpoints & routing
 │   ├── core/
-│   │   ├── config.py        # Settings configuration (Pydantic)
+│   │   ├── config.py        # Settings configuration (Pydantic & FastAPI-Mail ConnectionConfig)
 │   │   ├── database.py      # SQLAlchemy engine and session connection
 │   │   └── database_seeder.py # Database seeder script for startup
 │   ├── models/
 │   │   ├── db_models.py     # SQLAlchemy DB schemas
 │   │   └── schemas.py       # Pydantic schemas (Data serialization/validation)
 │   └── services/
-│       └── email_service.py # Mock email service for notification handling
+│       └── email_service.py # FastAPI-Mail SMTP email dispatch service
+├── .env                  # Environment variables (Zoho SMTP credentials & server config)
+├── .env.example          # Template environment variable configuration
 ├── requirements.txt      # Python dependencies manifest
 ├── run.py                # Development server boot script
 └── neasw.db              # SQLite Database file
@@ -100,12 +107,27 @@ Pydantic schemas enforce type-safety and structural validity for HTTP payloads:
 | :--- | :--- | :--- | :--- |
 | **GET** | `/api/about/leadership` | Fetches the full roster of regional chapter leadership members. | `list[LeadershipMember]` |
 | **GET** | `/api/join/volunteer-plans` | Fetches the active tiered volunteering duration plans. | `list[VolunteerPlan]` |
-| **POST** | `/api/contact/submit` | Handles contact form submissions. Writes data to SQLite and triggers the mock email service. | `{ "status": "success", "id": int, "message": str }` |
+| **POST** | `/api/contact/submit` | Handles contact form submissions. Writes data to SQLite and triggers the FastAPI-Mail service. | `{ "status": "success", "id": int, "message": str }` |
 | **GET** | `/api/contact/info` | Returns organization contact details (email, phone, chapters, socials). | `ContactInfo` |
 
-### 6. Core Services (`app/services/email_service.py`)
-*   **Email Handling:** The `EmailService` class features a static async method `send_contact_form_email(form_data)`. 
-*   **Implementation:** Currently structured as a mock service, it extracts validation fields and logs them. In production, this can be expanded to connect with SMTP clients, Amazon SES, or SendGrid.
+### 6. Email Service & Configuration (`app/services/email_service.py` & `app/core/config.py`)
+*   **Async Background Dispatch:** The `/api/contact/submit` endpoint utilizes FastAPI's `BackgroundTasks` to trigger `send_contact_form_email` asynchronously. This allows instant HTTP responses to client requests without waiting for SMTP network round-trips.
+*   **Self-Notification & Reply-To:** Form entries are emailed directly to `settings.MAIL_TO_ADMIN` (`neaswsubmission@zohomail.in`), including a dynamic `Reply-To` header set to the submitter's email address for quick replies.
+*   **Zoho India SMTP Setup:** Configured for Zoho India (`smtp.zoho.in`) on port `465` with SSL/TLS enabled (`MAIL_SSL_TLS=True`).
+*   **Connection Configuration:** Managed dynamically via Pydantic `BaseSettings` (`app/core/config.py`), reading from `.env`:
+    ```env
+    MAIL_USERNAME=neaswsubmission@zohomail.in
+    MAIL_PASSWORD=YOUR_ZOHO_APP_PASSWORD
+    MAIL_FROM=neaswsubmission@zohomail.in
+    MAIL_FROM_NAME=NEASW Submission
+    MAIL_SERVER=smtp.zoho.in
+    MAIL_PORT=465
+    MAIL_STARTTLS=False
+    MAIL_SSL_TLS=True
+    USE_CREDENTIALS=True
+    VALIDATE_CERTS=True
+    MAIL_TO_ADMIN=neaswsubmission@zohomail.in
+    ```
 
 ---
 

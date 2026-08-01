@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models.db_models import ContactSubmission, LeadershipMember, VolunteerPlan
@@ -29,9 +29,13 @@ async def get_volunteer_plans(db: Session = Depends(get_db)):
 
 # PAGE 5: CONTACT US ENDPOINTS
 @router.post("/contact/submit")
-async def submit_contact_form(form_data: ContactFormSubmit, db: Session = Depends(get_db)):
+async def submit_contact_form(
+    form_data: ContactFormSubmit,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db)
+):
     """
-    Receives contact form submissions, writes them to the SQLite database, and simulates email notification.
+    Receives contact form submissions, writes them to the SQLite database, and dispatches an email notification.
     """
     try:
         # Create DB record
@@ -47,8 +51,8 @@ async def submit_contact_form(form_data: ContactFormSubmit, db: Session = Depend
         db.commit()
         db.refresh(db_submission)
 
-        # Notify via Email Service (mock/stub)
-        await EmailService.send_contact_form_email(form_data)
+        # Notify via Email Service asynchronously in background
+        background_tasks.add_task(EmailService.send_contact_form_email, form_data)
 
         return {
             "status": "success",
@@ -58,6 +62,7 @@ async def submit_contact_form(form_data: ContactFormSubmit, db: Session = Depend
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Failed to submit form: {str(e)}")
+
 
 @router.get("/contact/info")
 async def get_contact_info():
