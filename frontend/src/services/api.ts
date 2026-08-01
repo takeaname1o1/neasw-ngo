@@ -33,7 +33,8 @@ export interface ContactInfo {
   partners?: { name: string; url: string }[];
 }
 
-const RENDER_BACKEND_URL = 'https://neasw-ngo.onrender.com/api';
+const RENDER_BACKEND_URL = 'https://neasw-ngo.onrender.com/api'; // v1.0.2
+
 
 const isLocalhost = typeof window !== 'undefined' && (
   window.location.hostname === 'localhost' ||
