@@ -33,20 +33,44 @@ export interface ContactInfo {
   partners?: { name: string; url: string }[];
 }
 
+async function handleResponse<T>(response: Response, defaultErrorMsg: string): Promise<T> {
+  const rawText = await response.text();
+
+  if (!response.ok) {
+    let errorDetail = defaultErrorMsg;
+    if (rawText) {
+      try {
+        const parsed = JSON.parse(rawText);
+        errorDetail = parsed.detail || parsed.message || defaultErrorMsg;
+      } catch {
+        errorDetail = `${defaultErrorMsg} (HTTP ${response.status}): ${rawText.slice(0, 100)}`;
+      }
+    } else {
+      errorDetail = `${defaultErrorMsg} (HTTP ${response.status} Empty Response)`;
+    }
+    throw new Error(errorDetail);
+  }
+
+  if (!rawText || !rawText.trim()) {
+    return {} as T;
+  }
+
+  try {
+    return JSON.parse(rawText);
+  } catch (err) {
+    console.error('Failed to parse JSON response. Raw text:', rawText);
+    throw new Error(`Invalid JSON response from server: ${err instanceof Error ? err.message : String(err)}`);
+  }
+}
+
 export async function getLeadership(): Promise<LeadershipMember[]> {
   const response = await fetch('/api/about/leadership');
-  if (!response.ok) {
-    throw new Error('Failed to fetch leadership members');
-  }
-  return response.json();
+  return handleResponse<LeadershipMember[]>(response, 'Failed to fetch leadership members');
 }
 
 export async function getVolunteerPlans(): Promise<VolunteerPlan[]> {
   const response = await fetch('/api/join/volunteer-plans');
-  if (!response.ok) {
-    throw new Error('Failed to fetch volunteer plans');
-  }
-  return response.json();
+  return handleResponse<VolunteerPlan[]>(response, 'Failed to fetch volunteer plans');
 }
 
 export async function submitContactForm(data: ContactFormSubmit): Promise<{ status: string; id?: number; message: string }> {
@@ -57,17 +81,11 @@ export async function submitContactForm(data: ContactFormSubmit): Promise<{ stat
     },
     body: JSON.stringify(data),
   });
-  if (!response.ok) {
-    const errData = await response.json().catch(() => ({}));
-    throw new Error(errData.detail || 'Failed to submit contact form');
-  }
-  return response.json();
+  return handleResponse<{ status: string; id?: number; message: string }>(response, 'Failed to submit contact form');
 }
 
 export async function getContactInfo(): Promise<ContactInfo> {
   const response = await fetch('/api/contact/info');
-  if (!response.ok) {
-    throw new Error('Failed to fetch contact info');
-  }
-  return response.json();
+  return handleResponse<ContactInfo>(response, 'Failed to fetch contact info');
 }
+
