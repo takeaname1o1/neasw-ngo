@@ -33,6 +33,27 @@ export interface ContactInfo {
   partners?: { name: string; url: string }[];
 }
 
+const RENDER_BACKEND_URL = 'https://neasw-ngo.onrender.com/api';
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || '/api';
+
+async function fetchWithFallback(endpoint: string, options?: RequestInit): Promise<Response> {
+  const primaryUrl = `${API_BASE_URL}${endpoint}`;
+  try {
+    const res = await fetch(primaryUrl, options);
+    if (res.status === 404 && API_BASE_URL === '/api') {
+      console.warn(`Primary endpoint ${primaryUrl} returned 404. Falling back to Render backend directly.`);
+      return await fetch(`${RENDER_BACKEND_URL}${endpoint}`, options);
+    }
+    return res;
+  } catch (err) {
+    if (API_BASE_URL === '/api') {
+      console.warn(`Primary fetch to ${primaryUrl} failed. Falling back to Render backend directly:`, err);
+      return await fetch(`${RENDER_BACKEND_URL}${endpoint}`, options);
+    }
+    throw err;
+  }
+}
+
 async function handleResponse<T>(response: Response, defaultErrorMsg: string): Promise<T> {
   const rawText = await response.text();
 
@@ -64,17 +85,17 @@ async function handleResponse<T>(response: Response, defaultErrorMsg: string): P
 }
 
 export async function getLeadership(): Promise<LeadershipMember[]> {
-  const response = await fetch('/api/about/leadership');
+  const response = await fetchWithFallback('/about/leadership');
   return handleResponse<LeadershipMember[]>(response, 'Failed to fetch leadership members');
 }
 
 export async function getVolunteerPlans(): Promise<VolunteerPlan[]> {
-  const response = await fetch('/api/join/volunteer-plans');
+  const response = await fetchWithFallback('/join/volunteer-plans');
   return handleResponse<VolunteerPlan[]>(response, 'Failed to fetch volunteer plans');
 }
 
 export async function submitContactForm(data: ContactFormSubmit): Promise<{ status: string; id?: number; message: string }> {
-  const response = await fetch('/api/contact/submit', {
+  const response = await fetchWithFallback('/contact/submit', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -85,7 +106,8 @@ export async function submitContactForm(data: ContactFormSubmit): Promise<{ stat
 }
 
 export async function getContactInfo(): Promise<ContactInfo> {
-  const response = await fetch('/api/contact/info');
+  const response = await fetchWithFallback('/contact/info');
   return handleResponse<ContactInfo>(response, 'Failed to fetch contact info');
 }
+
 

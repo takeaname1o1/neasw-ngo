@@ -4,7 +4,14 @@ from fastapi_mail import ConnectionConfig
 class Settings(BaseSettings):
     PROJECT_NAME: str = "NEASW Welfare Foundation API"
     API_V1_STR: str = "/api"
-    CORS_ORIGINS: list[str] = ["*"]
+    CORS_ORIGINS: list[str] = [
+        "*",
+        "https://neaswwelfarefoundation.in",
+        "https://www.neaswwelfarefoundation.in",
+        "http://localhost:3000",
+        "http://localhost:5173"
+    ]
+
 
     # FastAPI-Mail / Zoho SMTP configuration
     MAIL_USERNAME: str = "neaswsubmission@zohomail.in"
