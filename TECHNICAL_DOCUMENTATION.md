@@ -111,6 +111,7 @@ Pydantic schemas enforce type-safety and structural validity for HTTP payloads:
 | **GET** | `/api/contact/info` | Returns organization contact details (email, phone, chapters, socials). | `ContactInfo` |
 
 ### 6. Email Service & Configuration (`app/services/email_service.py` & `app/core/config.py`)
+*   **Startup Server Activation Email:** On application boot, FastAPI's `lifespan` context manager in `app/main.py` triggers `EmailService.send_startup_email()` asynchronously, notifying `settings.MAIL_TO_ADMIN` that the server is online and the mail service is active.
 *   **Async Background Dispatch:** The `/api/contact/submit` endpoint utilizes FastAPI's `BackgroundTasks` to trigger `send_contact_form_email` asynchronously. This allows instant HTTP responses to client requests without waiting for SMTP network round-trips.
 *   **Self-Notification & Reply-To:** Form entries are emailed directly to `settings.MAIL_TO_ADMIN` (`neaswsubmission@zohomail.in`), including a dynamic `Reply-To` header set to the submitter's email address for quick replies.
 *   **Zoho India SMTP Setup:** Configured for Zoho India (`smtp.zoho.in`) on port `465` with SSL/TLS enabled (`MAIL_SSL_TLS=True`).

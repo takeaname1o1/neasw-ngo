@@ -1,9 +1,12 @@
+import asyncio
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.endpoints import router as api_router
 from app.core.database import engine, Base, SessionLocal
 from app.core.database_seeder import seed_db
+from app.services.email_service import EmailService
 
 # Create all database tables
 Base.metadata.create_all(bind=engine)
@@ -15,11 +18,19 @@ try:
 finally:
     db.close()
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Trigger startup email notification asynchronously in the background
+    asyncio.create_task(EmailService.send_startup_email())
+    yield
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     description="Backend API for the NEASW Welfare Foundation Website",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
+
 
 # Configure CORS for frontend communication
 app.add_middleware(
