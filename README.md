@@ -1,6 +1,6 @@
 # NEASW Welfare Foundation
 
-The NEASW Welfare Foundation website presents the organisation’s community work, cultural initiatives, leadership, and volunteering opportunities across Northeast India and beyond. It combines a React single-page application with a FastAPI service that stores enquiries and volunteer applications in PostgreSQL on Neon (with SQLite for offline development) and supports SMTP notifications.
+The NEASW Welfare Foundation website presents the organisation’s community work, cultural initiatives, leadership, and volunteering opportunities across Northeast India and beyond. It combines a React single-page application with a FastAPI service that stores enquiries and volunteer applications in PostgreSQL on Neon (with SQLite for offline development) and supports Brevo HTTPS email notifications (with optional SMTP).
 
 ## Features
 
@@ -25,7 +25,7 @@ Browser: React + TypeScript
          FastAPI + Pydantic
                 │
                 ├── SQLAlchemy → Neon PostgreSQL / local SQLite
-                └── FastAPI-Mail → SMTP notifications
+                └── HTTPX → Brevo HTTPS notifications (optional SMTP)
 ```
 
 | Layer | Implementation |
@@ -36,7 +36,7 @@ Browser: React + TypeScript
 | HTTP client | Browser `fetch` with a shared API helper |
 | Backend | FastAPI, Uvicorn, Pydantic v2, and pydantic-settings |
 | Persistence | SQLAlchemy 2, Psycopg 3, and Neon PostgreSQL; local SQLite fallback |
-| Email | FastAPI-Mail with configurable SMTP; defaults target Zoho |
+| Email | Brevo HTTPS API via HTTPX; optional FastAPI-Mail SMTP provider |
 | Frontend checks | TypeScript build checks and Oxlint |
 
 Navigation switches among five views without changing the browser URL. Refreshing the application returns to Home; individual views do not have deep links.
@@ -50,9 +50,9 @@ Navigation switches among five views without changing the browser URL. Refreshin
 │   │   ├── api/endpoints.py       # REST endpoints
 │   │   ├── core/                 # Settings, database sessions, and seeding
 │   │   ├── models/               # SQLAlchemy models and Pydantic schemas
-│   │   ├── services/             # SMTP email notifications
+│   │   ├── services/             # Brevo HTTPS and optional SMTP notifications
 │   │   └── main.py               # FastAPI app, CORS, and startup lifecycle
-│   ├── .env.example              # SMTP configuration template
+│   ├── .env.example              # Email configuration template
 │   ├── requirements.txt          # Python dependencies
 │   ├── run.py                    # Development server on port 8000
 │   └── update_leadership.py      # Replace database leadership from JSON
@@ -98,13 +98,13 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 cp .env.example .env
-# Edit .env with your SMTP account and intended notification recipient.
+# Edit .env with your Brevo API key, verified sender, and notification recipient.
 python run.py
 ```
 
 The backend automatically loads Neon variables from the repository root’s ignored `.env.local`, if present. Without `DATABASE_URL`, it uses local SQLite. The backend runs at `http://localhost:8000`. Interactive API documentation is available at `http://localhost:8000/docs`, with the OpenAPI schema at `http://localhost:8000/openapi.json`.
 
-The example configuration disables SMTP (`MAIL_ENABLED=False`), which is appropriate for Render Free. Startup and submission notifications are skipped when disabled or when no password is configured. To use SMTP on a host that permits it, set `MAIL_ENABLED=True` and valid credentials and a recipient you control. Database submissions do not depend on email delivery.
+The example configuration disables email (`MAIL_ENABLED=False`) until credentials are configured. On Render Free, use `MAIL_PROVIDER=brevo`, set `BREVO_API_KEY`, and then set `MAIL_ENABLED=True`. Notifications use HTTPS instead of blocked SMTP ports. The provider receives the submission details for the admin email. Database storage does not depend on email delivery; a missing key, provider rejection, or timeout is logged without undoing the saved submission. Legacy SMTP requires `MAIL_PROVIDER=smtp` and SMTP credentials on a host that permits it.
 
 In a second terminal, install and start the frontend:
 
@@ -138,18 +138,20 @@ Settings are defined in `backend/app/core/config.py`. Case-sensitive process env
 | --- | --- |
 | `DATABASE_URL` | Pooled Neon PostgreSQL URL; defaults to an absolute `backend/neasw.db` SQLite URL when omitted |
 | `DATABASE_URL_UNPOOLED` | Optional direct Neon URL used for table creation; uses `DATABASE_URL` if omitted |
-| `MAIL_ENABLED` | `True` in code; the example sets `False` for Render Free |
+| `MAIL_ENABLED` | Global email switch; `True` in code, `False` in the example until credentials are configured |
+| `MAIL_PROVIDER` | `brevo` (default) for HTTPS, or `smtp` for legacy SMTP |
+| `BREVO_API_KEY` | Private Brevo API key; required for the Brevo provider, redacted in settings representations |
 | `PROJECT_NAME` | `NEASW Welfare Foundation API` |
 | `API_V1_STR` | `/api`; changing this also requires updating frontend routing |
 | `CORS_ORIGINS` | JSON array of allowed origins; currently includes `*`, the organisation’s domains, and localhost ports 3000 and 5173 |
 | `MAIL_USERNAME`, `MAIL_PASSWORD` | SMTP login; the password defaults to empty |
-| `MAIL_FROM`, `MAIL_FROM_NAME` | Sender address and display name |
+| `MAIL_FROM`, `MAIL_FROM_NAME` | Verified sender address and display name; defaults to `notifications@neaswwelfarefoundation.in` / `NEASW Welfare Foundation` |
 | `MAIL_SERVER`, `MAIL_PORT` | `smtp.zoho.in`, `587` |
 | `MAIL_STARTTLS`, `MAIL_SSL_TLS` | `True`, `False` |
 | `USE_CREDENTIALS`, `VALIDATE_CERTS` | Both `True` |
 | `MAIL_TO_ADMIN` | Notification recipient; defaults to `neaswsubmission@zohomail.in` |
 
-The SMTP example is in `backend/.env.example`. Local `.env` files and SQLite databases are ignored by Git.
+The email configuration example is in `backend/.env.example`. Local `.env` files and SQLite databases are ignored by Git.
 
 ### Frontend API routing
 
@@ -245,7 +247,7 @@ Database configuration regression checks are available from `backend/`:
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-These tests do not connect to Neon. After changes, also check all five views, responsive navigation, galleries, volunteer plan loading, and form validation. Verify actual submissions only against the intended API and SMTP recipient. The repository root also provides `npm run build`, `npm run dev`, and `npm run lint` wrappers for the frontend commands.
+These tests do not connect to Neon. After changes, also check all five views, responsive navigation, galleries, volunteer plan loading, and form validation. Verify actual submissions only against the intended API and email recipient. The repository root also provides `npm run build`, `npm run dev`, and `npm run lint` wrappers for the frontend commands.
 
 ## Neon setup on Render Free
 
@@ -260,7 +262,7 @@ neon deploy
 
 `neon deploy` writes `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, and `NEON_BRANCH` into the ignored root `.env.local` (or `.env` if present). Keep this file private. Install frontend dependencies with `npm ci --prefix frontend` and use `npm run build` from the root.
 
-In **Render → Python backend service → Environment**, privately copy the two database URL values, set `MAIL_ENABLED=False`, save, and deploy the updated backend code. Use `backend` as the root directory, `pip install -r requirements.txt` as the build command, and `uvicorn app.main:app --host 0.0.0.0 --port "$PORT"` as the start command. Copy the full values without wrapping quotes. Keep database URLs server-side; never prefix them with `VITE_`.
+In **Render → Python backend service → Environment**, privately copy the two database URL values, configure Brevo as described below (or keep `MAIL_ENABLED=False` until ready), save, and deploy the updated backend code. Use `backend` as the root directory, `pip install -r requirements.txt` as the build command, and `uvicorn app.main:app --host 0.0.0.0 --port "$PORT"` as the start command. Copy the full values without wrapping quotes. Keep database URLs server-side; never prefix them with `VITE_`.
 
 To view enquiries, open the Neon console’s SQL Editor on the `production` branch and run:
 
@@ -339,9 +341,30 @@ python -m pip install -r requirements.txt
 uvicorn app.main:app --host 0.0.0.0 --port "$PORT"
 ```
 
-Set `PORT` through the hosting environment, or substitute the port your service expects. Set both Neon database URLs under the Render backend service’s **Environment** tab, along with `MAIL_ENABLED=False` for Render Free and a JSON array of frontend origins in `CORS_ORIGINS`. Do not set database credentials on the static frontend service. The development entry point `python run.py` enables reload and fixes the port at 8000; use the Uvicorn command above for hosting.
+Set `PORT` through the hosting environment, or substitute the port your service expects. Set both Neon database URLs under the Render backend service’s **Environment** tab, along with the Brevo configuration below (or `MAIL_ENABLED=False` to disable email) and a JSON array of frontend origins in `CORS_ORIGINS`. Do not set database credentials on the static frontend service. The development entry point `python run.py` enables reload and fixes the port at 8000; use the Uvicorn command above for hosting.
 
 On Render Free, use Neon via `DATABASE_URL`: database storage then lives outside the temporary Render filesystem and survives backend restarts and redeployments. SQLite on Render Free remains temporary. No hosting manifest currently configures the Render service; use its dashboard settings. Neon deployment provisions database services only; it does not deploy the Python app to Render or set Render environment variables.
+
+### Brevo email on Render Free
+
+The sender `notifications@neaswwelfarefoundation.in` must be verified and its domain authenticated in Brevo. Generate an **API key**, not an SMTP key. Complete any required Brevo account/phone verification before sending.
+
+Set these variables privately on the **Python backend service**, then redeploy the updated code:
+
+```dotenv
+MAIL_ENABLED=True
+MAIL_PROVIDER=brevo
+BREVO_API_KEY=<your private Brevo API key>
+MAIL_FROM=notifications@neaswwelfarefoundation.in
+MAIL_FROM_NAME=NEASW Welfare Foundation
+MAIL_TO_ADMIN=neaswsubmission@zohomail.in
+```
+
+`MAIL_ENABLED=False` disables both providers, even when an API key is present. SMTP username/password settings are not used by the Brevo provider. Brevo failures never fall back to SMTP. Never commit or expose the API key in frontend variables.
+
+Both startup notifications and contact/volunteer notifications use `https://api.brevo.com/v3/smtp/email` over HTTPS with a 15-second request timeout and a 5-second connection timeout. Contact notifications use the verified sender above and the submitter's email as Reply-To. User input is escaped in HTML. The backend logs provider acceptance, HTTP error status, or network failure without logging keys or submission bodies. No automatic retries are made, to avoid duplicate sends after ambiguous timeouts.
+
+After deployment, check Render logs and **Brevo → Transactional → Logs**. Provider acceptance means Brevo queued the message; inspect delivery events to confirm delivery. Submitting either website form should save the record in Neon and send one admin notification. Each backend startup can also send a notification; these count toward your email allowance. Configuration and HTTP failure cases are covered by mocked tests and do not send real emails.
 
 ### Frontend on Vercel
 
@@ -360,7 +383,7 @@ When deploying to another backend, set `VITE_API_BASE_URL` before the frontend b
 ## Current limitations
 
 - Payment processing is not implemented.
-- SMTP notifications run in the application process without a durable queue or retry mechanism. A notification failure does not undo a saved submission.
+- Email notifications run in the application process without a durable queue or automatic retry mechanism. A notification failure does not undo a saved submission. Brevo API acceptance does not guarantee inbox delivery; check transactional logs in Brevo for delivery events.
 - CORS permits explicit trusted frontend origins; add any additional deployment origins to `CORS_ORIGINS`.
 - Some display content has local fallbacks, so a rendered page alone does not establish backend health.
 

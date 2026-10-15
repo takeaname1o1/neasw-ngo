@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Literal
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from fastapi_mail import ConnectionConfig
 from pydantic import SecretStr, Field
@@ -14,6 +15,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str = f"sqlite:///{BACKEND_DIR / 'neasw.db'}"
     DATABASE_URL_UNPOOLED: str | None = None
     MAIL_ENABLED: bool = True
+    MAIL_PROVIDER: Literal["brevo", "smtp"] = "brevo"
+    BREVO_API_KEY: SecretStr = SecretStr("")
     ADMIN_USERNAME: str = ""
     ADMIN_PASSWORD: SecretStr = SecretStr("")
     ADMIN_COOKIE_SECURE: bool = True
@@ -26,11 +29,11 @@ class Settings(BaseSettings):
     ]
 
 
-    # FastAPI-Mail / Zoho SMTP configuration
+    # Shared sender settings and optional legacy SMTP configuration.
     MAIL_USERNAME: str = "neaswsubmission@zohomail.in"
     MAIL_PASSWORD: str = ""
-    MAIL_FROM: str = "neaswsubmission@zohomail.in"
-    MAIL_FROM_NAME: str = "NEASW Submission"
+    MAIL_FROM: str = "notifications@neaswwelfarefoundation.in"
+    MAIL_FROM_NAME: str = "NEASW Welfare Foundation"
     MAIL_SERVER: str = "smtp.zoho.in"
     MAIL_PORT: int = 587
     MAIL_STARTTLS: bool = True
