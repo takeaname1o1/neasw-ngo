@@ -48,14 +48,15 @@ Navigation switches among five views without changing the browser URL. Refreshin
 ├── backend/
 │   ├── app/
 │   │   ├── api/endpoints.py       # REST endpoints
-│   │   ├── core/                 # Settings, database sessions, and seeding
+│   │   ├── core/                 # Settings, database connections, and admin security
+│   │   ├── data/site_content.json # Static leadership and volunteer plans
 │   │   ├── models/               # SQLAlchemy models and Pydantic schemas
 │   │   ├── services/             # Brevo HTTPS and optional SMTP notifications
 │   │   └── main.py               # FastAPI app, CORS, and startup lifecycle
 │   ├── .env.example              # Email configuration template
 │   ├── requirements.txt          # Python dependencies
 │   ├── run.py                    # Development server on port 8000
-│   └── update_leadership.py      # Replace database leadership from JSON
+│   └── update_leadership.py      # Refresh static API leadership from JSON
 ├── frontend/
 │   ├── src/
 │   │   ├── assets/               # Images, programme notes, and leader.json
@@ -215,21 +216,19 @@ curl http://localhost:8000/api/contact/info
 
 The configured `DATABASE_URL` selects Neon PostgreSQL or SQLite. Ordinary `postgres://` and `postgresql://` URLs are normalised to SQLAlchemy’s `postgresql+psycopg` driver. PostgreSQL defaults to TLS (`sslmode=require`), a small connection pool, connection health checks, and disabled automatic prepared statements for PgBouncer compatibility. Keep the Neon URL’s TLS parameters intact. There is no migration framework yet; `create_all` creates missing tables but does not alter existing columns.
 
-At application startup, the backend creates missing tables using `DATABASE_URL_UNPOOLED` when supplied, then seeds through the application connection:
+The only application database table is **`contact_submissions`**, shared by contact enquiries and volunteer registrations. It stores the submitted fields and a UTC creation timestamp. No leadership, plan, admin session, or login-attempt records are stored in Neon.
 
-- `contact_submissions`: enquiry and application fields, plus a UTC creation timestamp.
-- `leadership_members`: name, position, and chapter.
-- `volunteer_plans`: unique duration, title, and JSON feature list.
+On startup, the backend creates this table if it is missing, using `DATABASE_URL_UNPOOLED` for schema operations when available. If PostgreSQL's `public` schema was deleted, startup recreates it first. Startup also drops the four retired application tables (`leadership_members`, `volunteer_plans`, `admin_sessions`, and `admin_login_attempts`) if an older deployment recreated them. It never deletes or seeds `contact_submissions`, and it leaves unrelated tables alone. If the database itself was deleted, create a replacement database in Neon and update both Render database URLs before redeploying; table recovery requires an existing, reachable database.
 
-The seeder inserts 6-, 12-, and 24-month plans only if the plan table is empty. It replaces the leadership table with the default 18-member roster when the existing record count is four or fewer. It does not synchronise later edits to an already populated database.
+Leadership (18 members) and volunteer plans (6, 12, and 24 months) are version-controlled in `backend/app/data/site_content.json`. Their existing API routes now read this file without opening a database connection. Content changes require a commit and redeploy.
 
-To replace database leadership from `frontend/src/assets/team/leader.json`, initialise the database by starting the backend first, then run from `backend/`:
+To refresh the static API leadership roster from `frontend/src/assets/team/leader.json`, run from `backend/`:
 
 ```bash
 python update_leadership.py
 ```
 
-This script deletes existing leadership rows and inserts the JSON roster in one transaction against the configured database, including Neon. The About directory, Home fallback roster, backend seed roster, and JSON file are separate content sources; changes to one do not automatically update the others. Footer API contact data lives in `backend/app/api/endpoints.py`; additional contact copy is embedded in frontend components.
+This script updates only `backend/app/data/site_content.json`; it preserves the volunteer plans and does not connect to Neon. Commit the JSON and redeploy to publish it. The About directory and Home fallback roster remain separate frontend content sources. Footer contact data lives in `backend/app/api/endpoints.py`.
 
 ## Build and checks
 
@@ -264,7 +263,7 @@ neon deploy
 
 `neon deploy` writes `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, and `NEON_BRANCH` into the ignored root `.env.local` (or `.env` if present). Keep this file private. Install frontend dependencies with `npm ci --prefix frontend` and use `npm run build` from the root.
 
-In **Render → Python backend service → Environment**, privately copy the two database URL values, configure Brevo as described below (or keep `MAIL_ENABLED=False` until ready), save, and deploy the updated backend code. Use `backend` as the root directory, `pip install -r requirements.txt` as the build command, and `uvicorn app.main:app --host 0.0.0.0 --port "$PORT"` as the start command. Copy the full values without wrapping quotes. Keep database URLs server-side; never prefix them with `VITE_`.
+In **Render → Python backend service → Environment**, privately copy the two database URL values, configure Brevo as described below (or keep `MAIL_ENABLED=False` until ready), save, and deploy the updated backend code. Use `backend` as the root directory, `pip install -r requirements.txt` as the build command, and `uvicorn app.main:app --host 0.0.0.0 --port "$PORT" --workers 1` as the start command. Copy the full values without wrapping quotes. Keep database URLs server-side; never prefix them with `VITE_`.
 
 To view enquiries, open the Neon console’s SQL Editor on the `production` branch and run:
 
@@ -293,18 +292,16 @@ Credentials are backend-only; never use `VITE_` prefixes or commit them.
 For deployment, set **`ADMIN_USERNAME` and `ADMIN_PASSWORD` in Render's backend
 Environment settings** using the values you chose locally, then redeploy the backend
 and frontend. Root `.env.local` is ignored by Git and is not uploaded automatically.
-The backend creates the additional `admin_sessions` and `admin_login_attempts`
-tables at startup using the existing database configuration. No Neon Auth service
-is required.
+Admin sessions and login-attempt counters are held in bounded, thread-safe process memory. They create no database tables. No Neon Auth service is required. **Run one Uvicorn worker and one service instance** with this design; multiple workers do not share sessions or rate-limit counters.
 
 Sessions expire after eight hours (`ADMIN_SESSION_SECONDS=28800`, configurable
 from 300 to 86400 seconds). Only a random opaque token is placed in the HttpOnly,
-SameSite=Lax cookie; the database stores its hash. Logout revokes that session;
+SameSite=Lax cookie; process memory stores its hash. Logout revokes that session;
 changing either credential invalidates all existing sessions. Password verification
 uses scrypt and constant-time comparisons. Responses containing admin data use
 `Cache-Control: no-store`. Login attempts are limited to five per client address
 and thirty overall per 15 minutes; attempts include successful logins. Rate-limit
-records persist in the database. When a trusted hosting proxy supplies client
+counters reset on backend restart. Restarts also sign every admin out; saved enquiries and registrations remain in Neon. When a trusted hosting proxy supplies client
 addresses, configure Uvicorn to trust only that proxy; otherwise multiple users
 may share the proxy's limit.
 
@@ -340,7 +337,7 @@ Configure a Python service with `backend` as its working directory:
 
 ```bash
 python -m pip install -r requirements.txt
-uvicorn app.main:app --host 0.0.0.0 --port "$PORT"
+uvicorn app.main:app --host 0.0.0.0 --port "$PORT" --workers 1
 ```
 
 Set `PORT` through the hosting environment, or substitute the port your service expects. Set both Neon database URLs under the Render backend service’s **Environment** tab, along with the Brevo configuration below (or `MAIL_ENABLED=False` to disable email) and a JSON array of frontend origins in `CORS_ORIGINS`. Do not set database credentials on the static frontend service. The development entry point `python run.py` enables reload and fixes the port at 8000; use the Uvicorn command above for hosting.

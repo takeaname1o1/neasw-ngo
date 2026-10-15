@@ -5,18 +5,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.endpoints import router as api_router
 from app.api.admin import router as admin_router
-from app.core.database import initialize_database, SessionLocal
-from app.core.database_seeder import seed_db
+from app.core.database import initialize_database
+from app.core.site_content import load_site_content
 from app.services.email_service import EmailService
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     initialize_database()
-    db = SessionLocal()
-    try:
-        seed_db(db)
-    finally:
-        db.close()
+    load_site_content()
     # Trigger startup email notification asynchronously in the background
     asyncio.create_task(EmailService.send_startup_email())
     yield

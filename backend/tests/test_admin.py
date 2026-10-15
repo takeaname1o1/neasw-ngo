@@ -1,5 +1,6 @@
 """Exercise auth and private records against isolated SQLite, never Neon."""
 from datetime import datetime, timedelta
+from dataclasses import replace
 import hashlib
 import os
 from pathlib import Path
@@ -16,11 +17,13 @@ from app.main import app
 from app.core.config import Settings
 from app.core.database import Base, get_db
 from app.api.admin import COOKIE, credential_key, now
-from app.models.db_models import AdminSession, ContactSubmission
+from app.models.db_models import ContactSubmission
+from app.core.admin_security import admin_security
 
 
 class AdminTests(unittest.TestCase):
     def setUp(self):
+        admin_security.clear()
         self.engine = create_engine('sqlite://', connect_args={'check_same_thread': False}, poolclass=StaticPool)
         Base.metadata.create_all(self.engine)
         self.sessions = sessionmaker(bind=self.engine)
@@ -44,6 +47,7 @@ class AdminTests(unittest.TestCase):
         credential_key.cache_clear()
         app.dependency_overrides.clear()
         self.engine.dispose()
+        admin_security.clear()
 
     def login(self, **kwargs):
         return self.client.post('/api/admin/login', json={'username': 'test-admin', 'password': 'test-password'}, **kwargs)
@@ -63,10 +67,10 @@ class AdminTests(unittest.TestCase):
         for flag in ('HttpOnly', 'Secure', 'SameSite=lax', 'Max-Age=28800', 'Path=/api/admin'):
             self.assertIn(flag, cookie)
         token = self.client.cookies.get(COOKIE)
-        with self.sessions() as db:
-            session = db.query(AdminSession).one()
-            self.assertNotEqual(session.token_hash, token)
-            self.assertEqual(session.token_hash, hashlib.sha256(token.encode()).hexdigest())
+        session = admin_security.get_session(hashlib.sha256(token.encode()).hexdigest(), now())
+        self.assertIsNotNone(session)
+        self.assertNotEqual(session.token_hash, token)
+        self.assertEqual(session.token_hash, hashlib.sha256(token.encode()).hexdigest())
         self.assertEqual(self.client.get('/api/admin/session').json()['username'], 'test-admin')
         records = self.client.get('/api/admin/submissions').json()
         self.assertEqual(records['total'], 23)
@@ -84,10 +88,9 @@ class AdminTests(unittest.TestCase):
 
     def test_expired_sessions_and_credential_rotation_are_rejected(self):
         self.login()
-        with self.sessions() as db:
-            session = db.query(AdminSession).one()
-            session.expires_at = now() - timedelta(seconds=1)
-            db.commit()
+        token_hash = hashlib.sha256(self.client.cookies.get(COOKIE).encode()).hexdigest()
+        session = admin_security.get_session(token_hash, now())
+        admin_security.create_session(replace(session, expires_at=now() - timedelta(seconds=1)), now())
         self.assertEqual(self.client.get('/api/admin/submissions').status_code, 401)
         self.login()
         with patch.object(Settings, 'admin_credentials', return_value=('test-admin', 'new-password')):
@@ -101,6 +104,12 @@ class AdminTests(unittest.TestCase):
         self.assertEqual(response.status_code, 429)
         self.assertEqual(response.headers['retry-after'], '900')
         self.assertEqual(self.client.get('/api/admin/submissions').status_code, 401)
+
+    def test_process_restart_invalidates_session_and_allows_fresh_login(self):
+        self.assertEqual(self.login().status_code, 200)
+        admin_security.clear()
+        self.assertEqual(self.client.get('/api/admin/session').status_code, 401)
+        self.assertEqual(self.login().status_code, 200)
 
     def test_csrf_and_cross_origin_requests_are_rejected(self):
         self.assertEqual(self.login(headers={'Origin': 'https://evil.example'}).status_code, 403)

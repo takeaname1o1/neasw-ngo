@@ -67,7 +67,10 @@ backend/
 │   ├── core/
 │   │   ├── config.py        # Settings configuration (Pydantic & FastAPI-Mail ConnectionConfig)
 │   │   ├── database.py      # SQLAlchemy engine and session connection
-│   │   └── database_seeder.py # Database seeder script for startup
+│   │   ├── site_content.py   # Load version-controlled public content
+│   │   └── admin_security.py # Process-local sessions and login limiting
+│   ├── data/
+│   │   └── site_content.json # Leadership and volunteer plans
 │   ├── models/
 │   │   ├── db_models.py     # SQLAlchemy DB schemas
 │   │   └── schemas.py       # Pydantic schemas (Data serialization/validation)
@@ -83,8 +86,8 @@ backend/
 ### 2. Main Entry Point (`app/main.py`)
 On application boot, `main.py` performs the following operations:
 *   Initializes the `FastAPI` instance.
-*   Triggers table creation via SQLAlchemy's metadata binding: `Base.metadata.create_all(bind=engine)`.
-*   Instantiates a database session and executes the database seeding function (`seed_db`) to populate default data if the tables are empty.
+*   Creates only `contact_submissions` if missing, restores a missing PostgreSQL `public` schema, and removes the four retired leadership/plan/admin security tables. Existing submission data is preserved.
+*   Loads and validates the static leadership and volunteer plans from `app/data/site_content.json`; no database seeding runs.
 *   Registers CORS middleware (`CORSMiddleware`) to allow seamless cross-origin requests from the React development server.
 *   Mounts the API router under the `/api` prefix.
 
@@ -93,8 +96,8 @@ On application boot, `main.py` performs the following operations:
 *   **ORM Integration:** SQLAlchemy ORM maps Python classes to database tables.
 *   **Database Tables (`app/models/db_models.py`):**
     *   `contact_submissions`: Stores submissions from the contact form and volunteer sign-ups. Fields: `id`, `name`, `email`, `phone_number`, `organization_name`, `preferred_date`, `message`, `created_at` (timestamp).
-    *   `leadership_members`: Directory of leadership personnel. Fields: `id`, `name`, `position`, `chapter`.
-    *   `volunteer_plans`: Available volunteer programs. Fields: `id`, `duration_months`, `title`, `features` (stored as JSON array).
+*   **Static content:** Leadership and volunteer plans are stored in `app/data/site_content.json` and served by the same API routes without a database query.
+*   **Admin security:** Opaque session hashes and login-attempt counters live in bounded, thread-safe process memory; use one API worker. Restarts invalidate admin sessions and reset login limits. No admin tables are created.
 
 ### 4. Data Validation (`app/models/schemas.py`)
 Pydantic schemas enforce type-safety and structural validity for HTTP payloads:
@@ -255,7 +258,7 @@ The decoupled codebase is structured to allow independent deployment of the back
 *   **Root Directory:** `backend/`
 *   **Build Settings:** Packages are installed via `requirements.txt`.
 *   **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-*   *Note: On boot, the database engine auto-creates and seeds `neasw.db` locally. For high-availability multi-instance setups, configure PostgreSQL/MySQL databases by overriding `SQLALCHEMY_DATABASE_URL` in `app/core/database.py`.*
+*   *On boot, the backend creates only the submissions table using `DATABASE_URL` (Neon PostgreSQL in production, SQLite locally). Leadership and plans are static. Run one API worker because admin security state is process-local.*
 
 ### 2. Frontend Deployment (Vercel)
 *   **Root Directory:** `frontend/`

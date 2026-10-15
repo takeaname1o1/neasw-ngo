@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.engine import make_url
 from sqlalchemy.orm import declarative_base, sessionmaker
 from app.core.config import settings
@@ -38,13 +38,24 @@ Base = declarative_base()
 
 def initialize_database():
     """Use Neon's direct connection for DDL, pooled connection for app queries."""
+    from app.models.db_models import ContactSubmission
+
     schema_engine = (
         create_database_engine(settings.DATABASE_URL_UNPOOLED)
         if engine.dialect.name == "postgresql" and settings.DATABASE_URL_UNPOOLED
         else engine
     )
     try:
-        Base.metadata.create_all(bind=schema_engine)
+        with schema_engine.begin() as connection:
+            if schema_engine.dialect.name == "postgresql":
+                # Recover when the public schema was dropped along with tables.
+                connection.execute(text("CREATE SCHEMA IF NOT EXISTS public"))
+            Base.metadata.create_all(bind=connection, tables=[ContactSubmission.__table__])
+            # Retire only the four app tables the single-table design replaces.
+            # Never truncate, drop, or reseed contact_submissions.
+            for table in ("leadership_members", "volunteer_plans", "admin_sessions", "admin_login_attempts"):
+                prefix = '"public".' if schema_engine.dialect.name == "postgresql" else ""
+                connection.execute(text(f'DROP TABLE IF EXISTS {prefix}"{table}"'))
     finally:
         if schema_engine is not engine:
             schema_engine.dispose()

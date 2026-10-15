@@ -1,4 +1,4 @@
-"""Read-only administration with opaque, revocable database-backed sessions."""
+"""Read-only administration with opaque, revocable process-local sessions."""
 from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 import hashlib
@@ -7,12 +7,13 @@ import secrets
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from pydantic import BaseModel, Field
-from sqlalchemy import or_, text
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.database import get_db
-from app.models.db_models import AdminLoginAttempt, AdminSession, ContactSubmission
+from app.models.db_models import ContactSubmission
+from app.core.admin_security import AdminSession, admin_security
 
 COOKIE = "neasw_admin_session"
 COOKIE_PATH = "/api/admin"
@@ -52,12 +53,12 @@ def session_tag(token_hash: str):
     return hmac.new(credential_key(username, password), token_hash.encode(), hashlib.sha256).hexdigest()
 
 
-def require_admin(request: Request, db: Session = Depends(get_db)):
+def require_admin(request: Request):
     token = request.cookies.get(COOKIE, "")
     if not token or len(token) > 128:
         raise HTTPException(401, "Please sign in")
     token_hash = hashlib.sha256(token.encode()).hexdigest()
-    session = db.get(AdminSession, token_hash)
+    session = admin_security.get_session(token_hash, now())
     if (not session or session.expires_at <= now()
             or not hmac.compare_digest(session.credential_tag, session_tag(token_hash))):
         raise HTTPException(401, "Session expired. Please sign in again")
@@ -70,42 +71,29 @@ class LoginInput(BaseModel):
 
 
 @router.post("/login")
-def login(data: LoginInput, request: Request, response: Response, db: Session = Depends(get_db)):
+def login(data: LoginInput, request: Request, response: Response):
     username, password = configured_credentials()
     current = now()
-    cutoff = current - timedelta(minutes=15)
-    # Shared persistence keeps limits across restarts and multiple workers.
     # Do not trust a caller-supplied X-Forwarded-For header here.
     client = request.client.host if request.client else "unknown"
     client_hash = hashlib.sha256(client.encode()).hexdigest()
-    if db.get_bind().dialect.name == "postgresql":
-        # Serialize the short count/insert transaction across Neon connections.
-        db.execute(text("SELECT pg_advisory_xact_lock(731840219)"))
-    db.query(AdminLoginAttempt).filter(AdminLoginAttempt.created_at < cutoff).delete()
-    attempts = db.query(AdminLoginAttempt)
-    if (attempts.filter(AdminLoginAttempt.client_hash == client_hash).count() >= 5
-            or attempts.count() >= 30):
-        db.commit()
+    # Atomic process-local counters; single-worker deployment is required.
+    if not admin_security.record_attempt(client_hash, current):
         raise HTTPException(429, "Too many login attempts. Try again in 15 minutes",
                             headers={"Retry-After": "900"})
-    # Record before verification, including successful attempts, to limit CPU use.
-    db.add(AdminLoginAttempt(client_hash=client_hash, created_at=current))
-    db.commit()
     user_matches = hmac.compare_digest(data.username.encode(), username.encode())
     password_matches = hmac.compare_digest(
         credential_key(username, data.password), credential_key(username, password))
     if not (user_matches and password_matches):
         raise HTTPException(401, "Invalid username or password")
-    db.query(AdminSession).filter(AdminSession.expires_at <= current).delete()
     previous = request.cookies.get(COOKIE, "")
-    if previous:
-        db.query(AdminSession).filter(
-            AdminSession.token_hash == hashlib.sha256(previous.encode()).hexdigest()).delete()
     token = secrets.token_urlsafe(32)
     token_hash = hashlib.sha256(token.encode()).hexdigest()
     expires = current + timedelta(seconds=settings.ADMIN_SESSION_SECONDS)
-    db.add(AdminSession(token_hash=token_hash, credential_tag=session_tag(token_hash), expires_at=expires))
-    db.commit()
+    admin_security.create_session(
+        AdminSession(token_hash=token_hash, credential_tag=session_tag(token_hash), expires_at=expires),
+        current, hashlib.sha256(previous.encode()).hexdigest() if previous else None,
+    )
     response.set_cookie(COOKIE, token, max_age=settings.ADMIN_SESSION_SECONDS,
                         path=COOKIE_PATH, secure=settings.ADMIN_COOKIE_SECURE,
                         httponly=True, samesite="lax")
@@ -119,10 +107,9 @@ def get_session(session: AdminSession = Depends(require_admin)):
 
 
 @router.post("/logout")
-def logout(request: Request, response: Response, db: Session = Depends(get_db)):
+def logout(request: Request, response: Response):
     token_hash = hashlib.sha256(request.cookies.get(COOKIE, "").encode()).hexdigest()
-    db.query(AdminSession).filter(AdminSession.token_hash == token_hash).delete()
-    db.commit()
+    admin_security.revoke_session(token_hash)
     response.delete_cookie(COOKIE, path=COOKIE_PATH, secure=settings.ADMIN_COOKIE_SECURE,
                            httponly=True, samesite="lax")
     return {"status": "signed_out"}

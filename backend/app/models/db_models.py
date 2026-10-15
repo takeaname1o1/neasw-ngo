@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, JSON, DateTime
+from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
 from app.core.database import Base
 
@@ -13,35 +13,3 @@ class ContactSubmission(Base):
     preferred_date = Column(String, nullable=True)
     message = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
-
-
-class AdminSession(Base):
-    __tablename__ = "admin_sessions"
-
-    token_hash = Column(String(64), primary_key=True)
-    credential_tag = Column(String(64), nullable=False)
-    expires_at = Column(DateTime, nullable=False, index=True)
-
-
-class AdminLoginAttempt(Base):
-    __tablename__ = "admin_login_attempts"
-
-    id = Column(Integer, primary_key=True)
-    client_hash = Column(String(64), nullable=False, index=True)
-    created_at = Column(DateTime, nullable=False, index=True)
-
-class LeadershipMember(Base):
-    __tablename__ = "leadership_members"
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    position = Column(String, nullable=False)
-    chapter = Column(String, nullable=False)
-
-class VolunteerPlan(Base):
-    __tablename__ = "volunteer_plans"
-
-    id = Column(Integer, primary_key=True, index=True)
-    duration_months = Column(Integer, unique=True, nullable=False)
-    title = Column(String, nullable=False)
-    features = Column(JSON, nullable=False)

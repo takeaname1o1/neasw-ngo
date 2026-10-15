@@ -2,7 +2,8 @@ import logging
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.models.db_models import ContactSubmission, LeadershipMember, VolunteerPlan
+from app.models.db_models import ContactSubmission
+from app.core.site_content import load_site_content
 from app.models.schemas import ContactFormSubmit, LeadershipMember as LeadershipSchema, VolunteerPlan as PlanSchema
 from app.services.email_service import EmailService
 
@@ -11,23 +12,15 @@ logger = logging.getLogger("uvicorn.error.submissions")
 
 # PAGE 2: ABOUT US ENDPOINTS
 @router.get("/about/leadership", response_model=list[LeadershipSchema])
-async def get_leadership(db: Session = Depends(get_db)):
-    """Returns the leadership directory grouped by regional chapters from the database."""
-    try:
-        members = db.query(LeadershipMember).all()
-        return members
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database query failed: {str(e)}")
+async def get_leadership():
+    """Return the version-controlled chapter leadership directory."""
+    return load_site_content()["leadership"]
 
 # PAGE 4: JOIN NEASW ENDPOINTS
 @router.get("/join/volunteer-plans", response_model=list[PlanSchema])
-async def get_volunteer_plans(db: Session = Depends(get_db)):
-    """Returns the tiered volunteer plans from the database."""
-    try:
-        plans = db.query(VolunteerPlan).all()
-        return plans
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database query failed: {str(e)}")
+async def get_volunteer_plans():
+    """Return version-controlled volunteer plans without a database query."""
+    return load_site_content()["volunteer_plans"]
 
 # PAGE 5: CONTACT US ENDPOINTS
 @router.post("/contact/submit")
