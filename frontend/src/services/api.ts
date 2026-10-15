@@ -13,6 +13,7 @@ export interface VolunteerPlan {
 }
 
 export interface ContactFormSubmit {
+  submission_type?: 'contact' | 'volunteer';
   name: string;
   email: string;
   phone_number: string;
@@ -117,5 +118,4 @@ export async function getContactInfo(): Promise<ContactInfo> {
   const response = await fetchWithFallback('/contact/info');
   return handleResponse<ContactInfo>(response, 'Failed to fetch contact info');
 }
-
 

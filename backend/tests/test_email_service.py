@@ -126,6 +126,41 @@ class EmailServiceTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn('Server Booted', payload['subject'])
         self.assertIn('brevo', payload['htmlContent'])
 
+    async def test_registration_confirmation_targets_applicant_and_replies_to_admin(self):
+        requests = []
+        def handler(request):
+            requests.append(request)
+            return httpx.Response(201, json={'messageId': '<confirmation-test>'})
+        with self.mock_client(handler):
+            self.assertTrue(await EmailService.send_registration_confirmation(test_form(), 42))
+        payload = json.loads(requests[0].content)
+        self.assertEqual(payload['to'], [{'email': 'volunteer@example.com'}])
+        self.assertEqual(payload['replyTo'], {'email': 'admin@example.com'})
+        self.assertEqual(payload['sender']['email'], self.settings.MAIL_FROM)
+        self.assertIn('Test &lt;Volunteer&gt;', payload['htmlContent'])
+        self.assertIn('42', payload['htmlContent'])
+        self.assertIn('does not confirm a volunteer placement', payload['htmlContent'])
+        self.assertNotIn('alert(1)', payload['htmlContent'])
+
+    async def test_registration_confirmation_respects_mail_disabled(self):
+        self.settings.MAIL_ENABLED = False
+        with patch('app.services.email_service.httpx.AsyncClient') as http:
+            self.assertFalse(await EmailService.send_registration_confirmation(test_form(), 42))
+            http.assert_not_called()
+
+    async def test_smtp_confirmation_targets_applicant(self):
+        self.settings.MAIL_PROVIDER = 'smtp'
+        self.settings.MAIL_PASSWORD = 'test-smtp-password'
+        with patch('app.services.email_service.FastMail') as smtp:
+            smtp.return_value.send_message = AsyncMock()
+            self.assertTrue(await EmailService.send_registration_confirmation(test_form(), 42))
+            message = smtp.return_value.send_message.call_args.args[0]
+            self.assertEqual(
+                [str(getattr(recipient, 'email', recipient)) for recipient in message.recipients],
+                ['volunteer@example.com'],
+            )
+            self.assertEqual(message.headers, {'Reply-To': 'admin@example.com'})
+
     async def test_smtp_requires_explicit_provider_selection(self):
         self.settings.MAIL_PROVIDER = 'smtp'
         self.settings.MAIL_PASSWORD = 'test-smtp-password'
@@ -141,6 +176,67 @@ class EmailServiceTests(unittest.IsolatedAsyncioTestCase):
 
 
 class SubmissionNotificationTests(unittest.TestCase):
+    def exercise_notification_flow(self, submission_type, admin_status=201, applicant_status=201):
+        engine = create_engine('sqlite://', connect_args={'check_same_thread': False}, poolclass=StaticPool)
+        Base.metadata.create_all(engine)
+        sessions = sessionmaker(bind=engine)
+        requests = []
+        def test_db():
+            with sessions() as db:
+                yield db
+        def handler(request):
+            payload = json.loads(request.content)
+            requests.append(payload)
+            recipient = payload['to'][0]['email']
+            status = admin_status if recipient == 'admin@example.com' else applicant_status
+            return httpx.Response(status, json={'messageId': '<test-id>'})
+        transport = httpx.MockTransport(handler)
+        app.dependency_overrides[get_db] = test_db
+        client = TestClient(app)
+        try:
+            payload = test_form().model_dump()
+            if submission_type is not None:
+                payload['submission_type'] = submission_type
+            else:
+                payload.pop('submission_type')
+            with patch('app.services.email_service.settings', email_settings()), \
+                 patch('app.services.email_service.httpx.AsyncClient',
+                       side_effect=lambda **kwargs: AsyncClient(transport=transport)):
+                response = client.post('/api/contact/submit', json=payload)
+            self.assertEqual(response.status_code, 200)
+            with sessions() as db:
+                saved = db.query(ContactSubmission).one()
+                self.assertEqual(saved.id, response.json()['id'])
+            return requests
+        finally:
+            client.close()
+            app.dependency_overrides.pop(get_db, None)
+            engine.dispose()
+
+    def test_registration_sends_separate_admin_and_applicant_emails(self):
+        requests = self.exercise_notification_flow('volunteer')
+        self.assertEqual([r['to'] for r in requests], [
+            [{'email': 'admin@example.com'}], [{'email': 'volunteer@example.com'}],
+        ])
+
+    def test_contact_and_legacy_payloads_do_not_send_registration_confirmations(self):
+        for submission_type in ['contact', None]:
+            with self.subTest(submission_type=submission_type):
+                requests = self.exercise_notification_flow(submission_type)
+                self.assertEqual(len(requests), 1)
+                self.assertEqual(requests[0]['to'], [{'email': 'admin@example.com'}])
+
+    def test_admin_failure_does_not_block_applicant_confirmation(self):
+        with self.assertLogs('app.services.email_service', level='ERROR'):
+            requests = self.exercise_notification_flow('volunteer', admin_status=503)
+        self.assertEqual(len(requests), 2)
+        self.assertEqual(requests[1]['to'], [{'email': 'volunteer@example.com'}])
+
+    def test_applicant_failure_does_not_undo_saved_registration(self):
+        with self.assertLogs('app.services.email_service', level='ERROR'):
+            requests = self.exercise_notification_flow('volunteer', applicant_status=503)
+        self.assertEqual(len(requests), 2)
+
     def test_email_provider_failure_preserves_submission_and_success_response(self):
         engine = create_engine('sqlite://', connect_args={'check_same_thread': False}, poolclass=StaticPool)
         Base.metadata.create_all(engine)

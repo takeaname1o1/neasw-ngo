@@ -14,13 +14,16 @@ BREVO_EMAIL_URL = "https://api.brevo.com/v3/smtp/email"
 
 class EmailService:
     @staticmethod
-    async def _send_email(subject: str, body: str, reply_to: str | None = None) -> bool:
+    async def _send_email(
+        subject: str, body: str, reply_to: str | None = None,
+        *, recipient: str | None = None,
+    ) -> bool:
         if not settings.MAIL_ENABLED:
             logger.info("Email notifications disabled (MAIL_ENABLED=False).")
             return False
 
         if settings.MAIL_PROVIDER == "smtp":
-            return await EmailService._send_smtp(subject, body, reply_to)
+            return await EmailService._send_smtp(subject, body, reply_to, recipient=recipient)
 
         api_key = settings.BREVO_API_KEY.get_secret_value().strip()
         if not api_key:
@@ -29,7 +32,7 @@ class EmailService:
 
         payload = {
             "sender": {"email": settings.MAIL_FROM, "name": settings.MAIL_FROM_NAME},
-            "to": [{"email": settings.MAIL_TO_ADMIN}],
+            "to": [{"email": recipient or settings.MAIL_TO_ADMIN}],
             "subject": subject,
             "htmlContent": body,
         }
@@ -61,14 +64,17 @@ class EmailService:
         return False
 
     @staticmethod
-    async def _send_smtp(subject: str, body: str, reply_to: str | None) -> bool:
+    async def _send_smtp(
+        subject: str, body: str, reply_to: str | None,
+        *, recipient: str | None = None,
+    ) -> bool:
         if not settings.MAIL_PASSWORD:
             logger.warning("SMTP notification skipped: MAIL_PASSWORD is not configured.")
             return False
         try:
             message = MessageSchema(
                 subject=subject,
-                recipients=[settings.MAIL_TO_ADMIN],
+                recipients=[recipient or settings.MAIL_TO_ADMIN],
                 headers={"Reply-To": reply_to} if reply_to else {},
                 body=body,
                 subtype=MessageType.html,
@@ -98,6 +104,26 @@ class EmailService:
             subject=f"[New Web Submission] Form Entry from {' '.join(form_data.name.splitlines())}",
             body=body,
             reply_to=str(form_data.email),
+        )
+
+    @staticmethod
+    async def send_registration_confirmation(form_data: ContactFormSubmit, submission_id: int) -> bool:
+        """Acknowledge receipt, not acceptance into the volunteer programme."""
+        body = f"""
+<h2>Thank you for registering your interest</h2>
+<p>Hello {escape(form_data.name)},</p>
+<p>We have received your volunteer application to NEASW Welfare Foundation.</p>
+<p><strong>Application reference:</strong> {submission_id}</p>
+<p>Our team will review your application and contact you about the next steps.
+This email confirms receipt of your application; it does not confirm a volunteer placement.</p>
+<p>If you have questions, reply to this email to reach our team.</p>
+<p>NEASW Welfare Foundation<br>Unity &amp; Service</p>
+"""
+        return await EmailService._send_email(
+            subject="We received your volunteer application — NEASW Welfare Foundation",
+            body=body,
+            recipient=str(form_data.email),
+            reply_to=settings.MAIL_TO_ADMIN,
         )
 
     @staticmethod

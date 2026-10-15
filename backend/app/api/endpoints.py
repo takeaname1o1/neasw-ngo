@@ -35,7 +35,7 @@ async def submit_contact_form(
     db: Session = Depends(get_db)
 ):
     """
-    Receives contact form submissions, writes them to the SQLite database, and dispatches an email notification.
+    Saves a submission, notifies the admin, and acknowledges volunteer applications.
     """
     try:
         # Create DB record
@@ -53,6 +53,10 @@ async def submit_contact_form(
 
         # Notify via Email Service asynchronously in background
         background_tasks.add_task(EmailService.send_contact_form_email, form_data)
+        if form_data.submission_type == "volunteer":
+            background_tasks.add_task(
+                EmailService.send_registration_confirmation, form_data, db_submission.id
+            )
 
         return {
             "status": "success",

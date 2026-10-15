@@ -81,6 +81,7 @@ export const Join: React.FC = () => {
 
     try {
       const response = await submitContactForm({
+        submission_type: 'volunteer',
         name,
         email,
         phone_number: phone,

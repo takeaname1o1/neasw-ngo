@@ -198,6 +198,8 @@ Submission payload:
 }
 ```
 
+`submission_type` is optional and defaults to `contact`. The Join form sends `volunteer`, which additionally queues an application receipt email to the applicant after database storage. Contact enquiries and legacy payloads continue to notify only the admin.
+
 `name`, `email`, `phone_number`, and `message` are required. `organization_name` and `preferred_date` are optional. Email uses Pydantic’s `EmailStr` validation; the preferred date is stored as a string. A successful submission returns `status`, the saved record’s `id`, and a confirmation `message`. It confirms database storage, not email delivery.
 
 To check the local API without creating a record or sending a submission email:
@@ -364,7 +366,7 @@ MAIL_TO_ADMIN=neaswsubmission@zohomail.in
 
 Both startup notifications and contact/volunteer notifications use `https://api.brevo.com/v3/smtp/email` over HTTPS with a 15-second request timeout and a 5-second connection timeout. Contact notifications use the verified sender above and the submitter's email as Reply-To. User input is escaped in HTML. The backend logs provider acceptance, HTTP error status, or network failure without logging keys or submission bodies. No automatic retries are made, to avoid duplicate sends after ambiguous timeouts.
 
-After deployment, check Render logs and **Brevo → Transactional → Logs**. Provider acceptance means Brevo queued the message; inspect delivery events to confirm delivery. Submitting either website form should save the record in Neon and send one admin notification. Each backend startup can also send a notification; these count toward your email allowance. Configuration and HTTP failure cases are covered by mocked tests and do not send real emails.
+After deployment, check Render logs and **Brevo → Transactional → Logs**. Provider acceptance means Brevo queued the message; inspect delivery events to confirm delivery. Submitting either website form should save the record in Neon and send one admin notification. Volunteer registrations also send a separate receipt confirmation to the applicant, with the application reference and the admin address as Reply-To. This confirms receipt, not a volunteer placement. Each registration therefore uses two email sends. Admin notification failure does not prevent the applicant confirmation, and either email failing leaves the application saved. Deploy both the backend and frontend for the Join form’s `submission_type=volunteer` marker to take effect. Each backend startup can also send a notification; these count toward your email allowance. Configuration and HTTP failure cases are covered by mocked tests and do not send real emails.
 
 ### Frontend on Vercel
 

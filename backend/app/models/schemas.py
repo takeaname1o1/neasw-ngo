@@ -1,7 +1,8 @@
 from pydantic import BaseModel, EmailStr
-from typing import List, Optional
+from typing import List, Literal, Optional
 
 class ContactFormSubmit(BaseModel):
+    submission_type: Literal["contact", "volunteer"] = "contact"
     name: str
     email: EmailStr
     phone_number: str
