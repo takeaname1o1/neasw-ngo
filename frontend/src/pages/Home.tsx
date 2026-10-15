@@ -536,8 +536,18 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               textTransform: 'uppercase',
               fontWeight: 500,
             }}>
-              NEASW <br /> WELFARE <br /> FOUNDATION
+              NEASW
             </h1>
+            <p style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 'clamp(1.1rem, 3vw, 1.75rem)',
+              color: '#ffffff',
+              lineHeight: 1.4,
+              maxWidth: '720px',
+              margin: '20px auto 0',
+            }}>
+              NorthEast Association for Social Welfare
+            </p>
             <p style={{
               fontSize: '1.25rem',
               letterSpacing: '0.2em',
@@ -1269,7 +1279,7 @@ export const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
               margin: 0,
               textAlign: 'left'
             }}>
-              Real stories from real people whose lives have been touched by NEASW Welfare Foundation.
+              Real stories from real people whose lives have been touched by NorthEast Association for Social Welfare.
             </p>
           </div>
 

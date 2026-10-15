@@ -87,7 +87,7 @@ export function Admin() {
   }
 
   return <main className="admin-shell">
-    <div className="admin-brand"><a href="/">NEASW Welfare Foundation</a><span>Administration</span></div>
+    <div className="admin-brand"><a href="/">NorthEast Association for Social Welfare</a><span>Administration</span></div>
     {checking ? <p role="status">Checking your session…</p> : !authenticated ?
       <section className="admin-login card-panel">
         <h1>Admin sign in</h1>

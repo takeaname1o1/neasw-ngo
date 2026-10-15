@@ -43,7 +43,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) =
       }}>
         {/* Brand Logo */}
         <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', justifySelf: 'start' }} onClick={() => handleNavClick('home')}>
-          <img src={logoNESFSW} alt="NEASW Logo" style={{ height: '65px', width: 'auto', objectFit: 'contain' }} />
+          <img src={logoNESFSW} alt="NorthEast Association for Social Welfare (NEASW) logo" style={{ height: '65px', width: 'auto', objectFit: 'contain' }} />
         </div>
 
         {/* Desktop Nav (Pills centered) */}

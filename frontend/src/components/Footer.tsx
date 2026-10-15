@@ -65,7 +65,7 @@ export const Footer: React.FC<FooterProps> = ({ setCurrentPage }) => {
                 cursor: 'pointer',
               }}
             >
-              NEASW Welfare Foundation
+              NorthEast Association for Social Welfare
             </h4>
             <p style={{
               color: '#48bb78',
@@ -190,7 +190,7 @@ export const Footer: React.FC<FooterProps> = ({ setCurrentPage }) => {
           gap: '15px',
         }}>
           <div>
-            © 2026 NEASW Welfare Foundation
+            © 2026 NorthEast Association for Social Welfare
           </div>
           <div style={{ display: 'flex', gap: '20px' }}>
             <a href="#" style={{ color: 'inherit' }}>Terms of Use</a>

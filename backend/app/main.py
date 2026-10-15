@@ -23,7 +23,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    description="Backend API for the NEASW Welfare Foundation Website",
+    description="Backend API for the NorthEast Association for Social Welfare Website",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -54,4 +54,4 @@ async def private_admin_responses(request, call_next):
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to NEASW Welfare Foundation API. Visit /docs for OpenAPI documentation."}
+    return {"message": "Welcome to NorthEast Association for Social Welfare API. Visit /docs for OpenAPI documentation."}

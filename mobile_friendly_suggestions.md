@@ -1,6 +1,6 @@
 # Mobile-Friendliness Analysis & Suggestion Plan
 
-This document outlines the suggested changes to make the **NEASW Welfare Foundation** website mobile-friendly.
+This document outlines the suggested changes to make the **NorthEast Association for Social Welfare** website mobile-friendly.
 
 ---
 

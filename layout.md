@@ -1,4 +1,4 @@
-Based on the provided document images, here is a comprehensive website layout and structure for the **NEASW Welfare Foundation**.
+Based on the provided document images, here is a comprehensive website layout and structure for the **NorthEast Association for Social Welfare**.
 
 ### **Global Elements (Consistent Across Pages)**
 
@@ -15,7 +15,7 @@ Based on the provided document images, here is a comprehensive website layout an
 * **Contact Info:** Phone number, email address, Motto (“Unity & Service”), Headquarters address (50, Pandit Deen Dayal Upadhyaya Marg, Mata Sundari Railway Colony, Mandi House, Delhi, India 110002), and physical location tags (Delhi, Nagaland, Arunachal Pradesh, Manipur).
 
 
-* **Legal/Copyright:** 2025 NEASW Welfare Foundation, Terms & Conditions, and Privacy Policy links.
+* **Legal/Copyright:** 2025 NorthEast Association for Social Welfare, Terms & Conditions, and Privacy Policy links.
 
 
 
@@ -138,7 +138,7 @@ Based on the provided document images, here is a comprehensive website layout an
 * **Promotional Banners:** Graphic links encouraging visitors to "Plan Your Northeast Adventure" and "Choose Organic, Choose Better".
 
 
-Here is a comprehensive FastAPI backend structure designed to support the website layout and content for the **NEASW Welfare Foundation**.
+Here is a comprehensive FastAPI backend structure designed to support the website layout and content for the **NorthEast Association for Social Welfare**.
 
 This backend will provide the necessary RESTful API endpoints to serve your frontend content dynamically and handle user submissions, such as the contact form and volunteer sign-ups.
 
@@ -210,8 +210,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from models.schemas import ContactFormSubmit, LeadershipMember, VolunteerPlan
 
 app = FastAPI(
-    title="NEASW Welfare Foundation API",
-    description="Backend API for the NEASW Welfare Foundation Website",
+    title="NorthEast Association for Social Welfare API",
+    description="Backend API for the NorthEast Association for Social Welfare Website",
     version="1.0.0"
 )
 

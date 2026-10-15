@@ -125,15 +125,15 @@ class EmailService:
         body = f"""
 <h2>Thank you for registering your interest</h2>
 <p>Hello {escape(form_data.name)},</p>
-<p>We have received your volunteer application to NEASW Welfare Foundation.</p>
+<p>We have received your volunteer application to NorthEast Association for Social Welfare.</p>
 <p><strong>Application reference:</strong> {submission_id}</p>
 <p>Our team will review your application and contact you about the next steps.
 This email confirms receipt of your application; it does not confirm a volunteer placement.</p>
 <p>If you have questions, reply to this email to reach our team.</p>
-<p>NEASW Welfare Foundation<br>Unity &amp; Service</p>
+<p>NorthEast Association for Social Welfare<br>Unity &amp; Service</p>
 """
         return await EmailService._send_email(
-            subject="We received your volunteer application — NEASW Welfare Foundation",
+            subject="We received your volunteer application — NorthEast Association for Social Welfare",
             body=body,
             recipient=str(form_data.email),
             reply_to=settings.MAIL_TO_ADMIN,

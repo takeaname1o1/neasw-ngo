@@ -25,7 +25,7 @@ def email_settings(**overrides):
         "MAIL_PROVIDER": "brevo",
         "BREVO_API_KEY": "test-brevo-key",
         "MAIL_FROM": "notifications@neaswwelfarefoundation.in",
-        "MAIL_FROM_NAME": "NEASW Welfare Foundation",
+        "MAIL_FROM_NAME": "NorthEast Association for Social Welfare",
         "MAIL_TO_ADMIN": "admin@example.com",
     }
     values.update(overrides)

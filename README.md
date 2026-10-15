@@ -1,6 +1,6 @@
-# NEASW Welfare Foundation
+# NorthEast Association for Social Welfare (NEASW)
 
-The NEASW Welfare Foundation website presents the organisation’s community work, cultural initiatives, leadership, and volunteering opportunities across Northeast India and beyond. It combines a React single-page application with a FastAPI service that stores enquiries and volunteer applications in PostgreSQL on Neon (with SQLite for offline development) and supports Brevo HTTPS email notifications (with optional SMTP).
+The NorthEast Association for Social Welfare website presents the organisation’s community work, cultural initiatives, leadership, and volunteering opportunities across Northeast India and beyond. It combines a React single-page application with a FastAPI service that stores enquiries and volunteer applications in PostgreSQL on Neon (with SQLite for offline development) and supports Brevo HTTPS email notifications (with optional SMTP).
 
 ## Features
 
@@ -141,11 +141,11 @@ Settings are defined in `backend/app/core/config.py`. Case-sensitive process env
 | `MAIL_ENABLED` | Global email switch; `True` in code, `False` in the example until credentials are configured |
 | `MAIL_PROVIDER` | `brevo` (default) for HTTPS, or `smtp` for legacy SMTP |
 | `BREVO_API_KEY` | Private Brevo API key; required for the Brevo provider, redacted in settings representations |
-| `PROJECT_NAME` | `NEASW Welfare Foundation API` |
+| `PROJECT_NAME` | `NorthEast Association for Social Welfare API` |
 | `API_V1_STR` | `/api`; changing this also requires updating frontend routing |
 | `CORS_ORIGINS` | JSON array of allowed origins; currently includes `*`, the organisation’s domains, and localhost ports 3000 and 5173 |
 | `MAIL_USERNAME`, `MAIL_PASSWORD` | SMTP login; the password defaults to empty |
-| `MAIL_FROM`, `MAIL_FROM_NAME` | Verified sender address and display name; defaults to `notifications@neaswwelfarefoundation.in` / `NEASW Welfare Foundation` |
+| `MAIL_FROM`, `MAIL_FROM_NAME` | Verified sender address and display name; defaults to `notifications@neaswwelfarefoundation.in` / `NorthEast Association for Social Welfare` |
 | `MAIL_SERVER`, `MAIL_PORT` | `smtp.zoho.in`, `587` |
 | `MAIL_STARTTLS`, `MAIL_SSL_TLS` | `True`, `False` |
 | `USE_CREDENTIALS`, `VALIDATE_CERTS` | Both `True` |
@@ -358,7 +358,7 @@ MAIL_ENABLED=True
 MAIL_PROVIDER=brevo
 BREVO_API_KEY=<your private Brevo API key>
 MAIL_FROM=notifications@neaswwelfarefoundation.in
-MAIL_FROM_NAME=NEASW Welfare Foundation
+MAIL_FROM_NAME=NorthEast Association for Social Welfare
 MAIL_TO_ADMIN=neaswsubmission@zohomail.in
 ```
 

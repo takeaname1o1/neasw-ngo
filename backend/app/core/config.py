@@ -10,7 +10,7 @@ PROJECT_DIR = BACKEND_DIR.parent
 
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "NEASW Welfare Foundation API"
+    PROJECT_NAME: str = "NorthEast Association for Social Welfare API"
     API_V1_STR: str = "/api"
     DATABASE_URL: str = f"sqlite:///{BACKEND_DIR / 'neasw.db'}"
     DATABASE_URL_UNPOOLED: str | None = None
@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     MAIL_USERNAME: str = "neaswsubmission@zohomail.in"
     MAIL_PASSWORD: str = ""
     MAIL_FROM: str = "notifications@neaswwelfarefoundation.in"
-    MAIL_FROM_NAME: str = "NEASW Welfare Foundation"
+    MAIL_FROM_NAME: str = "NorthEast Association for Social Welfare"
     MAIL_SERVER: str = "smtp.zoho.in"
     MAIL_PORT: int = 587
     MAIL_STARTTLS: bool = True

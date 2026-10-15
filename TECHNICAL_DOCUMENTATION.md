@@ -1,6 +1,6 @@
-# NEASW Welfare Foundation Web App — Technical Documentation
+# NorthEast Association for Social Welfare Web App — Technical Documentation
 
-This document provides a comprehensive technical overview of the **NEASW Welfare Foundation** web application. The platform is designed to promote community development, cultural preservation, sustainable tourism, and organic products from Northeast India.
+This document provides a comprehensive technical overview of the **NorthEast Association for Social Welfare** web application. The platform is designed to promote community development, cultural preservation, sustainable tourism, and organic products from Northeast India.
 
 The application leverages a modern, decoupled architecture:
 *   **Backend:** FastAPI (Python) web API layer, backed by SQLite (SQLAlchemy ORM).

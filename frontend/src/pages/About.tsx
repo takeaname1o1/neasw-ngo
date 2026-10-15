@@ -92,7 +92,7 @@ export const About: React.FC<AboutProps> = ({ setCurrentPage }) => {
               fontFamily: 'var(--font-body)',
               letterSpacing: '-0.015em',
             }}>
-              At NEASW Welfare Foundation, we are committed to empowering communities, preserving cultural heritage, and creating opportunities for youth through meaningful social initiatives.
+              At NorthEast Association for Social Welfare, we are committed to empowering communities, preserving cultural heritage, and creating opportunities for youth through meaningful social initiatives.
             </p>
         
           </div>
