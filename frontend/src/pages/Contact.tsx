@@ -89,6 +89,7 @@ export const Contact: React.FC<ContactProps> = ({ setCurrentPage }) => {
 
     try {
       const response = await submitContactForm({
+        submission_type: 'contact',
         name,
         email,
         phone_number: phone,

@@ -163,6 +163,30 @@ class EmailServiceTests(unittest.IsolatedAsyncioTestCase):
             self.assertFalse(await EmailService.send_registration_confirmation(test_form(), 42))
             http.assert_not_called()
 
+    async def test_contact_confirmation_targets_sender_and_replies_to_admin(self):
+        requests = []
+        def handler(request):
+            requests.append(request)
+            return httpx.Response(201, json={'messageId': '<contact-receipt>'})
+        with self.mock_client(handler):
+            self.assertTrue(await EmailService.send_contact_confirmation(test_form(), 43))
+        payload = json.loads(requests[0].content)
+        self.assertEqual(payload['to'], [{'email': 'volunteer@example.com'}])
+        self.assertEqual(payload['replyTo'], {'email': 'admin@example.com'})
+        self.assertEqual(payload['tags'], ['contact_confirmation'])
+        self.assertIn('We received your enquiry', payload['subject'])
+        self.assertIn('Test &lt;Volunteer&gt;', payload['htmlContent'])
+        self.assertIn('43', payload['htmlContent'])
+        self.assertIn('does not confirm a booking', payload['htmlContent'])
+        self.assertNotIn('volunteer placement', payload['htmlContent'])
+        self.assertNotIn('alert(1)', payload['htmlContent'])
+
+    async def test_contact_confirmation_respects_mail_disabled(self):
+        self.settings.MAIL_ENABLED = False
+        with patch('app.services.email_service.httpx.AsyncClient') as http:
+            self.assertFalse(await EmailService.send_contact_confirmation(test_form(), 43))
+            http.assert_not_called()
+
     async def test_smtp_confirmation_targets_applicant(self):
         self.settings.MAIL_PROVIDER = 'smtp'
         self.settings.MAIL_PASSWORD = 'test-smtp-password'
@@ -245,22 +269,36 @@ class SubmissionNotificationTests(unittest.TestCase):
 
     def test_explicit_contact_type_takes_precedence_over_legacy_markers(self):
         requests = self.exercise_notification_flow('contact', legacy_volunteer=True)
-        self.assertEqual(len(requests), 1)
+        self.assertEqual(len(requests), 2)
+        self.assertEqual(requests[1]['tags'], ['contact_confirmation'])
 
     def test_production_logs_identify_registration_classification(self):
         with self.assertLogs('uvicorn.error.submissions', level='INFO') as logs:
             self.exercise_notification_flow('volunteer')
         output = ' '.join(logs.output)
-        self.assertIn('applicant_confirmation=queued', output)
+        self.assertIn('confirmation=volunteer_confirmation queued', output)
         self.assertIn('classification=explicit', output)
         self.assertNotIn('volunteer@example.com', output)
 
-    def test_contact_and_legacy_payloads_do_not_send_registration_confirmations(self):
+    def test_contact_and_legacy_payloads_send_contact_receipts(self):
         for submission_type in ['contact', None]:
             with self.subTest(submission_type=submission_type):
                 requests = self.exercise_notification_flow(submission_type)
-                self.assertEqual(len(requests), 1)
+                self.assertEqual(len(requests), 2)
                 self.assertEqual(requests[0]['to'], [{'email': 'admin@example.com'}])
+                self.assertEqual(requests[1]['to'], [{'email': 'volunteer@example.com'}])
+                self.assertEqual(requests[1]['tags'], ['contact_confirmation'])
+
+    def test_admin_failure_does_not_block_contact_confirmation(self):
+        with self.assertLogs('uvicorn.error.email', level='ERROR'):
+            requests = self.exercise_notification_flow('contact', admin_status=503)
+        self.assertEqual(len(requests), 2)
+        self.assertEqual(requests[1]['tags'], ['contact_confirmation'])
+
+    def test_contact_confirmation_failure_preserves_saved_enquiry(self):
+        with self.assertLogs('uvicorn.error.email', level='ERROR'):
+            requests = self.exercise_notification_flow('contact', applicant_status=503)
+        self.assertEqual(len(requests), 2)
 
     def test_admin_failure_does_not_block_applicant_confirmation(self):
         with self.assertLogs('uvicorn.error.email', level='ERROR'):
@@ -284,7 +322,7 @@ class SubmissionNotificationTests(unittest.TestCase):
         client = TestClient(app)
         try:
             with patch('app.services.email_service.settings', email_settings()), \
-                 patch('app.services.email_service.httpx.AsyncClient', return_value=AsyncClient(
+                 patch('app.services.email_service.httpx.AsyncClient', side_effect=lambda **kwargs: AsyncClient(
                      transport=httpx.MockTransport(lambda request: httpx.Response(503)))), \
                  self.assertLogs('uvicorn.error.email', level='ERROR'):
                 response = client.post('/api/contact/submit', json=test_form().model_dump())

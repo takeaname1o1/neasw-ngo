@@ -37,7 +37,7 @@ async def submit_contact_form(
     db: Session = Depends(get_db)
 ):
     """
-    Saves a submission, notifies the admin, and acknowledges volunteer applications.
+    Saves a submission, notifies the admin, and acknowledges the sender.
     """
     try:
         # Create DB record
@@ -60,10 +60,14 @@ async def submit_contact_form(
             background_tasks.add_task(
                 EmailService.send_registration_confirmation, form_data, db_submission.id
             )
+        else:
+            background_tasks.add_task(
+                EmailService.send_contact_confirmation, form_data, db_submission.id
+            )
         logger.info(
-            "Submission %s saved; applicant_confirmation=%s; classification=%s.",
+            "Submission %s saved; confirmation=%s queued; classification=%s.",
             db_submission.id,
-            "queued" if is_registration else "not_requested",
+            "volunteer_confirmation" if is_registration else "contact_confirmation",
             "explicit" if "submission_type" in form_data.model_fields_set else "legacy",
         )
 

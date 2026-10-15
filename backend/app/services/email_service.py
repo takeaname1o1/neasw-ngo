@@ -120,6 +120,27 @@ class EmailService:
         )
 
     @staticmethod
+    async def send_contact_confirmation(form_data: ContactFormSubmit, submission_id: int) -> bool:
+        """Acknowledge a saved enquiry without promising a booking or response time."""
+        body = f"""
+<h2>Thank you for contacting us</h2>
+<p>Hello {escape(form_data.name)},</p>
+<p>We have received your enquiry at NorthEast Association for Social Welfare.</p>
+<p><strong>Enquiry reference:</strong> {submission_id}</p>
+<p>Our team will review your message and get back to you.
+This email confirms receipt of your enquiry; it does not confirm a booking or reservation.</p>
+<p>If you have questions or additional details, reply to this email to reach our team.</p>
+<p>NorthEast Association for Social Welfare<br>Unity &amp; Service</p>
+"""
+        return await EmailService._send_email(
+            subject="We received your enquiry — NorthEast Association for Social Welfare",
+            body=body,
+            recipient=str(form_data.email),
+            reply_to=settings.MAIL_TO_ADMIN,
+            category="contact_confirmation",
+        )
+
+    @staticmethod
     async def send_registration_confirmation(form_data: ContactFormSubmit, submission_id: int) -> bool:
         """Acknowledge receipt, not acceptance into the volunteer programme."""
         body = f"""
