@@ -7,9 +7,14 @@ import { About } from './pages/About';
 import { Work } from './pages/Work';
 import { Join } from './pages/Join';
 import { Contact } from './pages/Contact';
+import { Admin } from './pages/Admin';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
+
+  if (window.location.pathname === '/admin' || window.location.pathname.startsWith('/admin/')) {
+    return <Admin />;
+  }
 
   const renderPage = () => {
     switch (currentPage) {

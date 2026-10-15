@@ -14,6 +14,22 @@ class ContactSubmission(Base):
     message = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+
+class AdminSession(Base):
+    __tablename__ = "admin_sessions"
+
+    token_hash = Column(String(64), primary_key=True)
+    credential_tag = Column(String(64), nullable=False)
+    expires_at = Column(DateTime, nullable=False, index=True)
+
+
+class AdminLoginAttempt(Base):
+    __tablename__ = "admin_login_attempts"
+
+    id = Column(Integer, primary_key=True)
+    client_hash = Column(String(64), nullable=False, index=True)
+    created_at = Column(DateTime, nullable=False, index=True)
+
 class LeadershipMember(Base):
     __tablename__ = "leadership_members"
 

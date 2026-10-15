@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.endpoints import router as api_router
+from app.api.admin import router as admin_router
 from app.core.database import initialize_database, SessionLocal
 from app.core.database_seeder import seed_db
 from app.services.email_service import EmailService
@@ -39,6 +40,17 @@ app.add_middleware(
 
 # Include routers
 app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(admin_router, prefix=f"{settings.API_V1_STR}/admin")
+
+
+@app.middleware("http")
+async def private_admin_responses(request, call_next):
+    response = await call_next(request)
+    if request.url.path.startswith(f"{settings.API_V1_STR}/admin"):
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
 
 @app.get("/")
 async def root():

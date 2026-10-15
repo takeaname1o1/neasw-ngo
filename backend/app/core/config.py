@@ -1,6 +1,8 @@
 from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from fastapi_mail import ConnectionConfig
+from pydantic import SecretStr, Field
+from dotenv import dotenv_values
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
 PROJECT_DIR = BACKEND_DIR.parent
@@ -12,8 +14,11 @@ class Settings(BaseSettings):
     DATABASE_URL: str = f"sqlite:///{BACKEND_DIR / 'neasw.db'}"
     DATABASE_URL_UNPOOLED: str | None = None
     MAIL_ENABLED: bool = True
+    ADMIN_USERNAME: str = ""
+    ADMIN_PASSWORD: SecretStr = SecretStr("")
+    ADMIN_COOKIE_SECURE: bool = True
+    ADMIN_SESSION_SECONDS: int = Field(default=28800, ge=300, le=86400)
     CORS_ORIGINS: list[str] = [
-        "*",
         "https://neaswwelfarefoundation.in",
         "https://www.neaswwelfarefoundation.in",
         "http://localhost:3000",
@@ -49,6 +54,17 @@ class Settings(BaseSettings):
         case_sensitive=True,
         extra="ignore"
     )
+
+    def admin_credentials(self) -> tuple[str, str]:
+        # Legacy USER is read from dotenv files only: the OS also defines USER.
+        legacy = {}
+        for path in self.model_config["env_file"]:
+            if Path(path).is_file():
+                legacy.update(dotenv_values(path))
+        return (
+            self.ADMIN_USERNAME or legacy.get("USER") or "",
+            self.ADMIN_PASSWORD.get_secret_value() or legacy.get("PASSWORD") or "",
+        )
 
     def get_mail_config(self) -> ConnectionConfig:
         return ConnectionConfig(

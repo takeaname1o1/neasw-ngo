@@ -274,6 +274,60 @@ LIMIT 50;
 
 The connection change does not import previous Render SQLite records. Retain independent database exports/backups; the free plan has usage limits and a limited restore window. A public submissions-listing endpoint is intentionally not added because enquiries contain private contact details.
 
+## Private submissions dashboard
+
+Open `/admin/login` on the website, sign in, and view records at `/admin/submissions`.
+The read-only dashboard includes search, newest-first ordering, and 20 records per
+page. It displays both enquiries and volunteer applications from `contact_submissions`.
+
+For local development, the backend supports the existing `USER` and `PASSWORD`
+entries in the ignored root `.env.local`. `USER` is read only from dotenv files to
+avoid accidentally using the operating system's username. Preferred credentials
+are `ADMIN_USERNAME` and `ADMIN_PASSWORD`, which override those legacy entries.
+Credentials are backend-only; never use `VITE_` prefixes or commit them.
+
+For deployment, set **`ADMIN_USERNAME` and `ADMIN_PASSWORD` in Render's backend
+Environment settings** using the values you chose locally, then redeploy the backend
+and frontend. Root `.env.local` is ignored by Git and is not uploaded automatically.
+The backend creates the additional `admin_sessions` and `admin_login_attempts`
+tables at startup using the existing database configuration. No Neon Auth service
+is required.
+
+Sessions expire after eight hours (`ADMIN_SESSION_SECONDS=28800`, configurable
+from 300 to 86400 seconds). Only a random opaque token is placed in the HttpOnly,
+SameSite=Lax cookie; the database stores its hash. Logout revokes that session;
+changing either credential invalidates all existing sessions. Password verification
+uses scrypt and constant-time comparisons. Responses containing admin data use
+`Cache-Control: no-store`. Login attempts are limited to five per client address
+and thirty overall per 15 minutes; attempts include successful logins. Rate-limit
+records persist in the database. When a trusted hosting proxy supplies client
+addresses, configure Uvicorn to trust only that proxy; otherwise multiple users
+may share the proxy's limit.
+
+`ADMIN_COOKIE_SECURE=True` is the default and must remain enabled on hosted HTTPS.
+For local HTTP testing only, set `ADMIN_COOKIE_SECURE=False` in a backend dotenv
+file and restart the backend. Admin requests always use the website's same-origin
+`/api` proxy, independent of the public API fallback settings. Keep the Vercel
+rewrite pointing at the correct backend. Add your exact frontend origin to
+`CORS_ORIGINS` if it differs from the configured production and localhost origins.
+Admin requests require the `X-Admin-Request: 1` header and reject untrusted browser
+origins to protect the login/logout flows against cross-site requests.
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| POST | `/api/admin/login` | Verify username/password and set the session cookie |
+| GET | `/api/admin/session` | Check the current admin session |
+| POST | `/api/admin/logout` | Revoke the session and clear the cookie |
+| GET | `/api/admin/submissions` | Authenticated records; `page`, `page_size` (max 100), and `search` |
+
+Auth and records tests use temporary SQLite with fake credentials, never Neon.
+Install their extra dependency with `.venv/bin/pip install -r requirements-dev.txt`:
+
+```bash
+cd backend
+.venv/bin/python -m unittest discover -s tests -v
+```
+
 ## Deployment
 
 ### Backend service
@@ -305,9 +359,9 @@ When deploying to another backend, set `VITE_API_BASE_URL` before the frontend b
 
 ## Current limitations
 
-- There is no admin interface, authentication, enquiry-listing API, or implemented payment processing flow.
+- Payment processing is not implemented.
 - SMTP notifications run in the application process without a durable queue or retry mechanism. A notification failure does not undo a saved submission.
-- The current CORS configuration includes a wildcard while enabling credentials; configure explicit trusted origins for a hosted environment.
+- CORS permits explicit trusted frontend origins; add any additional deployment origins to `CORS_ORIGINS`.
 - Some display content has local fallbacks, so a rendered page alone does not establish backend health.
 
 See [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) for additional implementation notes. The source files remain authoritative where older notes differ.
