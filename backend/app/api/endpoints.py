@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.core.database import get_db
@@ -6,6 +7,7 @@ from app.models.schemas import ContactFormSubmit, LeadershipMember as Leadership
 from app.services.email_service import EmailService
 
 router = APIRouter()
+logger = logging.getLogger("uvicorn.error.submissions")
 
 # PAGE 2: ABOUT US ENDPOINTS
 @router.get("/about/leadership", response_model=list[LeadershipSchema])
@@ -53,10 +55,17 @@ async def submit_contact_form(
 
         # Notify via Email Service asynchronously in background
         background_tasks.add_task(EmailService.send_contact_form_email, form_data)
-        if form_data.submission_type == "volunteer":
+        is_registration = form_data.is_volunteer_registration
+        if is_registration:
             background_tasks.add_task(
                 EmailService.send_registration_confirmation, form_data, db_submission.id
             )
+        logger.info(
+            "Submission %s saved; applicant_confirmation=%s; classification=%s.",
+            db_submission.id,
+            "queued" if is_registration else "not_requested",
+            "explicit" if "submission_type" in form_data.model_fields_set else "legacy",
+        )
 
         return {
             "status": "success",

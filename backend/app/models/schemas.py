@@ -10,6 +10,18 @@ class ContactFormSubmit(BaseModel):
     preferred_date: Optional[str] = None
     message: str
 
+    @property
+    def is_volunteer_registration(self) -> bool:
+        if "submission_type" in self.model_fields_set:
+            return self.submission_type == "volunteer"
+        # Older cached Join forms predate the explicit submission_type field.
+        organization = self.organization_name or ""
+        return (
+            organization.startswith("Volunteer Application (")
+            and organization.endswith(")")
+            and self.message.startswith("Registered interest for the ")
+        )
+
 class LeadershipMember(BaseModel):
     id: Optional[int] = None
     name: str

@@ -87,7 +87,7 @@ class EmailServiceTests(unittest.IsolatedAsyncioTestCase):
             def handler(request):
                 return httpx.Response(status, json={'message': 'test-brevo-key volunteer@example.com'})
             with self.subTest(status=status), self.mock_client(handler), \
-                 self.assertLogs('app.services.email_service', level='ERROR') as logs, \
+                 self.assertLogs('uvicorn.error.email', level='ERROR') as logs, \
                  patch('app.services.email_service.FastMail') as smtp:
                 self.assertFalse(await EmailService.send_contact_form_email(test_form()))
                 smtp.assert_not_called()
@@ -101,17 +101,31 @@ class EmailServiceTests(unittest.IsolatedAsyncioTestCase):
         def handler(request):
             requests.append(request)
             raise httpx.ReadTimeout('test-brevo-key', request=request)
-        with self.mock_client(handler), self.assertLogs('app.services.email_service', level='ERROR') as logs:
+        with self.mock_client(handler), self.assertLogs('uvicorn.error.email', level='ERROR') as logs:
             self.assertFalse(await EmailService.send_contact_form_email(test_form()))
         self.assertEqual(len(requests), 1)
         self.assertNotIn('test-brevo-key', ' '.join(logs.output))
+
+    async def test_confirmation_rejection_logs_safe_provider_code(self):
+        def handler(request):
+            return httpx.Response(400, json={
+                'code': 'invalid_parameter',
+                'message': 'test-brevo-key volunteer@example.com',
+            })
+        with self.mock_client(handler), self.assertLogs('uvicorn.error.email', level='ERROR') as logs:
+            self.assertFalse(await EmailService.send_registration_confirmation(test_form(), 42))
+        output = ' '.join(logs.output)
+        self.assertIn('volunteer_confirmation', output)
+        self.assertIn('HTTP 400, code=invalid_parameter', output)
+        self.assertNotIn('test-brevo-key', output)
+        self.assertNotIn('volunteer@example.com', output)
 
     async def test_malformed_acceptance_response_is_not_reported_as_success(self):
         for body in [b'not-json', b'{}', b'[]']:
             def handler(request):
                 return httpx.Response(201, content=body)
             with self.subTest(body=body), self.mock_client(handler), \
-                 self.assertLogs('app.services.email_service', level='ERROR'):
+                 self.assertLogs('uvicorn.error.email', level='ERROR'):
                 self.assertFalse(await EmailService.send_contact_form_email(test_form()))
 
     async def test_startup_uses_same_https_provider_without_reply_to(self):
@@ -136,6 +150,7 @@ class EmailServiceTests(unittest.IsolatedAsyncioTestCase):
         payload = json.loads(requests[0].content)
         self.assertEqual(payload['to'], [{'email': 'volunteer@example.com'}])
         self.assertEqual(payload['replyTo'], {'email': 'admin@example.com'})
+        self.assertEqual(payload['tags'], ['volunteer_confirmation'])
         self.assertEqual(payload['sender']['email'], self.settings.MAIL_FROM)
         self.assertIn('Test &lt;Volunteer&gt;', payload['htmlContent'])
         self.assertIn('42', payload['htmlContent'])
@@ -176,7 +191,7 @@ class EmailServiceTests(unittest.IsolatedAsyncioTestCase):
 
 
 class SubmissionNotificationTests(unittest.TestCase):
-    def exercise_notification_flow(self, submission_type, admin_status=201, applicant_status=201):
+    def exercise_notification_flow(self, submission_type, admin_status=201, applicant_status=201, legacy_volunteer=False):
         engine = create_engine('sqlite://', connect_args={'check_same_thread': False}, poolclass=StaticPool)
         Base.metadata.create_all(engine)
         sessions = sessionmaker(bind=engine)
@@ -195,6 +210,9 @@ class SubmissionNotificationTests(unittest.TestCase):
         client = TestClient(app)
         try:
             payload = test_form().model_dump()
+            if legacy_volunteer:
+                payload['organization_name'] = 'Volunteer Application (6 Months Plan)'
+                payload['message'] = 'Registered interest for the 6 Months Plan (6 months).'
             if submission_type is not None:
                 payload['submission_type'] = submission_type
             else:
@@ -219,6 +237,24 @@ class SubmissionNotificationTests(unittest.TestCase):
             [{'email': 'admin@example.com'}], [{'email': 'volunteer@example.com'}],
         ])
 
+    def test_cached_legacy_join_form_still_sends_confirmation(self):
+        requests = self.exercise_notification_flow(None, legacy_volunteer=True)
+        self.assertEqual(len(requests), 2)
+        self.assertEqual(requests[1]['tags'], ['volunteer_confirmation'])
+        self.assertEqual(requests[1]['to'], [{'email': 'volunteer@example.com'}])
+
+    def test_explicit_contact_type_takes_precedence_over_legacy_markers(self):
+        requests = self.exercise_notification_flow('contact', legacy_volunteer=True)
+        self.assertEqual(len(requests), 1)
+
+    def test_production_logs_identify_registration_classification(self):
+        with self.assertLogs('uvicorn.error.submissions', level='INFO') as logs:
+            self.exercise_notification_flow('volunteer')
+        output = ' '.join(logs.output)
+        self.assertIn('applicant_confirmation=queued', output)
+        self.assertIn('classification=explicit', output)
+        self.assertNotIn('volunteer@example.com', output)
+
     def test_contact_and_legacy_payloads_do_not_send_registration_confirmations(self):
         for submission_type in ['contact', None]:
             with self.subTest(submission_type=submission_type):
@@ -227,13 +263,13 @@ class SubmissionNotificationTests(unittest.TestCase):
                 self.assertEqual(requests[0]['to'], [{'email': 'admin@example.com'}])
 
     def test_admin_failure_does_not_block_applicant_confirmation(self):
-        with self.assertLogs('app.services.email_service', level='ERROR'):
+        with self.assertLogs('uvicorn.error.email', level='ERROR'):
             requests = self.exercise_notification_flow('volunteer', admin_status=503)
         self.assertEqual(len(requests), 2)
         self.assertEqual(requests[1]['to'], [{'email': 'volunteer@example.com'}])
 
     def test_applicant_failure_does_not_undo_saved_registration(self):
-        with self.assertLogs('app.services.email_service', level='ERROR'):
+        with self.assertLogs('uvicorn.error.email', level='ERROR'):
             requests = self.exercise_notification_flow('volunteer', applicant_status=503)
         self.assertEqual(len(requests), 2)
 
@@ -250,7 +286,7 @@ class SubmissionNotificationTests(unittest.TestCase):
             with patch('app.services.email_service.settings', email_settings()), \
                  patch('app.services.email_service.httpx.AsyncClient', return_value=AsyncClient(
                      transport=httpx.MockTransport(lambda request: httpx.Response(503)))), \
-                 self.assertLogs('app.services.email_service', level='ERROR'):
+                 self.assertLogs('uvicorn.error.email', level='ERROR'):
                 response = client.post('/api/contact/submit', json=test_form().model_dump())
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response.json()['status'], 'success')

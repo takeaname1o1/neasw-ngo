@@ -1,4 +1,5 @@
 import logging
+import re
 from datetime import datetime, timezone
 from html import escape
 
@@ -8,7 +9,7 @@ from fastapi_mail import FastMail, MessageSchema, MessageType
 from app.models.schemas import ContactFormSubmit
 from app.core.config import settings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("uvicorn.error.email")
 BREVO_EMAIL_URL = "https://api.brevo.com/v3/smtp/email"
 
 
@@ -16,10 +17,10 @@ class EmailService:
     @staticmethod
     async def _send_email(
         subject: str, body: str, reply_to: str | None = None,
-        *, recipient: str | None = None,
+        *, recipient: str | None = None, category: str = "admin_notification",
     ) -> bool:
         if not settings.MAIL_ENABLED:
-            logger.info("Email notifications disabled (MAIL_ENABLED=False).")
+            logger.info("Email %s skipped: MAIL_ENABLED=False.", category)
             return False
 
         if settings.MAIL_PROVIDER == "smtp":
@@ -27,7 +28,7 @@ class EmailService:
 
         api_key = settings.BREVO_API_KEY.get_secret_value().strip()
         if not api_key:
-            logger.warning("Brevo notification skipped: BREVO_API_KEY is not configured.")
+            logger.warning("Brevo %s skipped: BREVO_API_KEY is not configured.", category)
             return False
 
         payload = {
@@ -35,6 +36,7 @@ class EmailService:
             "to": [{"email": recipient or settings.MAIL_TO_ADMIN}],
             "subject": subject,
             "htmlContent": body,
+            "tags": [category],
         }
         if reply_to:
             payload["replyTo"] = {"email": reply_to}
@@ -50,17 +52,28 @@ class EmailService:
             # API acceptance is distinct from delivery to the recipient's inbox.
             result = response.json()
             if not isinstance(result, dict) or not result.get("messageId"):
-                logger.error("Brevo returned an invalid email acceptance response.")
+                logger.error("Brevo %s returned an invalid email acceptance response.", category)
                 return False
-            logger.info("Brevo accepted email notification for delivery.")
+            logger.info("Brevo accepted %s for delivery.", category)
             return True
         except httpx.HTTPStatusError as exc:
             # Never log request headers, provider response bodies, or form data.
-            logger.error("Brevo rejected email notification (HTTP %s).", exc.response.status_code)
+            code = "unknown"
+            try:
+                detail = exc.response.json()
+                value = detail.get("code") if isinstance(detail, dict) else None
+                if isinstance(value, str) and re.fullmatch(r"[A-Za-z0-9_-]{1,64}", value):
+                    code = value
+            except ValueError:
+                pass
+            logger.error(
+                "Brevo rejected %s (HTTP %s, code=%s).",
+                category, exc.response.status_code, code,
+            )
         except httpx.RequestError as exc:
-            logger.error("Brevo notification request failed (%s).", type(exc).__name__)
+            logger.error("Brevo %s request failed (%s).", category, type(exc).__name__)
         except ValueError:
-            logger.error("Brevo returned an invalid JSON response.")
+            logger.error("Brevo %s returned an invalid JSON response.", category)
         return False
 
     @staticmethod
@@ -124,6 +137,7 @@ This email confirms receipt of your application; it does not confirm a volunteer
             body=body,
             recipient=str(form_data.email),
             reply_to=settings.MAIL_TO_ADMIN,
+            category="volunteer_confirmation",
         )
 
     @staticmethod
@@ -142,4 +156,5 @@ This email confirms receipt of your application; it does not confirm a volunteer
         return await EmailService._send_email(
             subject=f"[{settings.PROJECT_NAME}] Server Booted",
             body=body,
+            category="startup_notification",
         )
