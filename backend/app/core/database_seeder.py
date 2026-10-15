@@ -78,3 +78,4 @@ def seed_db(db: Session):
     except Exception as e:
         logger.error(f"Error seeding database: {str(e)}")
         db.rollback()
+        raise

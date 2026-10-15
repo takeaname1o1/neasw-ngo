@@ -1,209 +1,313 @@
-# NEASW Welfare Foundation NGO Web App
+# NEASW Welfare Foundation
 
-A modern, highly interactive web application for the **NEASW Welfare Foundation**, built using a decoupled architecture: a premium Vite + React frontend powered by a FastAPI + SQLite backend.
+The NEASW Welfare Foundation website presents the organisation’s community work, cultural initiatives, leadership, and volunteering opportunities across Northeast India and beyond. It combines a React single-page application with a FastAPI service that stores enquiries and volunteer applications in PostgreSQL on Neon (with SQLite for offline development) and supports SMTP notifications.
 
-> 📘 **Technical Documentation:** For a detailed breakdown of the frontend, backend, database models, and deployment configurations, refer to the [Technical Documentation](file:///Users/g10/Sync/deploy_project/ngo/TECHNICAL_DOCUMENTATION.md).
+## Features
 
----
+- **Home:** rotating banners, initiative and programme galleries, leadership carousel, FAQs, and partner links.
+- **About:** organisation background, areas of work, and a chapter-based leadership directory.
+- **Our Work:** programme descriptions and photography covering community welfare, education, healthcare, environmental awareness, tourism, and cultural preservation.
+- **Join NEASW:** 6-, 12-, and 24-month volunteer plans with an application modal.
+- **Contact:** enquiry form, image gallery, contact details, and social links.
+- **Shared interface:** responsive layouts, navigation, footer, and calls to action.
 
-## 🏗️ Architecture & Tech Stack
+Contact enquiries and volunteer applications use the same submission endpoint and database table. Volunteer applications record the selected plan in the organisation and message fields.
 
-- **Frontend**:
-  - React (TypeScript) + Vite
-  - Styled with Vanilla CSS & React Inline Styles (premium custom design, fully responsive)
-  - Routing: Custom state-based router supporting seamless navigation and transition effects
-  - Icons: `lucide-react`
-- **Backend**:
-  - FastAPI (Python)
-  - Database: SQLite (SQLAlchemy ORM)
-  - Data seeding scripts for volunteer plans, leadership records, and contact details
-  - Automatic port killing (`run.sh`) to prevent port collision warnings
+## Architecture and stack
 
----
-
-## 🏗️ Technical Overview & Architecture
-
-The application is built on a modern, decoupled client-server architecture designed for high performance, maintainability, and scalability.
-
-```
-+-------------------------------------------------------------------+
-|                        Client Browser                             |
-|    Vite + React SPA (TypeScript) | Custom Router | Vanilla CSS    |
-+-------------------------------------------------------------------+
-                                 |
-                         HTTP JSON (/api/*)
-                                 |
-                                 v
-+-------------------------------------------------------------------+
-|                    FastAPI Backend (Python)                       |
-|   Uvicorn Server | REST Endpoints | Pydantic Schemas | ORM        |
-+-------------------------------------------------------------------+
-                                 |
-                                 v
-+-------------------------------------------------------------------+
-|                     SQLite Data Store (SQLAlchemy)                |
-|       contact_submissions | leadership_members | volunteer_plans  |
-+-------------------------------------------------------------------+
+```text
+Browser: React + TypeScript
+    │
+    ├── Local: /api → Vite development proxy
+    └── Hosted: configured API URL or deployed Render backend
+                │
+                ▼
+         FastAPI + Pydantic
+                │
+                ├── SQLAlchemy → Neon PostgreSQL / local SQLite
+                └── FastAPI-Mail → SMTP notifications
 ```
 
-### 💻 Technology Stack
+| Layer | Implementation |
+| --- | --- |
+| Frontend | React 19, TypeScript 6, Vite 8 |
+| UI | Plain CSS, inline styles, and Lucide React icons |
+| Navigation | React state in `App.tsx`; no URL-based router |
+| HTTP client | Browser `fetch` with a shared API helper |
+| Backend | FastAPI, Uvicorn, Pydantic v2, and pydantic-settings |
+| Persistence | SQLAlchemy 2, Psycopg 3, and Neon PostgreSQL; local SQLite fallback |
+| Email | FastAPI-Mail with configurable SMTP; defaults target Zoho |
+| Frontend checks | TypeScript build checks and Oxlint |
 
-* **Frontend**:
-  * **Framework**: React 18 (TypeScript) built with Vite for sub-millisecond HMR and optimized production bundles.
-  * **Styling**: Vanilla CSS with custom `:root` tokens, smooth CSS transitions, custom animations, glassmorphic accents, and dynamic layout bounds.
-  * **Icons & UI**: `lucide-react` icons.
-  * **State & Routing**: Custom light state-based router providing instant view transitions without heavy external router dependencies.
-  * **HTTP Client**: Native browser `fetch` API wrapping `/api/*` endpoints.
+Navigation switches among five views without changing the browser URL. Refreshing the application returns to Home; individual views do not have deep links.
 
-* **Backend**:
-  * **Framework**: FastAPI (Python 3.10+) with async request processing and automatic Swagger OpenAPI documentation (`/docs`).
-  * **Database & ORM**: SQLite (`neasw.db`) managed through SQLAlchemy ORM.
-  * **Data Validation**: Pydantic v2 schemas (`EmailStr`, type coercion, and JSON validation).
-  * **Server**: Uvicorn ASGI server.
-  * **Seeding & Booting**: Automated DB seeder script executed at startup to ensure default data presence.
+## Repository layout
 
----
-
-## 🔌 Technical Details & API Endpoints
-
-### 💾 Database Schema (`neasw.db`)
-
-The backend utilizes SQLAlchemy ORM with three core tables:
-
-1. **`contact_submissions`**:
-   * `id` (INTEGER, Primary Key, Autoincrement)
-   * `name` (VARCHAR, Required)
-   * `email` (VARCHAR, Required)
-   * `phone_number` (VARCHAR, Required)
-   * `organization_name` (VARCHAR, Optional)
-   * `preferred_date` (VARCHAR, Optional)
-   * `message` (TEXT, Required)
-   * `created_at` (DATETIME, Default: UTC Now)
-
-2. **`leadership_members`**:
-   * `id` (INTEGER, Primary Key)
-   * `name` (VARCHAR, Required)
-   * `position` (VARCHAR, Required)
-   * `chapter` (VARCHAR, Required)
-
-3. **`volunteer_plans`**:
-   * `id` (INTEGER, Primary Key)
-   * `duration_months` (INTEGER, Required)
-   * `title` (VARCHAR, Required)
-   * `features` (JSON / TEXT Array, Required)
-
----
-
-### 🌐 Backend REST API Specs
-
-| Method | Route | Description | Request Payload | Response Schema |
-| :--- | :--- | :--- | :--- | :--- |
-| **GET** | `/api/about/leadership` | Fetches active roster of regional chapter leadership. | None | `List[LeadershipMember]` |
-| **GET** | `/api/join/volunteer-plans` | Fetches tiered volunteering plans & durations. | None | `List[VolunteerPlan]` |
-| **POST** | `/api/contact/submit` | Validates & saves user contact/volunteer inquiries. | `ContactFormSubmit` (JSON) | `{ "status": "success", "id": int, "message": str }` |
-| **GET** | `/api/contact/info` | Returns organizational contact details & social channels. | None | `ContactInfo` |
-
-> 📖 **Full Documentation:** For an in-depth dive into internal backend file structures, frontend CSS variable design tokens, component hierarchies, and mock email services, view [TECHNICAL_DOCUMENTATION.md](file:///Users/g10/Sync/deploy_project/ngo/TECHNICAL_DOCUMENTATION.md).
-
----
-
-## 📂 Project Directory Structure
-
-```
-├── backend/                  # FastAPI Application
+```text
+.
+├── backend/
 │   ├── app/
-│   │   ├── api/              # Controller endpoints & routing logic
-│   │   ├── core/             # DB configuration, session management & seeder
-│   │   ├── models/           # SQLAlchemy DB models & Pydantic validation schemas
-│   │   └── services/         # Mock email service & helper integrations
-│   ├── run.py                # Server entry point
-│   ├── requirements.txt      # Python dependencies
-│   └── neasw.db              # SQLite Database
-├── frontend/                 # Vite React Application
+│   │   ├── api/endpoints.py       # REST endpoints
+│   │   ├── core/                 # Settings, database sessions, and seeding
+│   │   ├── models/               # SQLAlchemy models and Pydantic schemas
+│   │   ├── services/             # SMTP email notifications
+│   │   └── main.py               # FastAPI app, CORS, and startup lifecycle
+│   ├── .env.example              # SMTP configuration template
+│   ├── requirements.txt          # Python dependencies
+│   ├── run.py                    # Development server on port 8000
+│   └── update_leadership.py      # Replace database leadership from JSON
+├── frontend/
 │   ├── src/
-│   │   ├── assets/           # High-resolution local image files & brand assets
-│   │   ├── components/       # Header, Footer, Conversion blocks
-│   │   ├── pages/            # View components (Home, About, Work, Join, Contact)
-│   │   └── services/         # API HTTP client wrapper (`api.ts`)
-│   ├── package.json          # Node dependencies
-│   └── vite.config.ts        # Vite configuration
-├── run.sh                    # Startup boot script (port cleanup & launch)
-├── vercel.json               # Vercel deployment routing & API rewrites
-├── TECHNICAL_DOCUMENTATION.md # Comprehensive technical specifications
-└── README.md                 # Project Overview & Setup Guide
+│   │   ├── assets/               # Images, programme notes, and leader.json
+│   │   ├── components/           # Header, footer, and conversion block
+│   │   ├── pages/                # Home, About, Work, Join, and Contact
+│   │   ├── services/api.ts       # API types, URL selection, and fallback
+│   │   ├── App.tsx               # View selection and shared layout
+│   │   └── index.css             # Shared styles and design tokens
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── vite.config.ts            # Development /api proxy
+│   └── vercel.json               # API rewrite and SPA fallback
+├── neon.ts                       # Neon service and branch configuration
+├── package.json                  # Root build/dev commands and Neon tooling
+├── run.sh                        # Combined local development launcher
+├── vercel.json                   # Duplicate root deployment configuration
+├── TECHNICAL_DOCUMENTATION.md     # Additional implementation notes
+├── layout.md                     # Layout reference
+├── mobile_friendly_suggestions.md
+└── previews.html                 # Standalone design preview
 ```
 
----
+## Local development
 
-## 🚀 Local Development Setup
+### Prerequisites
 
-To run the application locally on your macOS system:
+- **Node.js 20.19+ within Node 20, or Node.js 22.12+**, with npm, as required by the locked Vite and React plugin packages.
+- **Python 3.10+**, with pip and virtual environment support.
+- **Bash and `lsof`** if using the combined launcher.
 
-1. **Prerequisites**: Make sure you have **Node.js** (v18+) and **Python** (3.10+) installed.
-2. **Launch with Auto Boot**:
-   In the root directory, run the launch script:
-   ```bash
-   ./run.sh
-   ```
-   *This script automatically kills any occupying processes on ports `3000` (frontend) and `8000` (backend), initializes the Python virtual environment (`.venv`), installs dependencies, seeds the database, and runs both servers simultaneously.*
-3. **Access the Application**:
-   - Frontend: `http://localhost:3000/` or `http://localhost:3001/`
-   - FastAPI Interactive docs: `http://localhost:8000/docs`
+The commands below assume a Linux or macOS shell and start from the repository root.
 
----
+### Start the services separately
 
-## 🌐 Deployment Guide: Frontend on Vercel
+In one terminal, prepare and start the backend:
 
-Vite + React single-page applications are extremely fast to deploy on Vercel.
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+cp .env.example .env
+# Edit .env with your SMTP account and intended notification recipient.
+python run.py
+```
 
-### Step 1: Deploy your Backend
-Since the React frontend makes relative calls to `/api/...`, your FastAPI backend must be deployed first.
-1. Deploy the `backend/` folder to a service like **Railway** or **Render**.
-2. Note your deployed backend URL (e.g. `https://neasw-backend-production.up.railway.app`).
+The backend automatically loads Neon variables from the repository root’s ignored `.env.local`, if present. Without `DATABASE_URL`, it uses local SQLite. The backend runs at `http://localhost:8000`. Interactive API documentation is available at `http://localhost:8000/docs`, with the OpenAPI schema at `http://localhost:8000/openapi.json`.
 
-### Step 2: Configure Vercel API Rewrites
-1. Open the root [vercel.json](file:///Users/g10/Sync/deploy_project/ngo/vercel.json) file.
-2. Replace the `destination` URL in the `/api` rewrite block with your live backend API URL:
-   ```json
-   {
-     "source": "/api/:path*",
-     "destination": "https://YOUR_LIVE_BACKEND_URL/api/:path*"
-   }
-   ```
-3. Commit and push this change to your GitHub repository:
-   ```bash
-   git add vercel.json
-   git commit -m "Update backend API deployment URL"
-   git push origin master
-   ```
+The example configuration disables SMTP (`MAIL_ENABLED=False`), which is appropriate for Render Free. Startup and submission notifications are skipped when disabled or when no password is configured. To use SMTP on a host that permits it, set `MAIL_ENABLED=True` and valid credentials and a recipient you control. Database submissions do not depend on email delivery.
 
-### Step 3: Connect GitHub to Vercel
-1. Log in to your [Vercel Dashboard](https://vercel.com).
-2. Click **Add New** > **Project**.
-3. Import your GitHub repository `neasw-ngo`.
-4. In the Project Configuration:
-   - **Framework Preset**: Select `Vite`.
-   - **Root Directory**: Select `frontend` (this tells Vercel to build the Vite app located in the `frontend/` subdirectory).
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-5. Click **Deploy**. Vercel will build the frontend and serve it at a public `.vercel.app` URL.
+In a second terminal, install and start the frontend:
 
----
+```bash
+cd frontend
+npm ci
+npm run dev -- --port 3000
+```
 
-## ⚡ Deployment Guide: Backend on Railway
+Open the URL printed by Vite, normally `http://localhost:3000`. Without the explicit port, `npm run dev` normally uses port 5173. The Vite development server proxies `/api` to `http://127.0.0.1:8000`.
 
-To quickly deploy the FastAPI backend on Railway:
-1. Log in to [Railway.app](https://railway.app).
-2. Click **New Project** > **Deploy from GitHub repo**.
-3. Choose the `neasw-ngo` repository.
-4. Add a variable in Railway settings:
-   - **Root Directory**: `backend` (this builds and executes just the backend code).
-5. Railway will read the `requirements.txt` file and boot the app using `uvicorn app.main:app --host 0.0.0.0 --port $PORT` automatically.
+### Combined launcher
 
----
+After configuring `backend/.env`, you can start both services from the repository root:
 
-## 🎨 Recent Enhancements & Design Updates
+```bash
+./run.sh
+```
 
-- **Homepage Hero Banner:** Swapped the legacy banner with a fresh high-resolution banner [home_banner.png](file:///Users/g10/Sync/deploy_project/ngo/frontend/src/assets/home/home_banner.png).
-- **Impact Section Illustration:** Updated the central impact illustration [impact.png](file:///Users/g10/Sync/deploy_project/ngo/frontend/src/assets/home/impact.png) to separate general impact branding from the user portraits.
-- **Upgraded Partners Grid:** Added four high-quality partner logos (`Assam_rifles.png`, `Home_Affairs.png`, `NE_doner.png`, `science_techno.png`) and updated the layout of the homepage strip. Added smooth lifting micro-animations and grayscale-to-color hover transitions for a modern, interactive look.
+The script creates `backend/.venv` if needed, installs Python dependencies on every launch, installs frontend dependencies if `node_modules` is absent, and launches the backend on port 8000 and Vite on port 3000. It binds both services to all network interfaces.
+
+**The launcher forcibly terminates processes occupying ports 8000 and 3000 using `kill -9`.** Use the separate-terminal commands when those ports belong to other work. Ctrl+C triggers the launcher’s backend cleanup handler.
+
+## Configuration
+
+### Backend environment
+
+Settings are defined in `backend/app/core/config.py`. Case-sensitive process environment variables take precedence over dotenv files. Files load in this order, with later files overriding earlier ones: root `.env`, root `.env.local` (Neon CLI output), `backend/.env`, and `backend/.env.local`. These paths are resolved from the source location, independently of the working directory.
+
+| Variable | Default / purpose |
+| --- | --- |
+| `DATABASE_URL` | Pooled Neon PostgreSQL URL; defaults to an absolute `backend/neasw.db` SQLite URL when omitted |
+| `DATABASE_URL_UNPOOLED` | Optional direct Neon URL used for table creation; uses `DATABASE_URL` if omitted |
+| `MAIL_ENABLED` | `True` in code; the example sets `False` for Render Free |
+| `PROJECT_NAME` | `NEASW Welfare Foundation API` |
+| `API_V1_STR` | `/api`; changing this also requires updating frontend routing |
+| `CORS_ORIGINS` | JSON array of allowed origins; currently includes `*`, the organisation’s domains, and localhost ports 3000 and 5173 |
+| `MAIL_USERNAME`, `MAIL_PASSWORD` | SMTP login; the password defaults to empty |
+| `MAIL_FROM`, `MAIL_FROM_NAME` | Sender address and display name |
+| `MAIL_SERVER`, `MAIL_PORT` | `smtp.zoho.in`, `587` |
+| `MAIL_STARTTLS`, `MAIL_SSL_TLS` | `True`, `False` |
+| `USE_CREDENTIALS`, `VALIDATE_CERTS` | Both `True` |
+| `MAIL_TO_ADMIN` | Notification recipient; defaults to `neaswsubmission@zohomail.in` |
+
+The SMTP example is in `backend/.env.example`. Local `.env` files and SQLite databases are ignored by Git.
+
+### Frontend API routing
+
+`frontend/src/services/api.ts` chooses the API base URL in this order:
+
+1. `VITE_API_BASE_URL`, if supplied.
+2. `/api` when the browser hostname is `localhost` or `127.0.0.1`.
+3. `https://neasw-ngo.onrender.com/api` for other hostnames.
+
+For a custom API, set the value in `frontend/.env.local` before starting Vite or building:
+
+```dotenv
+VITE_API_BASE_URL=https://your-backend.example.com/api
+```
+
+Include `/api` and omit the trailing slash. Vite embeds this value at build time. For access through a LAN IP, explicitly set `VITE_API_BASE_URL=/api` to use the development proxy.
+
+**The shared client retries against the hard-coded Render backend after a network error or HTTP 404 from another API base, including for form submissions.** This also applies during local development; setting a custom base does not disable fallback. Keep the intended backend running and review this behavior before submitting test or private data.
+
+The Home leadership carousel makes its own relative `/api/about/leadership` request and does not use `VITE_API_BASE_URL`. Keep a same-origin API proxy or rewrite available for that request.
+
+## API
+
+All application routes use the default `/api` prefix.
+
+| Method | Endpoint | Behavior |
+| --- | --- | --- |
+| GET | `/` | API welcome message |
+| GET | `/api/about/leadership` | Leadership records with `id`, `name`, `position`, and `chapter` |
+| GET | `/api/join/volunteer-plans` | Volunteer plans with `id`, `duration_months`, `title`, and `features` |
+| GET | `/api/contact/info` | Contact details, locations, Instagram link, and partner links |
+| POST | `/api/contact/submit` | Validate and persist an enquiry, then queue an admin email |
+
+Submission payload:
+
+```json
+{
+  "name": "Example Volunteer",
+  "email": "volunteer@example.com",
+  "phone_number": "+91 9000000000",
+  "organization_name": "Example organisation",
+  "preferred_date": "2026-11-01",
+  "message": "I would like to learn about volunteering."
+}
+```
+
+`name`, `email`, `phone_number`, and `message` are required. `organization_name` and `preferred_date` are optional. Email uses Pydantic’s `EmailStr` validation; the preferred date is stored as a string. A successful submission returns `status`, the saved record’s `id`, and a confirmation `message`. It confirms database storage, not email delivery.
+
+To check the local API without creating a record or sending a submission email:
+
+```bash
+curl http://localhost:8000/
+curl http://localhost:8000/api/about/leadership
+curl http://localhost:8000/api/join/volunteer-plans
+curl http://localhost:8000/api/contact/info
+```
+
+## Data and content maintenance
+
+The configured `DATABASE_URL` selects Neon PostgreSQL or SQLite. Ordinary `postgres://` and `postgresql://` URLs are normalised to SQLAlchemy’s `postgresql+psycopg` driver. PostgreSQL defaults to TLS (`sslmode=require`), a small connection pool, connection health checks, and disabled automatic prepared statements for PgBouncer compatibility. Keep the Neon URL’s TLS parameters intact. There is no migration framework yet; `create_all` creates missing tables but does not alter existing columns.
+
+At application startup, the backend creates missing tables using `DATABASE_URL_UNPOOLED` when supplied, then seeds through the application connection:
+
+- `contact_submissions`: enquiry and application fields, plus a UTC creation timestamp.
+- `leadership_members`: name, position, and chapter.
+- `volunteer_plans`: unique duration, title, and JSON feature list.
+
+The seeder inserts 6-, 12-, and 24-month plans only if the plan table is empty. It replaces the leadership table with the default 18-member roster when the existing record count is four or fewer. It does not synchronise later edits to an already populated database.
+
+To replace database leadership from `frontend/src/assets/team/leader.json`, initialise the database by starting the backend first, then run from `backend/`:
+
+```bash
+python update_leadership.py
+```
+
+This script deletes existing leadership rows and inserts the JSON roster in one transaction against the configured database, including Neon. The About directory, Home fallback roster, backend seed roster, and JSON file are separate content sources; changes to one do not automatically update the others. Footer API contact data lives in `backend/app/api/endpoints.py`; additional contact copy is embedded in frontend components.
+
+## Build and checks
+
+Run from `frontend/`:
+
+```bash
+npm run lint       # Oxlint
+npm run build      # TypeScript project build, then Vite production bundle
+npm run preview    # Serve the built dist/ directory locally
+```
+
+`npm run preview` serves the frontend build; the configured `/api` proxy belongs to the development server. Provide an API URL for the build and a same-origin rewrite where needed.
+
+Database configuration regression checks are available from `backend/`:
+
+```bash
+.venv/bin/python -m unittest discover -s tests -v
+```
+
+These tests do not connect to Neon. After changes, also check all five views, responsive navigation, galleries, volunteer plan loading, and form validation. Verify actual submissions only against the intended API and SMTP recipient. The repository root also provides `npm run build`, `npm run dev`, and `npm run lint` wrappers for the frontend commands.
+
+## Neon setup on Render Free
+
+This checkout is configured for Neon project `empty-lab-47800504`, branch `production`, in organisation `org-bold-snow-12527053`. `neon.ts` declares a database-only setup; the existing FastAPI backend remains on Render. Do not enable other Neon services for this app.
+
+```bash
+npm install -g neon@latest
+neon login
+neon init -y --org-id org-bold-snow-12527053 --project-id empty-lab-47800504 --branch production --services postgres
+neon deploy
+```
+
+`neon deploy` writes `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, and `NEON_BRANCH` into the ignored root `.env.local` (or `.env` if present). Keep this file private. Install frontend dependencies with `npm ci --prefix frontend` and use `npm run build` from the root.
+
+In **Render → Python backend service → Environment**, privately copy the two database URL values, set `MAIL_ENABLED=False`, save, and deploy the updated backend code. Use `backend` as the root directory, `pip install -r requirements.txt` as the build command, and `uvicorn app.main:app --host 0.0.0.0 --port "$PORT"` as the start command. Copy the full values without wrapping quotes. Keep database URLs server-side; never prefix them with `VITE_`.
+
+To view enquiries, open the Neon console’s SQL Editor on the `production` branch and run:
+
+```sql
+SELECT id, name, email, phone_number, organization_name,
+       preferred_date, message, created_at
+FROM contact_submissions
+ORDER BY id DESC
+LIMIT 50;
+```
+
+The connection change does not import previous Render SQLite records. Retain independent database exports/backups; the free plan has usage limits and a limited restore window. A public submissions-listing endpoint is intentionally not added because enquiries contain private contact details.
+
+## Deployment
+
+### Backend service
+
+Configure a Python service with `backend` as its working directory:
+
+```bash
+python -m pip install -r requirements.txt
+uvicorn app.main:app --host 0.0.0.0 --port "$PORT"
+```
+
+Set `PORT` through the hosting environment, or substitute the port your service expects. Set both Neon database URLs under the Render backend service’s **Environment** tab, along with `MAIL_ENABLED=False` for Render Free and a JSON array of frontend origins in `CORS_ORIGINS`. Do not set database credentials on the static frontend service. The development entry point `python run.py` enables reload and fixes the port at 8000; use the Uvicorn command above for hosting.
+
+On Render Free, use Neon via `DATABASE_URL`: database storage then lives outside the temporary Render filesystem and survives backend restarts and redeployments. SQLite on Render Free remains temporary. No hosting manifest currently configures the Render service; use its dashboard settings. Neon deployment provisions database services only; it does not deploy the Python app to Render or set Render environment variables.
+
+### Frontend on Vercel
+
+Use these repository settings:
+
+| Setting | Value |
+| --- | --- |
+| Root directory | `frontend` |
+| Build command | `npm run build` |
+| Output directory | `dist` |
+
+`frontend/vercel.json` rewrites `/api/:path*` to `https://neasw-ngo.onrender.com/api/:path*` and sends other paths to `index.html`. A duplicate configuration exists at the repository root; keep both consistent when changing the backend destination.
+
+When deploying to another backend, set `VITE_API_BASE_URL` before the frontend build and update the API rewrite for the Home leadership request. The hard-coded fallback in `frontend/src/services/api.ts` must also be reviewed when changing environments.
+
+## Current limitations
+
+- There is no admin interface, authentication, enquiry-listing API, or implemented payment processing flow.
+- SMTP notifications run in the application process without a durable queue or retry mechanism. A notification failure does not undo a saved submission.
+- The current CORS configuration includes a wildcard while enabling credentials; configure explicit trusted origins for a hosted environment.
+- Some display content has local fallbacks, so a rendered page alone does not establish backend health.
+
+See [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) for additional implementation notes. The source files remain authoritative where older notes differ.

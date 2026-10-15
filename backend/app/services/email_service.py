@@ -11,6 +11,10 @@ class EmailService:
         """
         Sends contact form submission email using FastAPI-Mail and configured SMTP credentials.
         """
+        if not settings.MAIL_ENABLED or not settings.MAIL_PASSWORD:
+            logger.info("Submission saved; SMTP notifications are disabled or unconfigured.")
+            return False
+
         message = MessageSchema(
             subject=f"[New Web Submission] Form Entry from {form_data.name}",
             recipients=[settings.MAIL_TO_ADMIN],
@@ -45,6 +49,10 @@ class EmailService:
         """
         Dispatches a server activation notification email when the backend boots up.
         """
+        if not settings.MAIL_ENABLED or not settings.MAIL_PASSWORD:
+            logger.info("Startup SMTP notification skipped: disabled or unconfigured.")
+            return False
+
         import datetime
 
         message = MessageSchema(
@@ -74,5 +82,4 @@ class EmailService:
         except Exception as e:
             logger.error(f"Failed to send startup email via FastAPI-Mail: {e}")
             return False
-
 

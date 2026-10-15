@@ -1,9 +1,17 @@
+from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from fastapi_mail import ConnectionConfig
+
+BACKEND_DIR = Path(__file__).resolve().parents[2]
+PROJECT_DIR = BACKEND_DIR.parent
+
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "NEASW Welfare Foundation API"
     API_V1_STR: str = "/api"
+    DATABASE_URL: str = f"sqlite:///{BACKEND_DIR / 'neasw.db'}"
+    DATABASE_URL_UNPOOLED: str | None = None
+    MAIL_ENABLED: bool = True
     CORS_ORIGINS: list[str] = [
         "*",
         "https://neaswwelfarefoundation.in",
@@ -29,7 +37,14 @@ class Settings(BaseSettings):
 
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        # Neon pulls to the project root; backend-specific files override it.
+        # Process environment (including Render settings) takes precedence.
+        env_file=(
+            PROJECT_DIR / ".env",
+            PROJECT_DIR / ".env.local",
+            BACKEND_DIR / ".env",
+            BACKEND_DIR / ".env.local",
+        ),
         env_file_encoding="utf-8",
         case_sensitive=True,
         extra="ignore"
@@ -50,4 +65,3 @@ class Settings(BaseSettings):
         )
 
 settings = Settings()
-
