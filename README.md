@@ -280,7 +280,7 @@ The connection change does not import previous Render SQLite records. Retain ind
 ## Private submissions dashboard
 
 Open `/admin/login` on the website, sign in, and view records at `/admin/submissions`.
-The read-only dashboard includes search, newest-first ordering, and 20 records per
+The read-only dashboard includes search, UTC date filters, newest-first ordering, and 20 records per
 page. It displays both enquiries and volunteer applications from `contact_submissions`.
 
 For local development, the backend supports the existing `USER` and `PASSWORD`
@@ -319,9 +319,59 @@ origins to protect the login/logout flows against cross-site requests.
 | POST | `/api/admin/login` | Verify username/password and set the session cookie |
 | GET | `/api/admin/session` | Check the current admin session |
 | POST | `/api/admin/logout` | Revoke the session and clear the cookie |
-| GET | `/api/admin/submissions` | Authenticated records; `page`, `page_size` (max 100), and `search` |
+| GET | `/api/admin/submissions` | Authenticated records; `page`, `page_size` (max 100), `search`, `date_from`, `date_to` |
+| GET | `/api/admin/submissions/export` | Authenticated XLSX download; the same search and UTC date filters, across all pages |
 
-Auth and records tests use temporary SQLite with fake credentials, never Neon.
+### Export submissions to Excel
+
+Sign in, enter an optional search and UTC date range, and click **Search** to apply
+those filters. Click **Export Excel** to download every matching enquiry and
+volunteer application, including records on other pages. Editing a filter without
+clicking Search does not change the export scope. Both date bounds include the
+whole UTC day. Clear the fields and click Search to export all records.
+
+The `.xlsx` contains **Submissions** and **Export info** worksheets, with the
+applied filters, generation time, and row count. Empty results produce a workbook
+with headers and a zero count. Phone numbers remain text, timestamps are labelled
+UTC, and user-entered text cannot execute as an Excel formula or hyperlink.
+Values above Excel's 32,767 UTF-16-unit cell limit are preserved in ordered
+chunks in **Long text**; the main cell points to its submission ID and field.
+XML-incompatible control characters are shown as explicit `\uNNNN` escapes.
+There is no reliable enquiry/volunteer type column in the stored data, so the
+workbook does not guess one.
+
+Optional **backend-only** export settings (defaults work without new Render variables):
+
+| Variable | Default | Valid range |
+| --- | --- | --- |
+| `EXPORT_MAX_ROWS` | `25000` | 1–100000 |
+| `EXPORT_MAX_FILE_MB` | `25` | 1–100 MiB |
+| `EXPORT_MAX_CONCURRENT` | `1` | 1–2 per process |
+
+For Render Free, retain the defaults and **one worker / one service instance**.
+The size setting caps the completed file in MiB and the total source text
+(1,048,576 source characters per configured MiB). An over-limit request asks you to
+narrow the search or UTC date range; it never returns a partial export. Another
+active export returns 429 with `Retry-After: 30`. Exports use a consistent read
+snapshot and batches of 500 rows. No records, tables, email flows, or Neon
+configuration are changed by exporting.
+
+The completed ZIP and intermediate XML live in a private system temporary
+directory, outside the static site. They are removed after download, disconnect,
+or generation failure. Crashed exports older than one hour are reaped on startup
+or the next export; a file lock protects active downloads. Downloads use the
+existing private admin cookie/header checks and `no-store` responses. They have
+no public link. Uvicorn's admin access logs omit query strings so searches are not
+recorded there; any external proxy has its own logging configuration. This is a readable data export, **not a PostgreSQL restore backup**.
+Handle the downloaded file as private contact data.
+
+Deploy **both backend and frontend** after updating. The backend requirements now
+include `openpyxl` and `lxml`; the openpyxl 3.1 version range is intentional because
+its write-only XML writer is directed into the private export directory. Existing
+Neon and Brevo variables remain sufficient. Sign in again after the backend
+restarts, then verify an authorised export on the hosted site.
+
+Auth, records and export tests use temporary SQLite with fake credentials, never Neon.
 Install their extra dependency with `.venv/bin/pip install -r requirements-dev.txt`:
 
 ```bash

@@ -21,6 +21,9 @@ class Settings(BaseSettings):
     ADMIN_PASSWORD: SecretStr = SecretStr("")
     ADMIN_COOKIE_SECURE: bool = True
     ADMIN_SESSION_SECONDS: int = Field(default=28800, ge=300, le=86400)
+    EXPORT_MAX_ROWS: int = Field(default=25000, ge=1, le=100000)
+    EXPORT_MAX_FILE_MB: int = Field(default=25, ge=1, le=100)
+    EXPORT_MAX_CONCURRENT: int = Field(default=1, ge=1, le=2)
     CORS_ORIGINS: list[str] = [
         "https://neaswwelfarefoundation.in",
         "https://www.neaswwelfarefoundation.in",

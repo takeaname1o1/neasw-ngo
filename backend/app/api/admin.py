@@ -1,5 +1,5 @@
 """Read-only administration with opaque, revocable process-local sessions."""
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from functools import lru_cache
 import hashlib
 import hmac
@@ -7,13 +7,13 @@ import secrets
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from pydantic import BaseModel, Field
-from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.database import get_db
-from app.models.db_models import ContactSubmission
 from app.core.admin_security import AdminSession, admin_security
+from app.services.submission_queries import submission_query
+from app.services.export_service import ExportResponse, generate_export
 
 COOKIE = "neasw_admin_session"
 COOKIE_PATH = "/api/admin"
@@ -118,18 +118,20 @@ def logout(request: Request, response: Response):
 @router.get("/submissions")
 def submissions(page: int = Query(1, ge=1), page_size: int = Query(20, ge=1, le=100),
                 search: str = Query("", max_length=200),
+                date_from: date | None = None, date_to: date | None = None,
                 session: AdminSession = Depends(require_admin), db: Session = Depends(get_db)):
-    query = db.query(ContactSubmission)
-    if search.strip():
-        pattern = f"%{search.strip()}%"
-        query = query.filter(or_(*(column.ilike(pattern) for column in (
-            ContactSubmission.name, ContactSubmission.email, ContactSubmission.phone_number,
-            ContactSubmission.organization_name, ContactSubmission.message))))
-    total = query.count()
-    rows = (query.order_by(ContactSubmission.created_at.desc(), ContactSubmission.id.desc())
-            .offset((page - 1) * page_size).limit(page_size).all())
+    query = submission_query(db, search, date_from, date_to)
+    total = query.order_by(None).count()
+    rows = query.offset((page - 1) * page_size).limit(page_size).all()
     return {"items": [{"id": row.id, "name": row.name, "email": row.email,
                        "phone_number": row.phone_number, "organization_name": row.organization_name,
                        "preferred_date": row.preferred_date, "message": row.message,
                        "created_at": row.created_at.replace(tzinfo=timezone.utc) if row.created_at else None}
                       for row in rows], "total": total, "page": page, "page_size": page_size}
+
+
+@router.get("/submissions/export")
+def export_submissions(search: str = Query("", max_length=200),
+                       date_from: date | None = None, date_to: date | None = None,
+                       session: AdminSession = Depends(require_admin), db: Session = Depends(get_db)):
+    return ExportResponse(generate_export(db, search, date_from, date_to))

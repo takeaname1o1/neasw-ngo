@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { AdminError, adminRequest } from '../services/admin';
+import { AdminError, adminRequest, downloadSubmissions } from '../services/admin';
 import type { SubmissionPage } from '../services/admin';
 import './Admin.css';
 
@@ -14,11 +14,28 @@ export function Admin() {
   const [loading, setLoading] = useState(false);
   const [records, setRecords] = useState<SubmissionPage | null>(null);
   const [search, setSearch] = useState('');
-  const [query, setQuery] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+  const [filters, setFilters] = useState({ search: '', date_from: '', date_to: '' });
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState('');
+  const [exportStatus, setExportStatus] = useState('');
+  const exportController = useRef<AbortController | null>(null);
+  const mounted = useRef(true);
   const [page, setPage] = useState(1);
   const [refresh, setRefresh] = useState(0);
+  const filterParams = new URLSearchParams(Object.entries(filters).filter(([, value]) => value)).toString();
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; exportController.current?.abort(); };
+  }, []);
 
   function showLogin() {
+    exportController.current?.abort();
+    setExporting(false);
+    setExportStatus('');
+    setExportError('');
     setAuthenticated(false);
     setRecords(null);
     setPassword('');
@@ -49,8 +66,8 @@ export function Admin() {
     setLoading(true);
     setRecords(null);
     setError('');
-    adminRequest<SubmissionPage>(`/submissions?page=${page}&search=${encodeURIComponent(query)}`, { signal: controller.signal })
-      .then(setRecords)
+    adminRequest<SubmissionPage>(`/submissions?page=${page}&${filterParams}`, { signal: controller.signal })
+      .then(data => { if (!controller.signal.aborted) setRecords(data); })
       .catch(err => {
         if (controller.signal.aborted) return;
         if (err instanceof AdminError && err.status === 401) showLogin();
@@ -58,7 +75,7 @@ export function Admin() {
       })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [authenticated, page, query, refresh]);
+  }, [authenticated, page, filterParams, refresh]);
 
   async function signIn(event: FormEvent) {
     event.preventDefault();
@@ -76,6 +93,9 @@ export function Admin() {
   }
 
   async function signOut() {
+    exportController.current?.abort();
+    setExportStatus('');
+    setExporting(false);
     setBusy(true);
     setError('');
     try {
@@ -84,6 +104,29 @@ export function Admin() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unable to sign out');
     } finally { setBusy(false); }
+  }
+
+  async function exportExcel() {
+    if (exportController.current && !exportController.current.signal.aborted) return;
+    const controller = new AbortController();
+    exportController.current = controller;
+    setExporting(true);
+    setExportError('');
+    setExportStatus('Preparing Excel…');
+    try {
+      await downloadSubmissions(filterParams, controller.signal);
+      if (!controller.signal.aborted && mounted.current) setExportStatus('Excel download ready.');
+    } catch (err) {
+      if (controller.signal.aborted || !mounted.current) return;
+      setExportStatus('');
+      if (err instanceof AdminError && err.status === 401) {
+        showLogin();
+        setError(err.message);
+      } else setExportError(err instanceof Error ? err.message : 'Unable to export submissions');
+    } finally {
+      if (!controller.signal.aborted && mounted.current) setExporting(false);
+      if (exportController.current === controller) exportController.current = null;
+    }
   }
 
   return <main className="admin-shell">
@@ -102,16 +145,25 @@ export function Admin() {
         <div className="admin-heading"><div><h1>Submissions</h1><p>Signed in as {username}</p></div>
           <button className="btn btn-secondary" disabled={busy} onClick={signOut}>{busy ? 'Signing out…' : 'Sign out'}</button>
         </div>
-        <form className="admin-search" onSubmit={e => { e.preventDefault(); setPage(1); setQuery(search.trim()); setRefresh(v => v + 1); }}>
-          <label htmlFor="submission-search">Search submissions</label>
-          <div><input id="submission-search" type="search" placeholder="Name, email, phone, organisation or message" maxLength={200} value={search} onChange={e => setSearch(e.target.value)} />
-            <button className="btn btn-accent" disabled={loading}>Search</button>
-            <button type="button" className="btn btn-secondary" disabled={loading} onClick={() => setRefresh(v => v + 1)}>Refresh</button></div>
+        <form className="admin-search" onSubmit={e => { e.preventDefault(); setPage(1); setFilters({ search: search.trim(), date_from: dateFrom, date_to: dateTo }); setExportStatus(''); setExportError(''); setRefresh(v => v + 1); }}>
+          <div className="admin-filter-fields">
+            <label htmlFor="submission-search">Search submissions<input id="submission-search" type="search" placeholder="Name, email, phone, organisation or message" maxLength={200} value={search} onChange={e => setSearch(e.target.value)} /></label>
+            <label htmlFor="submission-from">From date (UTC)<input id="submission-from" type="date" value={dateFrom} max={dateTo || '9999-12-30'} onChange={e => setDateFrom(e.target.value)} /></label>
+            <label htmlFor="submission-to">To date (UTC)<input id="submission-to" type="date" value={dateTo} min={dateFrom} max="9999-12-30" onChange={e => setDateTo(e.target.value)} /></label>
+          </div>
+          <div className="admin-filter-actions">
+            <button className="btn btn-accent" disabled={loading || busy}>Search</button>
+            <button type="button" className="btn btn-secondary" disabled={loading || busy} onClick={() => setRefresh(v => v + 1)}>Refresh</button>
+            <button type="button" className="btn btn-secondary" disabled={exporting || busy || loading} onClick={exportExcel}>{exporting ? 'Preparing Excel…' : 'Export Excel'}</button>
+          </div>
+          <p className="admin-export-hint">Exports all matching submissions for the applied filters, including other pages. Apply filter changes with Search.</p>
         </form>
+        <p role="status" className="admin-export-status">{exportStatus}</p>
+        {exportError && <p className="admin-error" role="alert">{exportError}</p>}
         {error && <p className="admin-error" role="alert">{error}</p>}
         {loading && <p role="status">Loading submissions…</p>}
         {records && <>
-          <p className="admin-count" aria-live="polite">{records.total} {records.total === 1 ? 'submission' : 'submissions'}{query ? ' matching your search' : ''}</p>
+          <p className="admin-count" aria-live="polite">{records.total} {records.total === 1 ? 'submission' : 'submissions'}{filterParams ? ' matching your filters' : ''}</p>
           {records.items.length === 0 ? <div className="card-panel admin-empty">No submissions found.</div> :
             <div className="admin-records">{records.items.map(record => <article className="card-panel admin-record" key={record.id}>
               <div className="admin-record-heading"><h2>{record.name}</h2><span>#{record.id} · {record.created_at ? new Date(record.created_at).toLocaleString() : 'Date unavailable'}</span></div>

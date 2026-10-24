@@ -10,9 +10,13 @@
 .admin-shell input:focus-visible, .admin-shell button:focus-visible { outline: 3px solid #0f766e; outline-offset: 3px; }
 .admin-shell button:disabled { cursor: default; opacity: .5; transform: none; }
 .admin-heading, .admin-record-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; flex-wrap: wrap; }
-.admin-heading h1 { font-size: 2.4rem; }
+.admin-heading h1 { font-size: clamp(1.8rem, 7vw, 2.4rem); }
 .admin-search { margin: 28px 0 20px; }
-.admin-search > div { display: flex; gap: 12px; margin-top: 8px; }
+.admin-filter-fields { display: grid; grid-template-columns: minmax(0, 1fr) 180px 180px; gap: 12px; }
+.admin-filter-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+.admin-export-hint, .admin-export-status { color: #64748b; font-size: .9rem; margin-top: 12px; }
+.admin-export-status:empty { display: none; }
+@media (max-width: 850px) { .admin-filter-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } .admin-filter-fields > label:first-child { grid-column: 1 / -1; } }
 .admin-error { color: #9f1239; padding: 12px; background: #fff1f2; border-radius: 4px; }
 .admin-records { display: grid; gap: 20px; margin-top: 16px; }
 .admin-record { padding: 24px; }
@@ -28,7 +32,7 @@
 @media (max-width: 600px) {
   .admin-shell { padding: 24px 16px; }
   .admin-login { margin: 24px auto; padding: 24px; }
-  .admin-search > div { flex-wrap: wrap; }
+  .admin-filter-fields { grid-template-columns: minmax(0, 1fr); }
   .admin-record { padding: 18px; }
   .admin-record dl { grid-template-columns: 1fr; }
   .admin-pagination { flex-wrap: wrap; }

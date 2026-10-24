@@ -3,14 +3,20 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
+from app.core.admin_logging import configure_admin_logging
+
 from app.api.endpoints import router as api_router
 from app.api.admin import router as admin_router
 from app.core.database import initialize_database
 from app.core.site_content import load_site_content
 from app.services.email_service import EmailService
 
+configure_admin_logging()
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    from app.services.export_service import clean_stale_exports
+    clean_stale_exports()
     initialize_database()
     load_site_content()
     # Trigger startup email notification asynchronously in the background
