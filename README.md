@@ -10,6 +10,7 @@ The NorthEast Association for Social Welfare website presents the organisation�
 - **Join NEASW:** 6-, 12-, and 24-month volunteer plans with an application modal.
 - **Contact:** enquiry form, image gallery, contact details, and social links.
 - **Shared interface:** responsive layouts, navigation, footer, and calls to action.
+- **Private administration:** password-protected submissions dashboard with search, UTC date filters, pagination, and Excel export across all matching pages.
 
 Contact enquiries and volunteer applications use the same submission endpoint and database table. Volunteer applications record the selected plan in the organisation and message fields.
 
@@ -32,14 +33,15 @@ Browser: React + TypeScript
 | --- | --- |
 | Frontend | React 19, TypeScript 6, Vite 8 |
 | UI | Plain CSS, inline styles, and Lucide React icons |
-| Navigation | React state in `App.tsx`; no URL-based router |
+| Navigation | React state for public views; explicit `/admin` path handling in `App.tsx` |
 | HTTP client | Browser `fetch` with a shared API helper |
 | Backend | FastAPI, Uvicorn, Pydantic v2, and pydantic-settings |
 | Persistence | SQLAlchemy 2, Psycopg 3, and Neon PostgreSQL; local SQLite fallback |
 | Email | Brevo HTTPS API via HTTPX; optional FastAPI-Mail SMTP provider |
+| Excel export | openpyxl 3.1 and lxml; authenticated, bounded XLSX generation |
 | Frontend checks | TypeScript build checks and Oxlint |
 
-Navigation switches among five views without changing the browser URL. Refreshing the application returns to Home; individual views do not have deep links.
+Public navigation switches among five views without changing the browser URL. Refreshing a public view returns to Home. The admin interface has explicit `/admin/login` and `/admin/submissions` paths.
 
 ## Repository layout
 
@@ -47,13 +49,13 @@ Navigation switches among five views without changing the browser URL. Refreshin
 .
 ├── backend/
 │   ├── app/
-│   │   ├── api/endpoints.py       # REST endpoints
+│   │   ├── api/                  # Public endpoints and private admin routes
 │   │   ├── core/                 # Settings, database connections, and admin security
 │   │   ├── data/site_content.json # Static leadership and volunteer plans
 │   │   ├── models/               # SQLAlchemy models and Pydantic schemas
-│   │   ├── services/             # Brevo HTTPS and optional SMTP notifications
+│   │   ├── services/             # Email, shared filters, and Excel generation
 │   │   └── main.py               # FastAPI app, CORS, and startup lifecycle
-│   ├── .env.example              # Email configuration template
+│   ├── .env.example              # Backend environment configuration template
 │   ├── requirements.txt          # Python dependencies
 │   ├── run.py                    # Development server on port 8000
 │   └── update_leadership.py      # Refresh static API leadership from JSON
@@ -61,8 +63,8 @@ Navigation switches among five views without changing the browser URL. Refreshin
 │   ├── src/
 │   │   ├── assets/               # Images, programme notes, and leader.json
 │   │   ├── components/           # Header, footer, and conversion block
-│   │   ├── pages/                # Home, About, Work, Join, and Contact
-│   │   ├── services/api.ts       # API types, URL selection, and fallback
+│   │   ├── pages/                # Public views and the admin dashboard
+│   │   ├── services/             # Public API client and same-origin admin client
 │   │   ├── App.tsx               # View selection and shared layout
 │   │   └── index.css             # Shared styles and design tokens
 │   ├── package.json
@@ -73,7 +75,8 @@ Navigation switches among five views without changing the browser URL. Refreshin
 ├── package.json                  # Root build/dev commands and Neon tooling
 ├── run.sh                        # Combined local development launcher
 ├── vercel.json                   # Duplicate root deployment configuration
-├── TECHNICAL_DOCUMENTATION.md     # Additional implementation notes
+├── docs/                         # Excel usage guide and implementation record
+├── TECHNICAL_DOCUMENTATION.md     # Architecture, data flows, and export internals
 ├── layout.md                     # Layout reference
 ├── mobile_friendly_suggestions.md
 └── previews.html                 # Standalone design preview
@@ -144,13 +147,16 @@ Settings are defined in `backend/app/core/config.py`. Case-sensitive process env
 | `BREVO_API_KEY` | Private Brevo API key; required for the Brevo provider, redacted in settings representations |
 | `PROJECT_NAME` | `NorthEast Association for Social Welfare API` |
 | `API_V1_STR` | `/api`; changing this also requires updating frontend routing |
-| `CORS_ORIGINS` | JSON array of allowed origins; currently includes `*`, the organisation’s domains, and localhost ports 3000 and 5173 |
+| `CORS_ORIGINS` | JSON array of allowed origins; defaults to the organisation’s domain and `www` variant, plus `http://localhost` ports 3000 and 5173; no wildcard |
 | `MAIL_USERNAME`, `MAIL_PASSWORD` | SMTP login; the password defaults to empty |
 | `MAIL_FROM`, `MAIL_FROM_NAME` | Verified sender address and display name; defaults to `notifications@neaswwelfarefoundation.in` / `NorthEast Association for Social Welfare` |
 | `MAIL_SERVER`, `MAIL_PORT` | `smtp.zoho.in`, `587` |
 | `MAIL_STARTTLS`, `MAIL_SSL_TLS` | `True`, `False` |
 | `USE_CREDENTIALS`, `VALIDATE_CERTS` | Both `True` |
 | `MAIL_TO_ADMIN` | Notification recipient; defaults to `neaswsubmission@zohomail.in` |
+| `ADMIN_USERNAME`, `ADMIN_PASSWORD` | Backend-only dashboard credentials; unset by default |
+| `ADMIN_SESSION_SECONDS`, `ADMIN_COOKIE_SECURE` | `28800` and `True`; session lifetime and HTTPS cookie setting |
+| `EXPORT_MAX_ROWS`, `EXPORT_MAX_FILE_MB`, `EXPORT_MAX_CONCURRENT` | `25000`, `25`, `1`; optional export limits, detailed below |
 
 The email configuration example is in `backend/.env.example`. Local `.env` files and SQLite databases are ignored by Git.
 
@@ -184,7 +190,7 @@ All application routes use the default `/api` prefix.
 | GET | `/api/about/leadership` | Leadership records with `id`, `name`, `position`, and `chapter` |
 | GET | `/api/join/volunteer-plans` | Volunteer plans with `id`, `duration_months`, `title`, and `features` |
 | GET | `/api/contact/info` | Contact details, locations, Instagram link, and partner links |
-| POST | `/api/contact/submit` | Validate and persist an enquiry, then queue an admin email |
+| POST | `/api/contact/submit` | Validate and save an enquiry or application, then queue admin and submitter receipt emails |
 
 Submission payload:
 
@@ -252,12 +258,12 @@ These tests do not connect to Neon. After changes, also check all five views, re
 
 ## Neon setup on Render Free
 
-This checkout is configured for Neon project `empty-lab-47800504`, branch `production`, in organisation `org-bold-snow-12527053`. `neon.ts` declares a database-only setup; the existing FastAPI backend remains on Render. Do not enable other Neon services for this app.
+`neon.ts` declares a database-only setup; the existing FastAPI backend remains on Render. The active hosted database is determined by Render’s environment URLs, not by account or project IDs in this README. For a new setup, substitute your own organisation, project and branch below. An already-connected deployment does not need to provision another database.
 
 ```bash
 npm install -g neon@latest
 neon login
-neon init -y --org-id org-bold-snow-12527053 --project-id empty-lab-47800504 --branch production --services postgres
+neon init -y --org-id YOUR_ORG_ID --project-id YOUR_PROJECT_ID --branch production --services postgres
 neon deploy
 ```
 
@@ -323,6 +329,10 @@ origins to protect the login/logout flows against cross-site requests.
 | GET | `/api/admin/submissions/export` | Authenticated XLSX download; the same search and UTC date filters, across all pages |
 
 ### Export submissions to Excel
+
+See the [Excel export guide](docs/EXCEL_EXPORT_GUIDE.md) for step-by-step usage,
+workbook details, and troubleshooting, and the [implementation record](docs/EXCEL_EXPORT_PLAN.md)
+for completed local checks and pending deployment verification.
 
 Sign in, enter an optional search and UTC date range, and click **Search** to apply
 those filters. Click **Export Excel** to download every matching enquiry and
@@ -436,4 +446,4 @@ When deploying to another backend, set `VITE_API_BASE_URL` before the frontend b
 - CORS permits explicit trusted frontend origins; add any additional deployment origins to `CORS_ORIGINS`.
 - Some display content has local fallbacks, so a rendered page alone does not establish backend health.
 
-See [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) for additional implementation notes. The source files remain authoritative where older notes differ.
+See [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) for the implemented architecture and data flows, [frontend/README.md](frontend/README.md) for frontend setup, and the [Excel export guide](docs/EXCEL_EXPORT_GUIDE.md) for admin downloads.

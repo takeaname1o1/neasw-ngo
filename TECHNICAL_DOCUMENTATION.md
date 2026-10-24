@@ -1,283 +1,251 @@
-# NorthEast Association for Social Welfare Web App — Technical Documentation
+# NorthEast Association for Social Welfare — Technical documentation
 
-This document provides a comprehensive technical overview of the **NorthEast Association for Social Welfare** web application. The platform is designed to promote community development, cultural preservation, sustainable tourism, and organic products from Northeast India.
+This document describes the implemented application. See [README.md](README.md)
+for installation, environment variables, and hosting settings, and the
+[Excel export guide](docs/EXCEL_EXPORT_GUIDE.md) for the admin download workflow.
 
-The application leverages a modern, decoupled architecture:
-*   **Backend:** FastAPI (Python) web API layer, backed by SQLite (SQLAlchemy ORM).
-*   **Frontend:** React (TypeScript) + Vite single-page application, styled with custom premium CSS.
-*   **Startup & Dev Orchestration:** An automated launch script (`run.sh`) that manages ports, environments, and servers.
+## Architecture
 
----
+The frontend is a React 19 / TypeScript 6 application built with Vite 8. The
+Python backend uses FastAPI, Pydantic v2, SQLAlchemy 2, and Psycopg 3. Production
+submissions are stored in Neon PostgreSQL; local development can use SQLite.
+Email uses Brevo's HTTPS API by default. Excel generation uses openpyxl and lxml.
 
-## 🏗️ High-Level System Architecture
+Public API requests use `frontend/src/services/api.ts`: an explicit
+`VITE_API_BASE_URL`, the local `/api` proxy, or the configured Render backend.
+That client can retry against the Render backend on a network error or 404.
+Admin requests use the separate `services/admin.ts` client and always stay on
+same-origin `/api/admin`, with cookies and the admin request header. They never
+use the public client's cross-host fallback.
 
-```mermaid
-graph TD
-    subgraph Client [Frontend React Web App]
-        UI[Vite + React UI]
-        Router[Custom State Router]
-        APIService[API Services / Fetch Client]
-    end
+Locally, Vite proxies `/api` to port 8000. The committed Vercel configurations
+proxy `/api/:path*` to the Render backend and serve `index.html` for other paths.
+The same-origin proxy is required for the admin cookie and Excel download even
+when public API calls use an absolute backend URL.
 
-    subgraph Server [Backend FastAPI Web Service]
-        Main[main.py App Host]
-        Endpoints[API Routes /endpoints.py]
-        EmailService[FastAPI-Mail Service]
-        DB_Seed[Database Seeder]
-    end
+## Source map
 
-    subgraph External [External Services]
-        ZohoSMTP[Zoho India SMTP Server<br/>smtp.zoho.in:587]
-    end
+| File | Responsibility |
+| --- | --- |
+| `backend/app/main.py` | App lifecycle, routers, CORS, private response headers |
+| `backend/app/api/endpoints.py` | Public content and submission endpoints |
+| `backend/app/api/admin.py` | Admin login, sessions, logout, listing and export |
+| `backend/app/core/config.py` | Validated environment settings and credential loading |
+| `backend/app/core/database.py` | Engines, sessions, startup schema recovery |
+| `backend/app/core/admin_security.py` | Bounded process-local sessions and login attempts |
+| `backend/app/core/admin_logging.py` | Removes admin query strings from Uvicorn access logs |
+| `backend/app/core/site_content.py` | Loads version-controlled public content |
+| `backend/app/data/site_content.json` | Leadership directory and volunteer plans |
+| `backend/app/models/db_models.py` | The submissions ORM model |
+| `backend/app/models/schemas.py` | Public API payload validation and receipt classification |
+| `backend/app/services/email_service.py` | Brevo HTTPS and optional legacy SMTP delivery |
+| `backend/app/services/submission_queries.py` | Shared list/export filtering and ordering |
+| `backend/app/services/export_service.py` | XLSX generation, limits, and temporary-file lifecycle |
+| `frontend/src/App.tsx` | Public view selection and admin path detection |
+| `frontend/src/pages/Admin.tsx` | Admin login, search, dates, pagination and export UI |
+| `frontend/src/services/admin.ts` | Private JSON requests and binary download handling |
 
-    subgraph DataStore [SQLite Storage]
-        DB[(neasw.db File)]
-    end
+## Lifecycle and persistence
 
-    UI --> Router
-    UI --> APIService
-    APIService -- "/api/* (JSON over HTTP)" --> Endpoints
-    Endpoints --> Database_ORM[SQLAlchemy Session]
-    Database_ORM --> DB
-    Endpoints --> EmailService
-    EmailService -- "STARTTLS (Port 587)" --> ZohoSMTP
-    Main --> DB_Seed
-    DB_Seed --> Database_ORM
+On startup the backend reaps stale export files, initializes the database, loads
+static content, and schedules an optional startup email. `MAIL_ENABLED=False`
+disables that email and all submission emails.
+
+`DATABASE_URL` selects the runtime connection. PostgreSQL URLs are normalized to
+the Psycopg driver, with TLS required by default, a small connection pool,
+connection health checks, and automatic prepared statements disabled for pooler
+compatibility. `DATABASE_URL_UNPOOLED`, when present, is used for PostgreSQL
+startup schema operations. Without `DATABASE_URL`, SQLite lives at
+`backend/neasw.db` using an absolute path resolved from the backend source.
+
+The only application table is **`contact_submissions`**:
+
+| Field | Meaning |
+| --- | --- |
+| `id` | Integer submission reference |
+| `name`, `email`, `phone_number` | Submitted contact details |
+| `organization_name` | Optional organisation or selected volunteer plan text |
+| `preferred_date` | Optional original date text |
+| `message` | Submitted message |
+| `created_at` | UTC creation timestamp |
+
+Startup creates this table if missing and restores a missing PostgreSQL `public`
+schema. It also drops four retired application tables: `leadership_members`,
+`volunteer_plans`, `admin_sessions`, and `admin_login_attempts`. It preserves
+existing submissions and unrelated tables. There is no general schema migration
+framework; `create_all` does not change existing columns or restore deleted data.
+
+Leadership and volunteer plans come from `site_content.json`, without database
+queries. `backend/update_leadership.py` refreshes that file from the frontend
+leadership JSON and preserves plans. Commit and deploy content updates.
+
+## Public submission and email flow
+
+| Method | Path | Behaviour |
+| --- | --- | --- |
+| GET | `/` | API welcome message |
+| GET | `/api/about/leadership` | Static leadership records |
+| GET | `/api/join/volunteer-plans` | Static 6-, 12-, and 24-month plans |
+| GET | `/api/contact/info` | Contact details and partner links |
+| POST | `/api/contact/submit` | Validate, save, and queue admin and submitter emails |
+
+`name`, `email`, `phone_number`, and `message` are required. Email is validated
+with `EmailStr`. Organisation and preferred date are optional; preferred date is
+stored as text. `submission_type` accepts `contact` or `volunteer` and defaults to
+`contact`. Legacy volunteer markers are recognised only when that field is
+omitted. This classification selects receipt wording but is **not stored as a
+database column**.
+
+The endpoint commits the record before scheduling separate background tasks for
+the admin notification and the appropriate submitter receipt. Volunteer receipts
+acknowledge an application; contact receipts acknowledge an enquiry. Neither
+confirms a placement or booking. Admin notifications use the submitter's email
+as Reply-To; receipts use the admin email as Reply-To.
+
+With `MAIL_PROVIDER=brevo`, HTTPX sends to Brevo over HTTPS using `BREVO_API_KEY`
+and the shared sender settings. The request timeout is 15 seconds, with a
+5-second connection timeout. The verified sender defaults to
+`notifications@neaswwelfarefoundation.in`. `MAIL_PROVIDER=smtp` selects the
+optional FastAPI-Mail implementation on a host that permits SMTP. Brevo errors
+do not trigger an SMTP fallback.
+
+Tasks run inside the API process without a durable queue or automatic retry.
+Database success does not prove email delivery. Check Render application logs
+for queue/acceptance errors and Brevo transactional logs for delivery events.
+An enabled deployment startup can also send an admin notification. A form
+submission normally uses two email sends, while an Excel export sends none.
+
+## Admin authentication and filtering
+
+Open `/admin/login`, then use `/admin/submissions`. The frontend renders these
+paths separately from its public state-based navigation.
+
+| Method | Path | Behaviour |
+| --- | --- | --- |
+| POST | `/api/admin/login` | Validate credentials and issue an opaque session cookie |
+| GET | `/api/admin/session` | Check the current session |
+| POST | `/api/admin/logout` | Revoke the session and clear its cookie |
+| GET | `/api/admin/submissions` | Read a filtered page of submissions |
+| GET | `/api/admin/submissions/export` | Download all matching rows as XLSX within limits |
+
+Set backend-only `ADMIN_USERNAME` and `ADMIN_PASSWORD`. Local legacy `USER` and
+`PASSWORD` entries are supported in dotenv files; the operating system's `USER`
+is not treated as an admin credential. Missing credentials fail closed.
+
+Password checks use scrypt and constant-time comparisons. Cookies are HttpOnly,
+SameSite=Lax, scoped to `/api/admin`, and Secure by default. Sessions expire after
+eight hours by default. Only token hashes and credential tags are kept in memory.
+Logout, expiry, credential changes, and process restarts invalidate sessions.
+Login attempts are limited to five per client and thirty globally per 15 minutes,
+including successful attempts. The session store is capped at 128 sessions.
+
+Every admin route requires `X-Admin-Request: 1`; an Origin header, when present,
+must match an explicit `CORS_ORIGINS` entry. The default origins are the production
+domain, its `www` variant, and `http://localhost` on ports 3000 and 5173. For local
+HTTP testing only, set `ADMIN_COOKIE_SECURE=False`. Use the configured localhost
+origin; `127.0.0.1` is not in the default origin list.
+
+List and export share `submission_query`:
+
+- `search`: up to 200 characters, trimmed, using case-insensitive SQL `ILIKE`
+  patterns across name, email, phone, organisation, and message. `%` and `_`
+  retain SQL pattern wildcard behaviour.
+- `date_from`, `date_to`: optional ISO `YYYY-MM-DD` dates covering whole UTC days.
+  The upper bound is the next day's exclusive midnight. Reversed dates and
+  `date_to=9999-12-31` are rejected.
+- Ordering: `created_at DESC, id DESC` for stable ties.
+- Listing: `page` starts at 1; `page_size` defaults to 20 and is capped at 100.
+  Exports ignore pagination.
+
+Private responses set `Cache-Control: no-store`, `Pragma: no-cache`, and
+`X-Content-Type-Options: nosniff`. Uvicorn admin access logs omit query strings;
+external proxies have separate logging policies.
+
+## Excel export implementation
+
+The **Search** action applies the current search/date fields and resets pagination.
+**Export Excel** uses those applied filters, including results on other pages.
+The button shows a preparing state and prevents duplicate clicks. Logout or
+leaving the admin view aborts the frontend request. HTTP errors are displayed
+inline; a 401 returns to sign-in. The client checks the XLSX content type before
+creating a temporary Blob URL, triggers the download, and then revokes the URL.
+
+The backend acquires a process-local export slot before generation. PostgreSQL
+uses a repeatable-read, read-only transaction; SQLite uses an explicit read
+transaction. Count and source-text budget checks use the same snapshot as the
+selected rows. The eight columns are streamed in batches of 500. The transaction
+is rolled back to end the read before the completed workbook is served.
+
+The write-only workbook has **Submissions** and **Export info** sheets. It uses
+literal string cells, text-formatted phone numbers, UTC-labelled datetimes,
+frozen headers, autofilter and fixed widths. Values exceeding 32,767 UTF-16 units
+are preserved in ordered **Long text** chunks. XML-incompatible characters are
+shown as explicit `\uNNNN` escapes. An empty result remains a valid workbook.
+No inferred enquiry/volunteer type or admin security state is exported.
+
+Defaults are 25,000 rows, 25 MiB output, and one active export per process.
+`EXPORT_MAX_FILE_MB` also limits source text to that value multiplied by
+1,048,576 characters, checked before fetching the text. These settings are
+validated at startup. Over-limit requests fail with 422 and instructions to
+narrow the filters; they never return partial data. Occupied slots return 429
+with `Retry-After: 30`.
+
+The completed ZIP and intermediate XML live under a private system temporary
+directory, outside static hosting. `ExportResponse` cleans up files and releases
+the slot after transfer, including failed sends. Generation failures clean up
+before returning an error. Stale directories older than one hour are reaped at
+startup or the next export; an advisory lock protects active downloads. The
+writer uses openpyxl 3.1 internals to keep XML in the same directory, so its
+version is deliberately constrained to `<3.2`. The file-lock implementation uses
+POSIX `fcntl`, suitable for the Linux Render runtime and local Linux/macOS.
+
+See the [export guide](docs/EXCEL_EXPORT_GUIDE.md) for usage, limits and errors,
+and the [implementation record](docs/EXCEL_EXPORT_PLAN.md) for verification results.
+
+## Development, deployment and verification
+
+Use the [README setup commands](README.md#local-development) to run the backend
+on port 8000 and Vite on port 3000. `run.sh` also starts both, but forcibly kills
+existing processes on those ports; separate terminals avoid that side effect.
+
+Deploy the Python service with root directory `backend`, build command
+`pip install -r requirements.txt`, and start command:
+
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port "$PORT" --workers 1
 ```
 
-### Decoupled Operations
-1.  **Client-Side Rendering:** The React application is loaded into the client browser as a Single Page Application (SPA). All page updates, navigation states, and UI interactions are handled client-side.
-2.  **API Communication:** The frontend communicates with the FastAPI backend using standard HTTP client calls (`fetch` API) targeted at `/api/*` endpoints. 
-3.  **Deployment Routing:** In production, relative path requests to `/api/*` are redirected to the live FastAPI backend via URL rewrites configured in `vercel.json`.
+Use **one API worker and one service instance**: sessions, login limits, and
+export slots are process-local. Keep Neon URLs, admin credentials, and the Brevo
+key in backend environment settings. SQLite files on the host are not a durable
+replacement for Neon storage. No new Neon services or database tables are
+required by the dashboard or export feature.
 
----
+For Vercel, use root directory `frontend`, build command `npm run build`, and
+output directory `dist`. Keep root and frontend `vercel.json` rewrites aligned.
+When moving hosts, update the public API base/fallback and the same-origin proxy;
+changing `VITE_API_BASE_URL` alone does not move admin requests.
 
-## 🐍 Backend Architecture (FastAPI)
+From the repository root:
 
-The backend directory (`/backend`) houses the Python REST API server which dynamically feeds the web interface.
-
-### 1. File & Directory Structure
-```text
-backend/
-├── app/
-│   ├── __init__.py
-│   ├── main.py              # Application entry point and configuration
-│   ├── api/
-│   │   └── endpoints.py     # API controller endpoints & routing
-│   ├── core/
-│   │   ├── config.py        # Settings configuration (Pydantic & FastAPI-Mail ConnectionConfig)
-│   │   ├── database.py      # SQLAlchemy engine and session connection
-│   │   ├── site_content.py   # Load version-controlled public content
-│   │   └── admin_security.py # Process-local sessions and login limiting
-│   ├── data/
-│   │   └── site_content.json # Leadership and volunteer plans
-│   ├── models/
-│   │   ├── db_models.py     # SQLAlchemy DB schemas
-│   │   └── schemas.py       # Pydantic schemas (Data serialization/validation)
-│   └── services/
-│       └── email_service.py # FastAPI-Mail SMTP email dispatch service
-├── .env                  # Environment variables (Zoho SMTP credentials & server config)
-├── .env.example          # Template environment variable configuration
-├── requirements.txt      # Python dependencies manifest
-├── run.py                # Development server boot script
-└── neasw.db              # SQLite Database file
+```bash
+npm ci --prefix frontend
+npm run build
+npm run lint
+cd backend
+.venv/bin/python -m pip install -r requirements-dev.txt
+.venv/bin/python -m unittest discover -s tests -v
 ```
 
-### 2. Main Entry Point (`app/main.py`)
-On application boot, `main.py` performs the following operations:
-*   Initializes the `FastAPI` instance.
-*   Creates only `contact_submissions` if missing, restores a missing PostgreSQL `public` schema, and removes the four retired leadership/plan/admin security tables. Existing submission data is preserved.
-*   Loads and validates the static leadership and volunteer plans from `app/data/site_content.json`; no database seeding runs.
-*   Registers CORS middleware (`CORSMiddleware`) to allow seamless cross-origin requests from the React development server.
-*   Mounts the API router under the `/api` prefix.
+The feature verification on 2026-10-24 passed 53 backend tests, the production
+build, browser downloads, and a LibreOffice round trip against synthetic data.
+Lint had six existing hook warnings. Tests use isolated databases and mocked
+email services, not production records. A local 25,000-row benchmark generated
+1.12 MiB in 11.26 seconds with peak RSS of 130.7 MiB; hosted performance is not
+established by that measurement.
 
-### 3. Database Layer (`app/core/database.py` & `app/models/db_models.py`)
-*   **Database Engine:** SQLite is utilized as a lightweight, serverless database stored in the local file `neasw.db`. The connection disables thread checking (`check_same_thread=False`) to support concurrent async requests in FastAPI.
-*   **ORM Integration:** SQLAlchemy ORM maps Python classes to database tables.
-*   **Database Tables (`app/models/db_models.py`):**
-    *   `contact_submissions`: Stores submissions from the contact form and volunteer sign-ups. Fields: `id`, `name`, `email`, `phone_number`, `organization_name`, `preferred_date`, `message`, `created_at` (timestamp).
-*   **Static content:** Leadership and volunteer plans are stored in `app/data/site_content.json` and served by the same API routes without a database query.
-*   **Admin security:** Opaque session hashes and login-attempt counters live in bounded, thread-safe process memory; use one API worker. Restarts invalidate admin sessions and reset login limits. No admin tables are created.
-
-### 4. Data Validation (`app/models/schemas.py`)
-Pydantic schemas enforce type-safety and structural validity for HTTP payloads:
-*   `ContactFormSubmit`: Validates incoming submissions. Requires `name`, `email` (using `EmailStr` for structural validation), `phone_number`, and `message`. Optional parameters include `organization_name` and `preferred_date`.
-*   `LeadershipMember` & `VolunteerPlan`: Define the JSON schemas returned to the client and configure `from_attributes = True` for compatibility with SQLAlchemy ORM objects.
-
-### 5. API Router & Endpoints (`app/api/endpoints.py`)
-
-| Method | Endpoint | Description | Response Schema |
-| :--- | :--- | :--- | :--- |
-| **GET** | `/api/about/leadership` | Fetches the full roster of regional chapter leadership members. | `list[LeadershipMember]` |
-| **GET** | `/api/join/volunteer-plans` | Fetches the active tiered volunteering duration plans. | `list[VolunteerPlan]` |
-| **POST** | `/api/contact/submit` | Handles contact form submissions. Writes data to SQLite and triggers the FastAPI-Mail service. | `{ "status": "success", "id": int, "message": str }` |
-| **GET** | `/api/contact/info` | Returns organization contact details (email, phone, chapters, socials). | `ContactInfo` |
-
-### 6. Email Service & Configuration (`app/services/email_service.py` & `app/core/config.py`)
-*   **Startup Server Activation Email:** On application boot, FastAPI's `lifespan` context manager in `app/main.py` triggers `EmailService.send_startup_email()` asynchronously, notifying `settings.MAIL_TO_ADMIN` that the server is online and the mail service is active.
-*   **Async Background Dispatch:** The `/api/contact/submit` endpoint utilizes FastAPI's `BackgroundTasks` to trigger `send_contact_form_email` asynchronously. This allows instant HTTP responses to client requests without waiting for SMTP network round-trips.
-*   **Self-Notification & Reply-To:** Form entries are emailed directly to `settings.MAIL_TO_ADMIN` (`neaswsubmission@zohomail.in`), including a dynamic `Reply-To` header set to the submitter's email address for quick replies.
-*   **Zoho India SMTP Setup:** Configured for Zoho India (`smtp.zoho.in`) on port `587` with STARTTLS enabled (`MAIL_STARTTLS=True`, `MAIL_SSL_TLS=False`) for Render cloud deployment compatibility.
-*   **Connection Configuration:** Managed dynamically via Pydantic `BaseSettings` (`app/core/config.py`), reading from `.env`:
-    ```env
-    MAIL_USERNAME=neaswsubmission@zohomail.in
-    MAIL_PASSWORD=YOUR_ZOHO_APP_PASSWORD
-    MAIL_FROM=neaswsubmission@zohomail.in
-    MAIL_FROM_NAME=NEASW Submission
-    MAIL_SERVER=smtp.zoho.in
-    MAIL_PORT=587
-    MAIL_STARTTLS=True
-    MAIL_SSL_TLS=False
-    USE_CREDENTIALS=True
-    VALIDATE_CERTS=True
-    MAIL_TO_ADMIN=neaswsubmission@zohomail.in
-    ```
-
----
-
-## 🎨 Frontend Architecture (Vite + React)
-
-The frontend application (`/frontend`) provides a highly optimized user interface written in React and compiled with Vite.
-
-### 1. Directory Structure
-```text
-frontend/
-├── public/               # Static assets & files
-├── src/
-│   ├── assets/           # Local high-resolution UI images & logos
-│   ├── components/       # Shared structural elements
-│   │   ├── Header.tsx    # Responsive navigation bar
-│   │   ├── Footer.tsx    # Footer with API-driven contact info
-│   │   └── ConversionBlock.tsx # Reusable CTA panels
-│   ├── pages/            # View components mapping pages
-│   │   ├── Home.tsx
-│   │   ├── About.tsx
-│   │   ├── Work.tsx
-│   │   ├── Join.tsx
-│   │   └── Contact.tsx
-│   ├── services/
-│   │   └── api.ts        # HTTP client methods using Fetch API
-│   ├── App.css           # Local overrides
-│   ├── App.tsx           # Router state controller
-│   ├── index.css         # Design system styling declarations
-│   └── main.tsx          # React application root mount
-├── package.json          # Node dependencies and scripts
-└── vite.config.ts        # Vite configuration settings
-```
-
-### 2. Design System & Global Styles (`src/index.css`)
-Styling is configured using Vanilla CSS variables (`:root`) for clean UI scaling and premium aesthetics:
-*   **Typography:** Imported Google Fonts:
-    *   *Headers:* `Playfair Display` (elegant serif) for titles.
-    *   *Body:* `Inter` (geometric sans-serif) for clean legibility.
-*   **Color Palette:**
-    *   `--bg-primary` (`#ffffff`): Crisp canvas background.
-    *   `--bg-secondary` (`#0f172a`): Deep navy/charcoal for premium contrast on CTAs & footers.
-    *   `--bg-tertiary` (`#f4f6f0`): Earthy pale olive background for structural balance.
-    *   `--bg-card` (`#f8fafc`): Light grey for modular containers.
-    *   `--color-forest` (`#0f766e`): Primary accent teal.
-    *   `--color-gold` (`#b45309`): Secondary amber highlighting.
-*   **UI Utilities:**
-    *   `.btn`: Minimalist buttons utilizing CSS variables for transitions.
-    *   `.input-underlined`: Clean, flat inputs featuring baseline underlines instead of bounding boxes.
-    *   `.fade-in-section`: Standard keyframe animation mapping page entrance states.
-
-### 3. State Routing (`src/App.tsx`)
-Rather than relying on heavy third-party routing libraries, the site leverages a lightweight state-based router for seamless transition control.
-*   **Navigation State:** `const [currentPage, setCurrentPage] = useState<string>('home')` controls the mounting of sub-pages.
-*   **Transitions:** Mounting pages dynamically triggers CSS animation classes (`fade-in-section`) declared in `index.css`.
-*   **Viewport Alignment:** Page changes trigger a viewport scroll reset (`window.scrollTo({ top: 0, behavior: 'smooth' })`).
-
-### 4. Page Views (`src/pages/`)
-1.  **Home Page (`Home.tsx`):**
-    *   Hero section with full-width background and pagination indicator.
-    *   Features grid illustrating member counts, revenue transparency, and organizational partners (Assam Rifles, Ministry of Home Affairs).
-    *   Testimonial quote block displaying stories of change.
-    *   Categorized FAQ module driven by state categories.
-2.  **About Us (`About.tsx`):**
-    *   Displays background story details since 2014.
-    *   Features a responsive multi-column photo collage grid.
-    *   Organizes core pillars into three categories: *Empower*, *Connect*, and *Transform*.
-3.  **Our Work (`Work.tsx`):**
-    *   Details the six flagship programs of the foundation.
-    *   Uses alternating layouts: text details next to custom split-image grid collages (combining vertical and horizontal alignments).
-4.  **Join Us (`Join.tsx`):**
-    *   Dynamically fetches the 3 volunteer plans from the backend API.
-    *   Falls back to local mock definitions in case of API failure.
-    *   Renders pricing-table columns for duration plans (6, 12, and 24 months).
-    *   Includes a registration interest popup modal with Pydantic validation checks.
-5.  **Contact Us (`Contact.tsx`):**
-    *   Hosts a comprehensive form allowing visitors to request special spots/collaborations.
-    *   Features grids detailing phone numbers, locations, and social media links.
-    *   Includes banners that redirect to local initiatives (Eco-Tourism, Organic Products).
-
----
-
-## ⚡ Development & Launch Orchestration (`run.sh`)
-
-To streamline local development on macOS, a shell script (`run.sh`) handles setup, dependencies, ports, and multi-server execution.
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Script as run.sh
-    participant PortKill as port-killer
-    participant Backend as FastAPI Server
-    participant Frontend as Vite Server
-
-    User->>Script: Execute ./run.sh
-    Script->>PortKill: Check Port 8000 & Port 3000
-    PortKill-->>Script: Kill processes running on occupied ports
-    Note over Script: Start Backend Setup
-    Script->>Backend: Create & activate Python .venv
-    Script->>Backend: pip install -r requirements.txt
-    Script->>Backend: Start python run.py (Port 8000) & PID saved
-    Note over Script: Start Frontend Setup
-    Script->>Frontend: Check node_modules (npm install if missing)
-    Script->>Frontend: Run npm run dev (Port 3000)
-    Note over Script: Shutdown hook captures SIGINT / SIGTERM
-    User->>Script: Stop process (Ctrl+C)
-    Script->>Backend: Kill FastAPI process
-    Script->>User: Shutdown complete
-```
-
-### Launch Sequence
-1.  **Process Management:** Scans ports `3000` (frontend) and `8000` (backend) using `lsof -t`. If processes are running on them, they are killed automatically to prevent startup errors.
-2.  **Python Virtualization:** Initiates a virtual environment (`.venv`) under `/backend`, upgrades local dependencies, and launches the FastAPI process in the background.
-3.  **Node Installation:** Transitions to `/frontend`, validates that `node_modules` exists, runs `npm install` if missing, and boots the Vite dev server (`npm run dev -- --port 3000 --host 0.0.0.0`) in the foreground.
-4.  **Signal Trapping:** Utilizes bash `trap` commands to listen for exit flags (`SIGINT`, `SIGTERM`). When stopping local development (Ctrl+C), the script kills the background FastAPI process before exiting.
-
----
-
-## 🌐 Deployment Configuration
-
-The decoupled codebase is structured to allow independent deployment of the backend and frontend.
-
-### 1. Backend Deployment (Railway/Render)
-*   **Environment:** Python 3.10+
-*   **Root Directory:** `backend/`
-*   **Build Settings:** Packages are installed via `requirements.txt`.
-*   **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-*   *On boot, the backend creates only the submissions table using `DATABASE_URL` (Neon PostgreSQL in production, SQLite locally). Leadership and plans are static. Run one API worker because admin security state is process-local.*
-
-### 2. Frontend Deployment (Vercel)
-*   **Root Directory:** `frontend/`
-*   **Framework Preset:** Vite
-*   **Build Command:** `npm run build` (outputs build to `dist/`)
-*   **API Configuration (`vercel.json`):**
-    ```json
-    {
-      "cleanUrls": true,
-      "rewrites": [
-        {
-          "source": "/api/:path*",
-          "destination": "https://neasw-ngo.onrender.com/api/:path*"
-        },
-        {
-          "source": "/(.*)",
-          "destination": "/index.html"
-        }
-      ]
-    }
-    ```
-    This configuration forces relative requests directed to `/api/*` to be proxied to the live backend URL, preventing CORS failures in production. All other routes are directed to `index.html` to support client-side state routing.
+Feature commit `8f52bf5` was pushed to `master`. Hosted deployment and an
+authorised production export were not verified in that implementation session.
+After deploying both services, sign in again and verify a small export against
+the intended environment. Export files contain private contact data and are
+readable reports, not PostgreSQL restore backups.
